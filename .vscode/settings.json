@@ -1,0 +1,31 @@
+{
+  "css.validate": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.rulers": [100],
+  "eslint.enable": true,
+  "eslint.validate": ["javascript", "typescript", "typescriptreact"],
+  "explorer.excludeGitIgnore": true,
+  "jest.autoRun": {
+    "onSave": "test-only",
+    "watch": false
+  },
+  "jest.jestCommandLine": "npm run test",
+  "less.validate": false,
+  "scss.validate": false,
+  "search.exclude": {
+    "package-lock.json": true
+  },
+  "stylelint.enable": true,
+  "tailwindCSS.validate": true,
+  "terminal.integrated.enablePersistentSessions": false,
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "[markdown][mdx]": {
+    "editor.wordWrap": "on"
+  }
+}
