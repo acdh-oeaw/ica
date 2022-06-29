@@ -1,11 +1,16 @@
 {
   "extends": "@stefanprobst/tsconfig",
   "compilerOptions": {
+    "jsx": "preserve",
     "exactOptionalPropertyTypes": false,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "~/*": ["./*"]
+      "@/*": [
+        "./src/*"
+      ],
+      "~/*": [
+        "./*"
+      ]
     }
   },
   "include": [
@@ -17,5 +22,10 @@
     "**/*.config.cjs",
     "stories/main.cjs"
   ],
-  "exclude": ["node_modules", "cypress", "out", "storybook-static"]
+  "exclude": [
+    "node_modules",
+    "cypress",
+    "out",
+    "storybook-static"
+  ]
 }

@@ -1,7 +1,7 @@
 import 'maplibre-gl/dist/maplibre-gl.css'
 
 import maplibregl from 'maplibre-gl'
-import { forwardRef } from 'react'
+import React, { forwardRef } from 'react'
 import type { MapProps, MapRef } from 'react-map-gl'
 import { Map, NavigationControl, ScaleControl } from 'react-map-gl'
 
