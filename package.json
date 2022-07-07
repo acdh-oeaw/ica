@@ -55,6 +55,8 @@
     "@stefanprobst/object": "^1.0.0",
     "@stefanprobst/pick": "^1.0.3",
     "@stefanprobst/request": "^0.1.11",
+    "deck.gl": "^8.7.12",
+    "immutable": "^4.1.0",
     "mapbox-gl": "npm:empty-npm-package@^1.0.0",
     "maplibre-gl": "^2.1.9",
     "next": "^12.1.6",
