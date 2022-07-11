@@ -43,7 +43,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            NEXT_PUBLIC_BASE_URL=https://ica.acdh.oeaw.ac.at
+            NEXT_PUBLIC_BASE_URL=https://ica-vis.acdh-dev.oeaw.ac.at
             NEXT_PUBLIC_MOCK_API=disabled
             NEXT_PUBLIC_REDMINE_ID=20399
             NEXT_PUBLIC_MATOMO_BASE_URL=https://matomo.acdh.oeaw.ac.at
@@ -53,8 +53,8 @@ jobs:
 
       - name: Deploy to cluster
         env:
-          RANCHER_PROJECT_ID: UNKNOWN
-          RANCHER_DEPLOYMENT: UNKNOWN
+          RANCHER_PROJECT_ID: c-zdbh8:p-hzftn
+          RANCHER_DEPLOYMENT: ica:ica-website
         run: |
           curl \
             -X POST \
