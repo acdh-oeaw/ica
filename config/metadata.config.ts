@@ -53,7 +53,7 @@ export const metadata: Record<Locale, AppMetadata> = {
       maskable: false,
     },
     image: {
-      href: '/assets/images/image.png',
+      href: '/assets/images/image.jpg',
       alt: '',
       fit: 'contain',
     },
