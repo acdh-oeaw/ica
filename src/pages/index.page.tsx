@@ -19,10 +19,7 @@ export default function HomePage(): JSX.Element {
       <PageMetadata title={metadata.title} titleTemplate={titleTemplate} />
       <main>
         <Hero />
-        <section>
-          <h3>Places</h3>
-          <PlacesList />
-        </section>
+        <PlacesSection />
       </main>
     </Fragment>
   )
@@ -52,6 +49,15 @@ function Hero(): JSX.Element {
   )
 }
 
+function PlacesSection(): JSX.Element {
+  return (
+    <section className="mx-auto grid max-w-6xl gap-8 py-8 px-8">
+      <h3 className="text-xl font-bold">Places</h3>
+      <PlacesList />
+    </section>
+  )
+}
+
 function PlacesList(): JSX.Element {
   const { places } = usePersonsPlaces()
   const placesWithCoordinates = places.filter((place) => {
@@ -61,7 +67,7 @@ function PlacesList(): JSX.Element {
   })
 
   return (
-    <ul role="list">
+    <ul role="list" className="grid gap-1">
       {placesWithCoordinates.map((place) => {
         return (
           <li key={place.id} className="flex gap-2">
