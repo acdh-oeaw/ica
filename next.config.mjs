@@ -81,7 +81,6 @@ const config = {
 
 /** @type {Array<(config: NextConfig) => NextConfig>} */
 const plugins = [
-  // @ts-expect-error Already fixed upstream.
   createBundleAnalyzerPlugin({ enabled: process.env['BUNDLE_ANALYZER'] === 'enabled' }),
 ]
 
