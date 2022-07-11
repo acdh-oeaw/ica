@@ -92,7 +92,7 @@ export default function HomePage(): JSX.Element {
         if (feature.layer.type === 'circle') {
           if (!Object.keys(names).includes(feature.properties.name)) {
             // @ts-expect-error TODO: fix later please
-            names[feature.properties.Name] = [feature.properties.type, feature.properties.id]
+            names[feature.properties.name] = [feature.properties.type, feature.properties.id]
           }
         } else if (feature.layer.type === 'line') {
           if (!Object.keys(relations).includes(feature.properties.name)) {
@@ -169,70 +169,73 @@ export default function HomePage(): JSX.Element {
       <PageMetadata title={metadata.title} titleTemplate={titleTemplate} />
       <main>
         <Hero />
-        <GeoMap
-          {...baseMap}
-          interactiveLayerIds={[layerStyle.id!, lineStyle.id!]}
-          onClick={onPopup}
-          ref={mapRef}
-        >
-          <Source id="relations" type="geojson" data={relationGeojson}>
-            <Layer {...lineStyle} />
-          </Source>
-          <Source id="data" type="geojson" data={geojson}>
-            <Layer {...layerStyle} />
-          </Source>
-          {popupInfo && (
-            <Popup
-              anchor="top"
-              longitude={Number(popupInfo.lng)}
-              latitude={Number(popupInfo.lat)}
-              onClose={() => {
-                setPopupInfo(null)
-              }}
-            >
-              <div>
-                {Object.keys(popupInfo.names).length > 0 && <b>Located here:</b>}
-                {Object.keys(popupInfo.names).map((name) => {
-                  return (
-                    <div key={name}>
-                      <a
-                        href={`https://ica.acdh-dev.oeaw.ac.at/apis/entities/entity/${popupInfo.names[name][0]}/${popupInfo.names[name][1]}/detail`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <u>{name}</u>
-                      </a>
-                    </div>
-                  )
-                })}
-                {Object.keys(popupInfo.relations).length > 0 && <b>Relations:</b>}
-                {Object.keys(popupInfo.relations).map((relation) => {
-                  return (
-                    <div key={relation}>
-                      <span>
-                        <em>{relation}:</em>
-                      </span>
-                      {popupInfo.relations[relation].map((r: any) => {
-                        return (
-                          <div key={r}>
-                            <span>
-                              {r[0]} -&gt; {r[1]}
-                            </span>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  )
-                })}
-              </div>
-            </Popup>
-          )}
-          <ControlPanel
-            onToggleLayer={onToggleLayer}
-            onToggleBasemap={onToggleBasemap}
-            onToggleSubLayer={onToggleSubLayer}
-          />
-        </GeoMap>
+        <div style={{ height: '100vh' }}>
+          <GeoMap
+            {...baseMap}
+            interactiveLayerIds={[layerStyle.id!, lineStyle.id!]}
+            onClick={onPopup}
+            ref={mapRef}
+          >
+            <Source id="relations" type="geojson" data={relationGeojson}>
+              <Layer {...lineStyle} />
+            </Source>
+            <Source id="data" type="geojson" data={geojson}>
+              <Layer {...layerStyle} />
+            </Source>
+            {popupInfo && (
+              <Popup
+                anchor="top"
+                longitude={Number(popupInfo.lng)}
+                latitude={Number(popupInfo.lat)}
+                onClose={() => {
+                  setPopupInfo(null)
+                }}
+                style={{ color: 'black' }}
+              >
+                <div>
+                  {Object.keys(popupInfo.names).length > 0 && <b>Located here:</b>}
+                  {Object.keys(popupInfo.names).map((name) => {
+                    return (
+                      <div key={name}>
+                        <a
+                          href={`https://ica.acdh-dev.oeaw.ac.at/apis/entities/entity/${popupInfo.names[name][0]}/${popupInfo.names[name][1]}/detail`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <u>{name}</u>
+                        </a>
+                      </div>
+                    )
+                  })}
+                  {Object.keys(popupInfo.relations).length > 0 && <b>Relations:</b>}
+                  {Object.keys(popupInfo.relations).map((relation) => {
+                    return (
+                      <div key={relation}>
+                        <span>
+                          <em>{relation}:</em>
+                        </span>
+                        {popupInfo.relations[relation].map((r: any) => {
+                          return (
+                            <div key={r}>
+                              <span>
+                                {r[0]} -&gt; {r[1]}
+                              </span>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )
+                  })}
+                </div>
+              </Popup>
+            )}
+            <ControlPanel
+              onToggleLayer={onToggleLayer}
+              onToggleBasemap={onToggleBasemap}
+              onToggleSubLayer={onToggleSubLayer}
+            />
+          </GeoMap>
+        </div>
         <PlacesSection />
       </main>
     </Fragment>
