@@ -10,6 +10,6 @@ describe('HomePage', () => {
   })
 
   it('should display page title', () => {
-    cy.findByRole('heading', { name: 'Hello, world!' }).should('be.visible')
+    cy.findByRole('heading', { name: 'Ideas Crossing the Atlantic' }).should('be.visible')
   })
 })

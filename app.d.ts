@@ -1,3 +1,7 @@
+type IsoDateString = string
+
+type UrlString = string
+
 declare module '*.svg' {
   import type { StaticImageData } from 'next/image'
 
