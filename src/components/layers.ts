@@ -34,5 +34,15 @@ export const lineStyle: LayerProps = {
     ],
     'line-width': 7,
   },
-  filter: ['in', 'type',  'Visited regularly', 'Friends with', 'Child of', 'Doctor of', 'Meeting with', 'Helped to emigrate', 'Studied at']
+  filter: [
+    'in',
+    'type',
+    'Visited regularly',
+    'Friends with',
+    'Child of',
+    'Doctor of',
+    'Meeting with',
+    'Helped to emigrate',
+    'Studied at',
+  ],
 }
