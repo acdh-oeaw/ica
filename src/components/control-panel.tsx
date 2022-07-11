@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { useState } from 'react'
 
 import styles from '@/styles/control-panel.module.css'
@@ -18,19 +17,24 @@ const subCategories = {
 }
 const basemaps = ['positron', 'voyager', 'dark-matter']
 
-function ControlPanel(props) {
+interface ControlPanelProps {
+  onToggleLayer: (name: string, checked: boolean) => void
+  onToggleSubLayer: (subCategory: string, checked: boolean, name: string) => void
+  onToggleBasemap: (baseMap: string, value: string) => void
+}
+
+export function ControlPanel(props: ControlPanelProps): JSX.Element {
   const [checked, setChecked] = useState(true)
   const [selected, setSelected] = useState('positron')
 
   return (
-    <div className={styles.panel}>
+    <div className={styles['panel']}>
       <h3>Layers: </h3>
       {categories.map((name) => {
         return (
           <div key={name} className="input">
             <input
               type="checkbox"
-              checked={checked[name]}
               defaultChecked={checked}
               onChange={(e) => {
                 setChecked(e.target.checked)
@@ -40,16 +44,16 @@ function ControlPanel(props) {
             <label>
               <b> {name}</b>
             </label>
+            {/* @ts-expect-error TODO: fix me later */}
             {subCategories[name].map((subCat) => {
               return (
                 <div key={subCat} className="input" style={{ marginLeft: '10px' }}>
                   <input
                     type="checkbox"
-                    checked={checked[subCat]}
                     defaultChecked={checked}
                     onChange={(e) => {
                       setChecked(e.target.checked)
-                      return props.onToggleSubLayer(subCat, e.target.checked, name)
+                      props.onToggleSubLayer(subCat, e.target.checked, name)
                     }}
                   />
                   <label> {subCat}</label>
@@ -79,5 +83,3 @@ function ControlPanel(props) {
     </div>
   )
 }
-
-export default React.memo(ControlPanel)

@@ -1,181 +1,66 @@
 import { PageMetadata } from '@stefanprobst/next-page-metadata'
-import React, { Fragment, useCallback, useRef, useState } from 'react'
+import type { Feature, FeatureCollection } from 'geojson'
+import { Fragment, useCallback, useRef, useState } from 'react'
+import type { MapRef } from 'react-map-gl'
 import { Layer, Popup, Source } from 'react-map-gl'
 
 import { useI18n } from '@/app/i18n/use-i18n'
 import { withDictionaries } from '@/app/i18n/with-dictionaries'
 import { usePageTitleTemplate } from '@/app/metadata/use-page-title-template'
-import ControlPanel from '@/components/control-panel'
+import { ControlPanel } from '@/components/control-panel'
 import { GeoMap } from '@/components/geo-map'
 import { base as baseMap } from '@/components/geo-map-base-layer.config'
 import { layerStyle, lineStyle } from '@/components/layers'
+import { geojson, relationships } from '@/components/mock-data'
 import { usePersonsPlaces } from '@/lib/use-persons-places'
 
 export const getStaticProps = withDictionaries(['common'])
+
+type PopupContent = {
+  feature: Feature
+  names: Record<string, any>
+  relations: Record<string, any>
+  lat: number
+  lng: number
+}
 
 export default function HomePage(): JSX.Element {
   const { t } = useI18n<'common'>()
   const titleTemplate = usePageTitleTemplate()
 
   const metadata = { title: t(['common', 'home', 'metadata', 'title']) }
-  const [PopupInfo, setPopupInfo] = useState(null)
+  const [popupInfo, setPopupInfo] = useState<PopupContent | null>(null)
 
-  const geojson = {
-    type: 'FeatureCollection',
-    features: [
-      {
-        type: 'Feature',
-        geometry: { type: 'Point', coordinates: [16.35323, 48.240234] },
-        properties: {
-          Name: 'John Gunther',
-          type: 'person',
-          Adress: 'Dollinergasse 5, 1190, Vienna',
-          id: '520',
-        },
-      },
-      {
-        type: 'Feature',
-        geometry: { type: 'Point', coordinates: [16.36735, 48.213089] },
-        properties: {
-          Name: 'Café Louvre',
-          type: 'institution',
-          Adress: 'Wipplingerstraße 27, 1010 Vienna',
-          id: '1953',
-        },
-      },
-      {
-        type: 'Feature',
-        geometry: { type: 'Point', coordinates: [16.361413, 48.197215] },
-        properties: {
-          Name: 'Dorothy Thompson',
-          type: 'person',
-          Adress: 'Rechte Wienzeile 31, 1040, Vienna',
-          id: '546',
-        },
-      },
-      {
-        type: 'Feature',
-        geometry: { type: 'Point', coordinates: [16.334765, 48.233707] },
-        properties: {
-          Name: 'Richard Beer-Hofmann',
-          type: 'person',
-          Adress: 'Hasenauerstraße 59, 1190, Vienna',
-          id: '622',
-        },
-      },
-      {
-        type: 'Feature',
-        geometry: { type: 'Point', coordinates: [16.334765, 48.233707] },
-        properties: {
-          Name: 'Miriam Beer-Hofmann Lens',
-          type: 'person',
-          Adress: 'Hasenauerstraße 59, 1190, Vienna',
-          id: '2841',
-        },
-      },
-      {
-        type: 'Feature',
-        geometry: { type: 'Point', coordinates: [16.3632, 48.21864] },
-        properties: {
-          Name: 'Tiffany Burlingham',
-          type: 'person',
-          Adress: 'Berggasse 19, 1090, Vienna',
-          id: '344',
-        },
-      },
-      {
-        type: 'Feature',
-        geometry: { type: 'Point', coordinates: [16.357269, 48.215329] },
-        properties: {
-          Name: 'Muriel Gardiner',
-          type: 'person',
-          Adress: 'Frankgasse 1, 1090, Vienna',
-          id: '5249',
-        },
-      },
-      {
-        type: 'Feature',
-        geometry: { type: 'Point', coordinates: [16.3632, 48.21864] },
-        properties: {
-          Name: 'Siegmund Freud',
-          type: 'person',
-          Adress: 'Berggasse 19, 1090, Vienna',
-          id: '223',
-        },
-      },
-      {
-        type: 'Feature',
-        geometry: { type: 'Point', coordinates: [16.37989, 48.188373] },
-        properties: {
-          Name: 'Thornton Wilder',
-          type: 'person',
-          Adress: 'Wiedner Gürtel 6, 1040, Vienna',
-          id: '672',
-        },
-      },
-      {
-        type: 'Feature',
-        geometry: { type: 'Point', coordinates: [16.383845, 48.202252] },
-        properties: {
-          Name: 'William Shirer',
-          type: 'person',
-          Adress: 'Reisnerstrasse 15, 1030 Vienna',
-          id: '523',
-        },
-      },
-      {
-        type: 'Feature',
-        geometry: { type: 'Point', coordinates: [16.36003, 48.21315] },
-        properties: {
-          Name: 'Universität Wien',
-          type: 'institution',
-          Adress: 'Universitätsring 1, 1010 Wien',
-          id: '765',
-        },
-      },
-    ],
-  }
-
-  const relationGeojson = {
+  const relationGeojson: FeatureCollection = {
     type: 'FeatureCollection',
     features: [],
   }
 
-  const relationships = {
-    'Visited regularly': { 'Café Louvre': ['Dorothy Thompson', 'John Gunther', 'William Shirer'] },
-    'Friends with': {
-      'Dorothy Thompson': ['John Gunther', 'Tiffany Burlingham', 'William Shirer'],
-      'John Gunther': ['William Shirer'],
-      'Thornton Wilder': ['Miriam Beer-Hofmann Lens'],
-    },
-    'Child of': { 'Richard Beer-Hofmann': ['Miriam Beer-Hofmann Lens'] },
-    'Doctor of': { 'Siegmund Freud': ['Muriel Gardiner', 'Tiffany Burlingham'] },
-    'Meeting with': { 'Siegmund Freud': ['Thornton Wilder'] },
-    'Helped to emigrate': {
-      'Thornton Wilder': ['Richard Beer-Hofmann', 'Miriam Beer-Hofmann Lens'],
-    },
-    'Studied at': {
-      'Universität Wien': ['Richard Beer-Hofmann', 'Muriel Gardiner'],
-    },
-  }
-
   Object.keys(relationships).forEach((relationship) => {
+    // @ts-expect-error TODO: fix later please
     Object.keys(relationships[relationship]).forEach((i) => {
-      let startPoint
-      let to
+      let startPoint: any
+      let to: any
       geojson.features.forEach((point) => {
-        if (point.properties.Name === i) {
+        // @ts-expect-error TODO: fix later please
+        if (point.properties['name'] === i) {
+          // @ts-expect-error TODO: fix later please
           startPoint = point.geometry.coordinates
-          to = point.properties.Name
+          // @ts-expect-error TODO: fix later please
+          to = point.properties.name
         }
       })
+      // @ts-expect-error TODO: fix later please
       relationships[relationship][i].forEach((j) => {
         let endPoint
         let from
         geojson.features.forEach((point) => {
-          if (point.properties.Name === j) {
+          // @ts-expect-error TODO: fix later please
+          if (point.properties.name === j) {
+            // @ts-expect-error TODO: fix later please
             endPoint = point.geometry.coordinates
-            from = point.properties.Name
+            // @ts-expect-error TODO: fix later please
+            from = point.properties.name
           }
         })
         relationGeojson.features.push({
@@ -193,27 +78,28 @@ export default function HomePage(): JSX.Element {
     })
   })
 
-  const onPopup = useCallback((event) => {
+  const onPopup = useCallback((event: any) => {
     event.originalEvent.stopPropagation()
-    const {
-      features,
-      point: { x, y },
-    } = event
+    const { features } = event
     if (features.length > 0) {
-      const PopupedFeature = features && features[0]
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const PopupedFeature = features[0]!
       const lat = event.lngLat.lat
       const lng = event.lngLat.lng
       const names = {}
       const relations = {}
-      features.forEach((feature) => {
+      features.forEach((feature: any) => {
         if (feature.layer.type === 'circle') {
-          if (!Object.keys(names).includes(feature.properties.Name)) {
+          if (!Object.keys(names).includes(feature.properties.name)) {
+            // @ts-expect-error TODO: fix later please
             names[feature.properties.Name] = [feature.properties.type, feature.properties.id]
           }
         } else if (feature.layer.type === 'line') {
-          if (!Object.keys(relations).includes(feature.properties.Name)) {
+          if (!Object.keys(relations).includes(feature.properties.name)) {
+            // @ts-expect-error TODO: fix later please
             relations[feature.properties.type] = [[feature.properties.to, feature.properties.from]]
           } else {
+            // @ts-expect-error TODO: fix later please
             relations[feature.properties.type].push([
               feature.properties.to,
               feature.properties.from,
@@ -221,8 +107,7 @@ export default function HomePage(): JSX.Element {
           }
         }
       })
-      // prettier-ignore
-      setPopupInfo(PopupedFeature && {feature: PopupedFeature, names, relations, lat, lng});
+      setPopupInfo({ feature: PopupedFeature, names, relations, lat, lng })
       if (features.length === 1 && features[0].layer.type === 'line') {
         mapRef.current?.fitBounds(
           [features[0].geometry.coordinates[0], features[0].geometry.coordinates[1]],
@@ -236,42 +121,44 @@ export default function HomePage(): JSX.Element {
     }
   }, [])
 
-  const mapRef = useRef<MapRef>()
+  const mapRef = useRef<MapRef>(null)
 
-  const onToggleLayer = useCallback((name, checked) => {
-    console.log(name, checked, mapRef.current?.getMap())
-    // mapRef.current?.getMap().setFilter('places', ['==', 'type', 'person']);
+  const onToggleLayer = useCallback((name: string, checked: boolean) => {
     if (checked === true) {
       mapRef.current?.getMap().setLayoutProperty(name, 'visibility', 'visible')
-    } else if (checked === false) {
+    } else {
       mapRef.current?.getMap().setLayoutProperty(name, 'visibility', 'none')
     }
   }, [])
 
-  const onToggleSubLayer = useCallback((name, checked, cat) => {
-    let filter = mapRef.current?.getMap().getLayer(cat).filter.slice(2)
+  const onToggleSubLayer = useCallback((name: string, checked: boolean, category: string) => {
+    // @ts-expect-error TODO: fix later please
+    let filter = mapRef.current?.getMap().getLayer(category).filter.slice(2)
     if (checked === false) {
-      filter = filter.filter((e) => {
+      filter = filter.filter((e: string) => {
         return e !== name
       })
-    } else if (checked === true) {
+    } else {
       filter.push(name)
     }
-    mapRef.current?.getMap().setFilter(cat, buildFilter(filter))
+    mapRef.current?.getMap().setFilter(category, buildFilter(filter))
   }, [])
 
-  function buildFilter(arr) {
+  function buildFilter(arr: Array<string>) {
     const filter = ['in', 'type']
     if (arr.length === 0) {
       return filter
     }
     for (let i = 0; i < arr.length; i += 1) {
-      filter.push(arr[i])
+      const value = arr[i]
+      if (value != null) {
+        filter.push(value)
+      }
     }
     return filter
   }
 
-  const onToggleBasemap = useCallback((basemap, value) => {
+  const onToggleBasemap = useCallback((basemap: string) => {
     mapRef.current
       ?.getMap()
       .setStyle(`https://basemaps.cartocdn.com/gl/${basemap}-gl-style/style.json`)
@@ -284,7 +171,7 @@ export default function HomePage(): JSX.Element {
         <Hero />
         <GeoMap
           {...baseMap}
-          interactiveLayerIds={[layerStyle.id, lineStyle.id]}
+          interactiveLayerIds={[layerStyle.id!, lineStyle.id!]}
           onClick={onPopup}
           ref={mapRef}
         >
@@ -294,26 +181,22 @@ export default function HomePage(): JSX.Element {
           <Source id="data" type="geojson" data={geojson}>
             <Layer {...layerStyle} />
           </Source>
-          {PopupInfo && (
+          {popupInfo && (
             <Popup
               anchor="top"
-              longitude={Number(PopupInfo.lng)}
-              latitude={Number(PopupInfo.lat)}
+              longitude={Number(popupInfo.lng)}
+              latitude={Number(popupInfo.lat)}
               onClose={() => {
-                return setPopupInfo(null)
+                setPopupInfo(null)
               }}
             >
               <div>
-                {Object.keys(PopupInfo.names).length > 0 && (
-                  <label>
-                    <b>Located here:</b>
-                  </label>
-                )}
-                {Object.keys(PopupInfo.names).map((name) => {
+                {Object.keys(popupInfo.names).length > 0 && <b>Located here:</b>}
+                {Object.keys(popupInfo.names).map((name) => {
                   return (
                     <div key={name}>
                       <a
-                        href={`https://ica.acdh-dev.oeaw.ac.at/apis/entities/entity/${PopupInfo.names[name][0]}/${PopupInfo.names[name][1]}/detail`}
+                        href={`https://ica.acdh-dev.oeaw.ac.at/apis/entities/entity/${popupInfo.names[name][0]}/${popupInfo.names[name][1]}/detail`}
                         target="_blank"
                         rel="noreferrer"
                       >
@@ -322,18 +205,14 @@ export default function HomePage(): JSX.Element {
                     </div>
                   )
                 })}
-                {Object.keys(PopupInfo.relations).length > 0 && (
-                  <label>
-                    <b>Relations:</b>
-                  </label>
-                )}
-                {Object.keys(PopupInfo.relations).map((relation) => {
+                {Object.keys(popupInfo.relations).length > 0 && <b>Relations:</b>}
+                {Object.keys(popupInfo.relations).map((relation) => {
                   return (
                     <div key={relation}>
                       <span>
                         <em>{relation}:</em>
                       </span>
-                      {PopupInfo.relations[relation].map((r) => {
+                      {popupInfo.relations[relation].map((r: any) => {
                         return (
                           <div key={r}>
                             <span>

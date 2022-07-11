@@ -1,3 +1,5 @@
+import type { LayerProps } from 'react-map-gl'
+
 export const layerStyle: LayerProps = {
   id: 'places',
   type: 'circle',
