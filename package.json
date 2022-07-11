@@ -55,9 +55,12 @@
     "@stefanprobst/object": "^1.1.0",
     "@stefanprobst/pick": "^1.0.3",
     "@stefanprobst/request": "^0.1.11",
+    "mapbox-gl": "npm:empty-npm-package@^1.0.0",
+    "maplibre-gl": "^2.1.9",
     "next": "^12.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-map-gl": "^7.0.16",
     "react-toastify": "^9.0.5",
     "sharp": "^0.30.7",
     "swr": "^2.0.0-beta.6"

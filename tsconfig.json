@@ -1,6 +1,7 @@
 {
   "extends": "@stefanprobst/tsconfig",
   "compilerOptions": {
+    "jsx": "preserve",
     "exactOptionalPropertyTypes": false,
     "baseUrl": ".",
     "paths": {
