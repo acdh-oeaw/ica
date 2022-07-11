@@ -4,8 +4,9 @@ export const layerStyle: LayerProps = {
   source: 'data',
   paint: {
     'circle-radius': 10,
-    'circle-color': ['match', ['get', 'Type'], 'Person', 'red', 'Place', 'green', 'yellow'],
+    'circle-color': ['match', ['get', 'type'], 'person', 'red', 'institution', 'green', 'yellow'],
   },
+  filter: ['in', 'type', 'person', 'institution'],
 }
 
 export const lineStyle: LayerProps = {
@@ -18,7 +19,7 @@ export const lineStyle: LayerProps = {
   paint: {
     'line-color': [
       'match',
-      ['get', 'Name'],
+      ['get', 'type'],
       'Visited regularly',
       'orange',
       'Friends with',
@@ -31,6 +32,7 @@ export const lineStyle: LayerProps = {
       'brown',
       'yellow',
     ],
-    'line-width': 5,
+    'line-width': 7,
   },
+  filter: ['in', 'type',  'Visited regularly', 'Friends with', 'Child of', 'Doctor of', 'Meeting with', 'Helped to emigrate', 'Studied at']
 }

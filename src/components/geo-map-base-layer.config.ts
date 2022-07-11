@@ -3,6 +3,8 @@ export const base = {
   initialViewState: {
     longitude: 16.371870746468748,
     latitude: 48.208191950123414,
-    zoom: 12,
+    pitch: 60, // pitch in degrees
+    bearing: -60, // bearing in degrees
+    zoom: 14,
   },
 }
