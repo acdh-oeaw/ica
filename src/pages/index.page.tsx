@@ -62,6 +62,7 @@ function PlacesList(): JSX.Element {
   const { places } = usePersonsPlaces()
   const placesWithCoordinates = places.filter((place) => {
     if (place.lat != null && place.lng != null) return true
+    // eslint-disable-next-line no-console
     console.info(`${place.name} has no coordinates`)
     return false
   })
