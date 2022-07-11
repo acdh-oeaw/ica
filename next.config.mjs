@@ -2,7 +2,6 @@
 /** @typedef {import('webpack').Configuration} WebpackConfig */
 /** @typedef {import('~/config/i18n.config').Locale} Locale */
 
-// @ts-expect-error Missing module declaration.
 import createBundleAnalyzerPlugin from '@next/bundle-analyzer'
 import { log } from '@stefanprobst/log'
 
@@ -18,10 +17,10 @@ const config = {
     ignoreDuringBuilds: true,
   },
   experimental: {
-    // browsersListForSwc: true,
-    // legacyBrowsers: false,
+    browsersListForSwc: true,
+    images: { allowFutureImage: true },
+    legacyBrowsers: false,
     newNextLinkBehavior: true,
-    outputStandalone: true,
   },
   headers() {
     const headers = [
@@ -65,8 +64,10 @@ const config = {
     defaultLocale,
     locales,
   },
+  output: 'standalone',
   pageExtensions: ['page.tsx', 'api.ts'],
   reactStrictMode: true,
+  swcMinify: true,
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -80,6 +81,7 @@ const config = {
 
 /** @type {Array<(config: NextConfig) => NextConfig>} */
 const plugins = [
+  // @ts-expect-error Already fixed upstream.
   createBundleAnalyzerPlugin({ enabled: process.env['BUNDLE_ANALYZER'] === 'enabled' }),
 ]
 
