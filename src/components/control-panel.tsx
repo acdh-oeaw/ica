@@ -33,22 +33,23 @@ export function ControlPanel(props: ControlPanelProps): JSX.Element {
       {categories.map((name) => {
         return (
           <div key={name} className="input">
-            <input
-              type="checkbox"
-              defaultChecked={checked}
-              onChange={(e) => {
-                setChecked(e.target.checked)
-                return props.onToggleLayer(name, e.target.checked)
-              }}
-            />
             <label>
+              <input
+                type="checkbox"
+                defaultChecked={checked}
+                onChange={(e) => {
+                  setChecked(e.target.checked)
+                  return props.onToggleLayer(name, e.target.checked)
+                }}
+              />
               <b> {name}</b>
             </label>
             {/* @ts-expect-error TODO: fix me later */}
             {subCategories[name].map((subCat) => {
               return (
                 <div key={subCat} className="input" style={{ marginLeft: '10px' }}>
-                  <input
+                  <label>
+                    <input
                     type="checkbox"
                     defaultChecked={checked}
                     onChange={(e) => {
@@ -56,13 +57,26 @@ export function ControlPanel(props: ControlPanelProps): JSX.Element {
                       props.onToggleSubLayer(subCat, e.target.checked, name)
                     }}
                   />
-                  <label> {subCat}</label>
+                  &nbsp;{subCat}</label>
                 </div>
               )
             })}
           </div>
         )
       })}
+      <h3>Real data:</h3>
+        <div className="input">
+        <label>  
+          <input
+            type="checkbox"
+            defaultChecked={checked}
+            onChange={(e) => {
+              setChecked(e.target.checked)
+              return props.onToggleLayer('points', e.target.checked)
+            }}
+          />
+          &nbsp;Addresses</label>
+        </div>        
       <h3>Basemaps: </h3>
       {basemaps.map((basemap) => {
         return (

@@ -11,6 +11,16 @@ export const layerStyle: LayerProps = {
   filter: ['in', 'type', 'person', 'institution'],
 }
 
+export const pointStyle: LayerProps = {
+  id: 'points',
+  type: 'circle',
+  source: 'data',
+  paint: {
+    'circle-radius': 5,
+    'circle-color': 'black',
+  },
+}
+
 export const lineStyle: LayerProps = {
   id: 'relations',
   type: 'line',
