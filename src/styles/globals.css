@@ -8,6 +8,10 @@
   padding: 0;
 }
 
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
 html,
 body,
 #__next {
