@@ -31,31 +31,30 @@ export default function HomePage(): JSX.Element {
   const { t } = useI18n<'common'>()
   const titleTemplate = usePageTitleTemplate()
 
-  const { places } = usePersonsPlaces();
+  const { places } = usePersonsPlaces()
   const placesWithCoordinates = places.filter((place) => {
     if (place.lat != null && place.lng != null) return true
   })
 
-  const { relationsByPlace } = usePersonsPlaces();
-  
+  const { relationsByPlace } = usePersonsPlaces()
+
   const geojson1: FeatureCollection = {
-      type: 'FeatureCollection',
-      features: placesWithCoordinates.map(feature => {
-        return {
-          "type": "Feature",
-          "properties": {
-            "id": feature.id,
-            "url": feature.url,
-            "name": feature.name
-          },
-          "geometry": {
-            "type": "Point",
-            "coordinates": [ feature.lng, feature.lat ]
-          }
-        }
-      })
-    }
-  
+    type: 'FeatureCollection',
+    features: placesWithCoordinates.map((feature) => {
+      return {
+        type: 'Feature',
+        properties: {
+          id: feature.id,
+          url: feature.url,
+          name: feature.name,
+        },
+        geometry: {
+          type: 'Point',
+          coordinates: [feature.lng, feature.lat],
+        },
+      }
+    }),
+  }
 
   const metadata = { title: t(['common', 'home', 'metadata', 'title']) }
   const [popupInfo, setPopupInfo] = useState<PopupContent | null>(null)
@@ -107,7 +106,6 @@ export default function HomePage(): JSX.Element {
     })
   })
 
-
   const onPopup = useCallback((event: any) => {
     event.originalEvent.stopPropagation()
     const { features } = event
@@ -116,20 +114,20 @@ export default function HomePage(): JSX.Element {
       const PopupedFeature = features[0]!
       const lat = event.lngLat.lat
       const lng = event.lngLat.lng
-      let address = '';
-      let addressUrl = '';
+      let address = ''
+      let addressUrl = ''
       const names = {}
       const relations = {}
-      const url = {};
+      const url = {}
       features.forEach((feature: any) => {
         if (feature.layer.type === 'circle') {
-          address = feature.properties.name;
-          addressUrl = `https://ica.acdh-dev.oeaw.ac.at/apis/entities/entity/place/${feature.properties.id}/detail`;
+          address = feature.properties.name
+          addressUrl = `https://ica.acdh-dev.oeaw.ac.at/apis/entities/entity/place/${feature.properties.id}/detail`
           const rs = relationsByPlace.get(feature.properties['id'])
-          console.log(rs, 'rs test');
+          console.log(rs, 'rs test')
           if (rs.length) {
             rs.forEach((r) => {
-              console.log(feature, 'test');
+              console.log(feature, 'test')
               if (!Object.keys(names).includes(r.related_person.label)) {
                 const link = `https://ica.acdh-dev.oeaw.ac.at/apis/entities/entity/person/${r.related_person.id}/detail`
                 names[r.related_person.label] = [link, r.relation_type.label]
@@ -149,7 +147,16 @@ export default function HomePage(): JSX.Element {
           }
         }
       })
-      setPopupInfo({ feature: PopupedFeature, names, relations, lat, lng, url, address, addressUrl })
+      setPopupInfo({
+        feature: PopupedFeature,
+        names,
+        relations,
+        lat,
+        lng,
+        url,
+        address,
+        addressUrl,
+      })
       if (features.length === 1 && features[0].layer.type === 'line') {
         mapRef.current?.fitBounds(
           [features[0].geometry.coordinates[0], features[0].geometry.coordinates[1]],
@@ -205,7 +212,6 @@ export default function HomePage(): JSX.Element {
       ?.getMap()
       .setStyle(`https://basemaps.cartocdn.com/gl/${basemap}-gl-style/style.json`)
   }, [])
-  
 
   return (
     <Fragment>
@@ -236,22 +242,16 @@ export default function HomePage(): JSX.Element {
                 style={{ color: 'black' }}
               >
                 <div>
-                <div>
-                  <a  href={popupInfo.addressUrl}
-                      target="_blank"
-                      rel="noreferrer">
-                        Address: <u>{popupInfo.address}</u>
-                  </a>
-                </div>
+                  <div>
+                    <a href={popupInfo.addressUrl} target="_blank" rel="noreferrer">
+                      Address: <u>{popupInfo.address}</u>
+                    </a>
+                  </div>
                   {Object.keys(popupInfo.names).length > 0 && <b>Located here:</b>}
                   {Object.keys(popupInfo.names).map((name) => {
                     return (
                       <div key={name}>
-                        <a
-                          href={popupInfo.names[name][0]}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
+                        <a href={popupInfo.names[name][0]} target="_blank" rel="noreferrer">
                           <u>{name}:</u> {popupInfo.names[name][1]}
                         </a>
                       </div>

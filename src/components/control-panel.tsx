@@ -50,14 +50,15 @@ export function ControlPanel(props: ControlPanelProps): JSX.Element {
                 <div key={subCat} className="input" style={{ marginLeft: '10px' }}>
                   <label>
                     <input
-                    type="checkbox"
-                    defaultChecked={checked}
-                    onChange={(e) => {
-                      setChecked(e.target.checked)
-                      props.onToggleSubLayer(subCat, e.target.checked, name)
-                    }}
-                  />
-                  &nbsp;{subCat}</label>
+                      type="checkbox"
+                      defaultChecked={checked}
+                      onChange={(e) => {
+                        setChecked(e.target.checked)
+                        props.onToggleSubLayer(subCat, e.target.checked, name)
+                      }}
+                    />
+                    &nbsp;{subCat}
+                  </label>
                 </div>
               )
             })}
@@ -65,8 +66,8 @@ export function ControlPanel(props: ControlPanelProps): JSX.Element {
         )
       })}
       <h3>Real data:</h3>
-        <div className="input">
-        <label>  
+      <div className="input">
+        <label>
           <input
             type="checkbox"
             defaultChecked={checked}
@@ -75,8 +76,9 @@ export function ControlPanel(props: ControlPanelProps): JSX.Element {
               return props.onToggleLayer('points', e.target.checked)
             }}
           />
-          &nbsp;Addresses</label>
-        </div>        
+          &nbsp;Addresses
+        </label>
+      </div>
       <h3>Basemaps: </h3>
       {basemaps.map((basemap) => {
         return (
