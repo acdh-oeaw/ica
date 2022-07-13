@@ -16,7 +16,7 @@ export const pointStyle: LayerProps = {
   type: 'circle',
   source: 'data',
   paint: {
-    'circle-radius': 5,
+    'circle-radius': 10,
     'circle-color': 'black',
   },
 }

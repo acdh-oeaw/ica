@@ -126,7 +126,8 @@ export default function HomePage(): JSX.Element {
           address = feature.properties.name;
           addressUrl = `https://ica.acdh-dev.oeaw.ac.at/apis/entities/entity/place/${feature.properties.id}/detail`;
           const rs = relationsByPlace.get(feature.properties['id'])
-          if (rs.length > 0) {
+          console.log(rs, 'rs test');
+          if (rs.length) {
             rs.forEach((r) => {
               console.log(feature, 'test');
               if (!Object.keys(names).includes(r.related_person.label)) {
