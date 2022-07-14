@@ -155,7 +155,7 @@ function PlacesLayer(): JSX.Element {
     <Source id={id.source} type="geojson" data={data}>
       <Layer id={id.layer} {...layerStyle.circle} />
       {popover.isVisible ? (
-        <Popup {...popover.coordinates} onClose={hide}>
+        <Popup {...popover.coordinates} closeButton={false} onClose={hide}>
           {popover.content}
         </Popup>
       ) : null}
