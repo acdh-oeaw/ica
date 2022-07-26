@@ -6,6 +6,7 @@ import { Layer, Popup, Source, useMap } from 'react-map-gl'
 import { useI18n } from '@/app/i18n/use-i18n'
 import { withDictionaries } from '@/app/i18n/with-dictionaries'
 import { usePageTitleTemplate } from '@/app/metadata/use-page-title-template'
+import { controlPanelStyle } from '@/components/control-panel.config'
 import { GeoMap } from '@/components/geo-map'
 import { initialViewState, mapStyle } from '@/components/geo-map.config'
 import { layerStyle } from '@/components/geo-map-layers.config'
@@ -57,30 +58,36 @@ function Hero(): JSX.Element {
 }
 
 function MainMap(): JSX.Element {
-  return (
-    <GeoMap initialViewState={initialViewState} mapStyle={mapStyle.positron}>
-      <PlacesLayer />
-    </GeoMap>
-  )
-}
-
-function PlacesLayer(): JSX.Element {
-  const popover = usePopoverState()
-  const { show, hide } = popover
+  const { places, relationsByPlace } = usePersonsPlaces()
 
   const id = {
     source: 'places-data',
     layer: 'places',
   }
 
-  const { places, relationsByPlace } = usePersonsPlaces()
-  const data = useMemo(() => {
-    const points: FeatureCollection = {
-      type: 'FeatureCollection',
-      features: [],
-    }
+  const points: FeatureCollection = {
+    type: 'FeatureCollection',
+    features: [],
+  }
 
+  const data = useMemo(() => {
     places.forEach((place) => {
+      const relations: Array<Record<string, unknown>> = relationsByPlace.get(place.id)
+      const relationObj: Record<string, unknown> = {}
+      relations.forEach((relation: Record<string, unknown>) => {
+        const information = {
+          id: relation['related_person']['id'],
+          label: relation['related_person']['label'],
+          start: relation['start_date_written'],
+          end: relation['end_date_written'],
+        }
+        if (!Object.keys(relationObj).includes(relation['relation_type']['label'])) {
+          relationObj[relation['relation_type']['label']] = [information]
+        } else {
+          relationObj[relation['relation_type']['label']].push(information)
+        }
+      })
+
       if (place.lat != null && place.lng != null) {
         const point: Feature = {
           type: 'Feature',
@@ -88,15 +95,85 @@ function PlacesLayer(): JSX.Element {
           properties: {
             id: place.id,
             label: place.name,
+            relations: relationObj,
+            relationTypes: Object.keys(relationObj),
+            visibility: true,
             /** NOTE: Be aware that nested objects and arrays get stringified on `event.features`. */
           },
         }
         points.features.push(point)
       }
     })
-
     return points
   }, [places])
+
+  const relationTypes = useMemo(() => {
+    const types = {}
+    places.forEach((place) => {
+      const relations: Record<string, unknown> = relationsByPlace.get(place.id)
+      relations.forEach((relation) => {
+        if (!Object.keys(types).includes(relation.relation_type.label)) {
+          types[relation.relation_type.label] = 1
+        } else {
+          types[relation.relation_type.label] += 1
+        }
+      })
+    })
+    return types
+  }, [places])
+
+  const filters: Array<string> = []
+
+  function toggleRelation(checked: boolean, value: string, map) {
+    let index: number
+    if (checked === false) {
+      filters.push(value)
+    } else {
+      filters.forEach((filter) => {
+        if (filter === value) {
+          index = filters.indexOf(value)
+          filters.splice(index, 1)
+        }
+      })
+    }
+    data.features.forEach((point) => {
+      let counter = 0
+      point.properties['relationTypes'].forEach((type: string) => {
+        filters.forEach((filter) => {
+          if (filter === type) {
+            counter += 1
+          }
+        })
+      })
+      if (filters.length === 0) {
+        point.properties['visibility'] = true
+      } else {
+        if (counter === point.properties['relationTypes'].length) {
+          point.properties['visibility'] = false
+        } else {
+          point.properties['visibility'] = true
+        }
+      }
+    })
+    map.getSource('places-data').setData(data)
+  }
+
+  return (
+    <GeoMap initialViewState={initialViewState} mapStyle={mapStyle.positron}>
+      <PlacesLayer relationsByPlace={relationsByPlace} id={id} data={data} />
+      <ControlPanel
+        relationTypes={relationTypes}
+        toggleRelation={(checked, value, map) => {
+          return toggleRelation(checked, value, map)
+        }}
+      />
+    </GeoMap>
+  )
+}
+
+function PlacesLayer({ relationsByPlace, id, data }): JSX.Element {
+  const popover = usePopoverState()
+  const { show, hide } = popover
 
   const { current: map } = useMap()
   useEffect(() => {
@@ -109,21 +186,21 @@ function PlacesLayer(): JSX.Element {
 
       const label = feature.properties['label']
       const relations = relationsByPlace.get(feature.properties['id'])
-
       const content = (
         <div className="grid gap-2 font-sans text-xs leading-4 text-gray-800">
           <strong className="font-medium">{label}</strong>
           <ul className="grid gap-1">
-            {relations?.map((relation) => {
+            {relations?.map((relation: Record<string, unknown>) => {
               const text = [
-                relation.related_person.label,
-                relation.relation_type.label,
-                [relation.start_date_written, relation.end_date_written].filter(Boolean).join('-'),
+                relation['related_person']['label'],
+                relation['relation_type']['label'],
+                [relation['start_date_written'], relation['end_date_written']]
+                  .filter(Boolean)
+                  .join('-'),
               ]
                 .filter(Boolean)
                 .join('. ')
-
-              return <li key={relation.id}>{text}</li>
+              return <li key={relation['id']}>{text}</li>
             })}
           </ul>
         </div>
@@ -160,6 +237,76 @@ function PlacesLayer(): JSX.Element {
         </Popup>
       ) : null}
     </Source>
+  )
+}
+
+interface ControlProps {
+  relationTypes
+  toggleRelation: (checked: boolean, value: string, map) => void
+}
+
+function ControlPanel(props: ControlProps): JSX.Element {
+  const { current: map } = useMap()
+
+  function onChangeVisibility(checked: boolean) {
+    const visibility = checked ? 'visible' : 'none'
+    map?.getMap().setLayoutProperty('places', 'visibility', visibility)
+  }
+
+  function toggleBasemap(value: string) {
+    map?.getMap().setStyle(mapStyle[value])
+  }
+
+  const [selected, setSelected] = useState('positron')
+
+  return (
+    <div style={controlPanelStyle.panelStyle}>
+      <h3>Layers: </h3>
+      <label>
+        <input
+          type="checkbox"
+          defaultChecked={true}
+          onChange={(e) => {
+            onChangeVisibility(e.target.checked)
+          }}
+        />
+        <b> Places </b>
+      </label>
+      {Object.keys(props.relationTypes).map((type: string) => {
+        return (
+          <div key={type} className="input" style={{ marginLeft: '10px' }}>
+            <label>
+              <input
+                type="checkbox"
+                defaultChecked={true}
+                value={type}
+                onChange={(e) => {
+                  props.toggleRelation(e.target.checked, e.target.value, map)
+                }}
+              />
+              &nbsp;"{type}": {props.relationTypes[type]}
+            </label>
+          </div>
+        )
+      })}
+      <h3>Basemaps: </h3>
+      {Object.keys(mapStyle).map((basemap) => {
+        return (
+          <div key={basemap} className="input">
+            <input
+              type="radio"
+              value={basemap}
+              checked={selected === basemap}
+              onChange={(e) => {
+                setSelected(e.target.value)
+                toggleBasemap(e.target.value)
+              }}
+            />
+            <label> {basemap}</label>
+          </div>
+        )
+      })}
+    </div>
   )
 }
 
