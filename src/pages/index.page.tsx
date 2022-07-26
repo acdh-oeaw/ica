@@ -284,7 +284,7 @@ function ControlPanel(props: ControlProps): JSX.Element {
                   props.toggleRelation(e.target.checked, e.target.value, map)
                 }}
               />
-              &nbsp;"{type}": {props.relationTypes[type]}
+              &nbsp;&quot;{type}&quot;: {props.relationTypes[type]}
             </label>
           </div>
         )
