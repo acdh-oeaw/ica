@@ -16,7 +16,9 @@
     "**/*.tsx",
     "**/*.config.mjs",
     "**/*.config.cjs",
-    "stories/main.cjs"
+    "stories/main.cjs",
+    "src",
+    "typings.d.ts"
   ],
   "exclude": ["node_modules", "cypress", "out", "storybook-static"]
 }
