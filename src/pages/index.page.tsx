@@ -1,7 +1,6 @@
 import 'rsuite/dist/rsuite.min.css'
 
 import { Listbox, Transition } from '@headlessui/react'
-import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { PageMetadata } from '@stefanprobst/next-page-metadata'
 import type { Feature, FeatureCollection } from 'geojson'
 import * as _ from 'lodash'
