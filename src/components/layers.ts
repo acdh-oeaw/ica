@@ -44,3 +44,38 @@ export const unclusteredPointLayer: LayerProps = {
     'circle-stroke-color': '#fff',
   },
 }
+
+export const lineStyle: LayerProps = {
+  id: 'lines',
+  type: 'line',
+  source: 'lines-data',
+  paint: {
+    'line-width': [
+      'match',
+      ['get', 'type'],
+      'friendship with',
+      3,
+      'close friendship with',
+      4,
+      'married',
+      5,
+      'married to',
+      5,
+      2,
+    ],
+    'line-color': [
+      'match',
+      ['get', 'type'],
+      'friendship with',
+      'red',
+      'close friendship with',
+      'yellow',
+      'married',
+      'green',
+      'married to',
+      'green',
+      'blue',
+    ],
+  },
+  filter: ['==', ['get', 'visibility'], true],
+}

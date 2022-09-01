@@ -10,6 +10,7 @@ import type {
   Institution,
   InstitutionPlaceRelation,
   Person,
+  PersonPersonRelation,
   PersonPlaceRelation,
   Place,
   PlacePlaceRelation,
@@ -428,6 +429,32 @@ export function useWorkPlaceRelations(
     options?.disabled === true ? null : ['getWorkPlaceRelations', params],
     () => {
       return getWorkPlaceRelations(params)
+    },
+    { keepPreviousData: true, ...options },
+  )
+}
+
+export function getPersonPersonRelations(params: {
+  ids?: Array<Person['id']>
+}): Promise<PaginatedResponse<PersonPersonRelation>> {
+  const url = createUrl({
+    baseUrl,
+    pathname: '/apis/api/relations/personperson/',
+    searchParams: { related_person__id__in: params.ids?.join(','), limit: defaultLimit },
+  })
+  const options: RequestOptions = { responseType: 'json' }
+
+  return request(url, options)
+}
+
+export function usePersonPersonRelations(
+  params: { ids?: Array<Person['id']> },
+  options?: QueryOptions & SWRConfiguration<PaginatedResponse<PersonPersonRelation>, Error>,
+) {
+  return useQuery(
+    options?.disabled === true ? null : ['getPersonPersonRelations', params],
+    () => {
+      return getPersonPersonRelations(params)
     },
     { keepPreviousData: true, ...options },
   )
