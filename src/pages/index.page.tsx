@@ -6,6 +6,7 @@ import { PageMetadata } from '@stefanprobst/next-page-metadata'
 import type { Feature, FeatureCollection } from 'geojson'
 import * as _ from 'lodash'
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import type { MapboxMap } from 'react-map-gl'
 import { Layer, Popup, Source, useMap } from 'react-map-gl'
 import { RangeSlider } from 'rsuite'
 
@@ -279,7 +280,7 @@ function MainMap(): JSX.Element {
 
   filters['Persons'] = persProf['Persons']
 
-  function timeRangeChange(e) {
+  function timeRangeChange(e: Array<number>) {
     timeRange = e
   }
 
@@ -305,25 +306,25 @@ function MainMap(): JSX.Element {
       timeRangeCopy[1] = 2000
     }
     const dates: Array<string> = []
-    if (start !== null) dates.push(start.substring(0, 4))
-    if (end !== null) dates.push(end.substring(0, 4))
+    if (start) dates.push(start.substring(0, 4))
+    if (end) dates.push(end.substring(0, 4))
     if (dates.length === 0) {
       return true
     } else if (dates.length === 1) {
-      if (dates[0] >= timeRangeCopy[0] && dates[0] <= timeRangeCopy[1]) {
+      if (Number(dates[0]) >= timeRangeCopy[0] && Number(dates[0]) <= timeRangeCopy[1]) {
         return true
       }
     } else if (dates.length === 2) {
       if (
-        (dates[0] >= timeRangeCopy[0] && dates[0] <= timeRangeCopy[1]) ||
-        (dates[1] >= timeRangeCopy[0] && dates[1] <= timeRangeCopy[1])
+        (Number(dates[0]) >= timeRangeCopy[0] && Number(dates[0]) <= timeRangeCopy[1]) ||
+        (Number(dates[1]) >= timeRangeCopy[0] && Number(dates[1]) <= timeRangeCopy[1])
       ) {
         return true
       }
     }
   }
 
-  function togglePoints(map) {
+  function togglePoints(map: MapboxMap) {
     const points: FeatureCollection = {
       type: 'FeatureCollection',
       features: [],
@@ -390,7 +391,7 @@ function MainMap(): JSX.Element {
     map.triggerRepaint()
   }
 
-  function toggleLines(map) {
+  function toggleLines(map: MapboxMap) {
     const lines: FeatureCollection = {
       type: 'FeatureCollection',
       features: [],
@@ -434,13 +435,15 @@ function MainMap(): JSX.Element {
 
       // Zoom on cluster or spiderify it
       if (mapRef.current.getZoom() < 12) {
-        mapRef.current.getSource('places-data').getClusterExpansionZoom(clusterId, (err, zoom) => {
-          if (err) return
-          mapRef.current.easeTo({
-            center: features[0].geometry.coordinates,
-            zoom: zoom,
+        mapRef.current
+          .getSource('places-data')
+          .getClusterExpansionZoom(clusterId, (err: Error, zoom: number) => {
+            if (err) return
+            mapRef.current.easeTo({
+              center: features[0].geometry.coordinates,
+              zoom: zoom,
+            })
           })
-        })
       } else {
         const spiderifiedCluster = {
           id: clusterId,
@@ -456,13 +459,13 @@ function MainMap(): JSX.Element {
   }
 
   const onMapLoad = useCallback(() => {
-    mapRef.current.getMap().on('click', 'clusters', function (e) {
+    mapRef.current.getMap().on('click', 'clusters', function () {
       clearSpiderifiedCluster(mapRef.current)
     })
-    mapRef.current.getMap().on('zoom', function (e) {
+    mapRef.current.getMap().on('zoom', function () {
       clearSpiderifiedCluster(mapRef.current)
     })
-  })
+  }, [mapRef])
 
   const popover = usePopoverState()
   const { show, hide } = popover
@@ -474,11 +477,10 @@ function MainMap(): JSX.Element {
     let link = ''
     let text = ''
     let persLink = ''
-    const content = []
+    const content: Array<JSX.Element> = []
     let type = ''
     features.forEach((feature) => {
       if (feature == null || feature.properties == null) return
-      console.log(feature)
       type = feature.geometry.type
       if (type === 'Point') {
         label = feature.properties['place']
@@ -587,10 +589,9 @@ function MainMap(): JSX.Element {
 }
 
 interface LayerProps {
-  relationsByPlace
-  id
-  data
-  linesData
+  id: Record<string, string>
+  data: FeatureCollection
+  linesData: FeatureCollection
   generatePopupContent: (event) => void
 }
 
@@ -616,7 +617,7 @@ function LayerCollection(props: LayerProps): JSX.Element {
       props.generatePopupContent(event)
     })
 
-    map.on('zoom', (event) => {
+    map.on('zoom', () => {
       hide()
     })
 
@@ -626,7 +627,7 @@ function LayerCollection(props: LayerProps): JSX.Element {
     map.on('mouseleave', props.id.layer, () => {
       map.getCanvas().style.cursor = ''
     })
-  }, [map, props.id.layer, show, props.relationsByPlace])
+  }, [map, props.id.layer, show])
 
   return (
     <>
@@ -650,10 +651,10 @@ function LayerCollection(props: LayerProps): JSX.Element {
 }
 
 interface ControlProps {
-  filterList
+  filterList: Array<string>
   personList: Array<string>
-  relationChange: (value: Array<string>) => void
-  togglePoints: (map) => void
+  relationChange: (type: string, value: Array<string>) => void
+  togglePoints: (map: MapboxMap) => void
 }
 
 function ControlPanel(props: ControlProps): JSX.Element {
@@ -691,7 +692,7 @@ function ControlPanel(props: ControlProps): JSX.Element {
             key={filter}
             filterOptions={props.filterList[filter]}
             type={filter}
-            relationChange={(type, value) => {
+            relationChange={(type: string, value: Array<string>) => {
               return props.relationChange(type, value)
             }}
           />
@@ -699,12 +700,17 @@ function ControlPanel(props: ControlProps): JSX.Element {
       })}
       <ComboboxMultiple
         personList={props.personList}
-        relationChange={(type, value) => {
+        relationChange={(type: string, value: Array<string>) => {
           return props.relationChange(type, value)
         }}
       />
     </div>
   )
+}
+
+interface TimeProps {
+  timeRangeChange: (e: Array<number>) => void
+  togglePoints: (map: MapboxMap) => void
 }
 
 function TimeSlider(props: TimeProps): JSX.Element {
@@ -726,6 +732,12 @@ function TimeSlider(props: TimeProps): JSX.Element {
   )
 }
 
+interface ListboxProps {
+  filterOptions: Array<string>
+  type: string
+  relationChange: (type: string, value: Array<string>) => void
+}
+
 function ListboxMultiple(props: ListboxProps): JSX.Element {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -739,14 +751,14 @@ function ListboxMultiple(props: ListboxProps): JSX.Element {
     }
   }, [props.filterOptions])
 
-  function isSelected(value) {
+  function isSelected(value: string) {
     return selectedOptions.find((el) => {
       return el === value
     })
       ? true
       : false
   }
-  function handleSelect(value) {
+  function handleSelect(value: string) {
     if (!isSelected(value)) {
       const selectedOptionsUpdated = [
         ...selectedOptions,
@@ -763,7 +775,7 @@ function ListboxMultiple(props: ListboxProps): JSX.Element {
     setIsOpen(true)
   }
 
-  function handleDeselect(value) {
+  function handleDeselect(value: string) {
     const selectedOptionsUpdated = selectedOptions.filter((el) => {
       return el !== value
     })
@@ -775,7 +787,7 @@ function ListboxMultiple(props: ListboxProps): JSX.Element {
     }
   }
 
-  function handleChecked(checked) {
+  function handleChecked(checked: boolean) {
     if (checked) {
       setselectedOptions(options)
       props.relationChange(props.type, options)
@@ -792,7 +804,7 @@ function ListboxMultiple(props: ListboxProps): JSX.Element {
       as="div"
       className="space-y-1"
       value={selectedOptions}
-      onChange={(value) => {
+      onChange={(value: string) => {
         handleSelect(value)
       }}
       open={isOpen}
@@ -914,6 +926,15 @@ function ListboxMultiple(props: ListboxProps): JSX.Element {
   )
 }
 
+interface ComboboxProps {
+  personList: Array<string>
+  relationChange: (type: string, value: Array<string>) => void
+}
+
+export interface Ipeople {
+  people: Array<string>
+}
+
 function ComboboxMultiple(props: ComboboxProps): JSX.Element {
   const [people, setPeople] = useState([])
   const [selectedPeople, setSelectedPeople] = useState([])
@@ -927,10 +948,10 @@ function ComboboxMultiple(props: ComboboxProps): JSX.Element {
 
   const [query, setQuery] = useState('')
 
-  const filteredPeople =
+  const filteredPeople: Array<string> =
     query === ''
       ? people
-      : people.filter((person) => {
+      : people.filter((person: string) => {
           return person.toLowerCase().includes(query.toLowerCase())
         })
 
@@ -939,7 +960,7 @@ function ComboboxMultiple(props: ComboboxProps): JSX.Element {
     props.relationChange('Persons', e)
   }
 
-  function handleChecked(checked) {
+  function handleChecked(checked: boolean) {
     if (checked) {
       setSelectedPeople(people)
       props.relationChange('Persons', people)
