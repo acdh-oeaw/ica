@@ -11,5 +11,3 @@ export const mapStyle = {
   voyager: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
   darkMatter: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
 }
-
-export const filterList = ['Places', 'Professions']

@@ -1,5 +1,8 @@
 // credit goes to: Franck Kerbiriou & Ross Alexander https://github.com/FranckKe/mapbox-gl-js-cluster-spiderify
 
+import type { Feature } from 'maplibre-gl'
+import { Marker } from 'maplibre-gl'
+
 const SPIDER_TYPE = 'layer' // marker: use Mapbox's Marker. layer: Use a Mabpbox point layer
 const MAX_LEAVES_TO_SPIDERIFY = 255 // Max leave to display when spiderify to prevent filling the map with leaves
 const CIRCLE_TO_SPIRAL_SWITCHOVER = SPIDER_TYPE.toLowerCase() === 'marker' ? 10 : 15 // When below number, will display leave as a circle. Over, as a spiral
@@ -15,8 +18,7 @@ const SPIRAL_OPTIONS = {
   lengthModifier: 1000, // Spiral length modifier
 }
 
-const SPIDER_LEGS = true
-const SPIDER_LEGS_LAYER_NAME = `spider-legs-${Math.random().toString(36).substr(2, 9)}`
+const SPIDER_LEGS_LAYER_NAME = 'spider-legs'
 const SPIDER_LEGS_PAINT_OPTION = {
   'line-width': 3,
   'line-color': 'rgba(128, 128, 128, 0.5)',
@@ -40,7 +42,7 @@ const SPIDER_LEAVES_PAINT_OPTION = {
   'circle-stroke-color': '#fff',
 }
 
-let clusterMarkers = []
+let clusterMarkers: Array<any> = []
 let spiderifiedCluster = {}
 let spiderLeavesCollection = []
 
@@ -53,17 +55,19 @@ function clearSpiderifiedMarkers() {
   clusterMarkers = []
 }
 
-function removeSourceAndLayer(map, id) {
+function removeSourceAndLayer(map: any, id: string) {
   if (map.getLayer(id) != null) map.removeLayer(id)
   if (map.getSource(id) != null) map.removeSource(id)
 }
 
-export function clearSpiderifiedCluster(map) {
+export function clearSpiderifiedCluster(map: any) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   spiderifiedCluster = {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   spiderLeavesCollection = []
   removeSourceAndLayer(map.getMap(), SPIDER_LEGS_LAYER_NAME)
   removeSourceAndLayer(map.getMap(), SPIDER_LEAVES_LAYER_NAME)
-  clearSpiderifiedMarkers(map)
+  clearSpiderifiedMarkers()
 }
 
 function generateEquidistantPointsInCircle({ totalPoints = 1, options = CIRCLE_OPTIONS }) {
@@ -104,61 +108,64 @@ function generateEquidistantPointsInSpiral({ totalPoints = 10, options = SPIRAL_
   return points.slice(0, totalPoints)
 }
 
-function generateLeavesCoordinates({ nbOfLeaves }) {
+function generateLeavesCoordinates(leaves: number) {
   // Position cluster's leaves in circle if below threshold, spiral otherwise
   let points
-  if (nbOfLeaves < CIRCLE_TO_SPIRAL_SWITCHOVER) {
+  if (leaves < CIRCLE_TO_SPIRAL_SWITCHOVER) {
     points = generateEquidistantPointsInCircle({
-      totalPoints: nbOfLeaves,
+      totalPoints: leaves,
     })
   } else {
     points = generateEquidistantPointsInSpiral({
-      totalPoints: nbOfLeaves,
+      totalPoints: leaves,
     })
   }
   return points
 }
 
-export function spiderifyCluster({ map, source, clusterToSpiderify }) {
-  const spiderlegsCollection = []
-  const spiderLeavesCollection = []
+export function spiderifyCluster({ map, source, clusterToSpiderify }: any) {
+  const spiderlegsCollection: Array<any> = []
+  const spiderLeavesCollection: Array<any> = []
 
   map
     .getSource(source)
-    .getClusterLeaves(clusterToSpiderify.id, MAX_LEAVES_TO_SPIDERIFY, 0, (error, features) => {
-      if (error) {
-        console.warning('Cluster does not exists on this zoom')
-        return
-      }
-
-      const leavesCoordinates = generateLeavesCoordinates({
-        nbOfLeaves: features.length,
-      })
-
-      const clusterXY = map.project(clusterToSpiderify.coordinates)
-
-      // Generate spiderlegs and leaves coordinates
-      features.forEach((element, index) => {
-        const spiderLeafLatLng = map.unproject([
-          clusterXY.x + leavesCoordinates[index].x,
-          clusterXY.y + leavesCoordinates[index].y,
-        ])
-
-        if (SPIDER_TYPE.toLowerCase() === 'marker') {
-          clusterMarkers.push(new mapboxgl.Marker().setLngLat(spiderLeafLatLng))
-        }
-        if (SPIDER_TYPE.toLowerCase() === 'layer') {
-          spiderLeavesCollection.push({
-            type: 'Feature',
-            geometry: {
-              type: 'Point',
-              coordinates: [spiderLeafLatLng.lng, spiderLeafLatLng.lat],
-            },
-            properties: element.properties,
-          })
+    .getClusterLeaves(
+      clusterToSpiderify.id,
+      MAX_LEAVES_TO_SPIDERIFY,
+      0,
+      (error: Error | null, features: Array<Feature>) => {
+        if (error != null) {
+          console.warn('Cluster does not exists on this zoom')
+          return
         }
 
-        if (SPIDER_LEGS) {
+        const leavesCoordinates = generateLeavesCoordinates(features.length)
+
+        const clusterXY = map.project(clusterToSpiderify.coordinates)
+
+        // Generate spiderlegs and leaves coordinates
+        features.forEach((element, index) => {
+          const spiderLeafLatLng = map.unproject([
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            clusterXY.x + leavesCoordinates[index]!.x,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            clusterXY.y + leavesCoordinates[index]!.y,
+          ])
+
+          if (SPIDER_TYPE.toLowerCase() === 'marker') {
+            clusterMarkers.push(new Marker().setLngLat(spiderLeafLatLng))
+          }
+          if (SPIDER_TYPE.toLowerCase() === 'layer') {
+            spiderLeavesCollection.push({
+              type: 'Feature',
+              geometry: {
+                type: 'Point',
+                coordinates: [spiderLeafLatLng.lng, spiderLeafLatLng.lat],
+              },
+              properties: element.properties,
+            })
+          }
+
           spiderlegsCollection.push({
             type: 'Feature',
             geometry: {
@@ -169,11 +176,8 @@ export function spiderifyCluster({ map, source, clusterToSpiderify }) {
               ],
             },
           })
-        }
-      })
+        })
 
-      // Draw spiderlegs and leaves coordinates
-      if (SPIDER_LEGS) {
         map.getMap().addLayer({
           id: SPIDER_LEGS_LAYER_NAME,
           type: 'line',
@@ -186,26 +190,26 @@ export function spiderifyCluster({ map, source, clusterToSpiderify }) {
           },
           paint: SPIDER_LEGS_PAINT_OPTION,
         })
-      }
 
-      if (SPIDER_TYPE.toLowerCase() === 'marker') {
-        clusterMarkers.forEach((marker) => {
-          return marker.addTo(map)
-        })
-      }
-      if (SPIDER_TYPE.toLowerCase() === 'layer') {
-        map.getMap().addLayer({
-          id: SPIDER_LEAVES_LAYER_NAME,
-          type: 'circle',
-          source: {
-            type: 'geojson',
-            data: {
-              type: 'FeatureCollection',
-              features: spiderLeavesCollection,
+        if (SPIDER_TYPE.toLowerCase() === 'marker') {
+          clusterMarkers.forEach((marker) => {
+            return marker.addTo(map)
+          })
+        }
+        if (SPIDER_TYPE.toLowerCase() === 'layer') {
+          map.getMap().addLayer({
+            id: SPIDER_LEAVES_LAYER_NAME,
+            type: 'circle',
+            source: {
+              type: 'geojson',
+              data: {
+                type: 'FeatureCollection',
+                features: spiderLeavesCollection,
+              },
             },
-          },
-          paint: SPIDER_LEAVES_PAINT_OPTION,
-        })
-      }
-    })
+            paint: SPIDER_LEAVES_PAINT_OPTION,
+          })
+        }
+      },
+    )
 }

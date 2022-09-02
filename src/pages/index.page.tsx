@@ -1,12 +1,12 @@
 import 'rsuite/dist/rsuite.min.css'
 
 import { Combobox, Listbox, Transition } from '@headlessui/react'
-import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
+import { ArrowsUpDownIcon as SelectorIcon, CheckIcon } from '@heroicons/react/20/solid'
 import { PageMetadata } from '@stefanprobst/next-page-metadata'
-import type { Feature, FeatureCollection } from 'geojson'
-import * as _ from 'lodash'
+import type { Feature, FeatureCollection, LineString, Point } from 'geojson'
+import type { MapLayerMouseEvent } from 'maplibre-gl'
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import type { MapboxMap } from 'react-map-gl'
+import type { MapboxMap, MapRef } from 'react-map-gl'
 import { Layer, Popup, Source, useMap } from 'react-map-gl'
 import { RangeSlider } from 'rsuite'
 
@@ -21,7 +21,7 @@ import {
   clusterLayer,
   lineStyle,
   unclusteredPointLayer,
-} from '@/components/layers'
+} from '@/components/geo-map-layer.config'
 import { clearSpiderifiedCluster, spiderifyCluster } from '@/components/spiderifier'
 import { usePersonsPersons } from '@/lib/use-persons-persons'
 import { usePersonsPlaces } from '@/lib/use-persons-places'
@@ -56,7 +56,7 @@ function Hero(): JSX.Element {
           A Geovisualization of Transatlantic Networks and Emigration (from Central Europe)
         </h2>
       </div>
-      <p className="text-justify text-lg leading-relaxed">
+      <p className="text-lg leading-relaxed">
         During the last ten years the members of the interdisciplinary commission the North Atlantic
         Triangle have explored the close transatlantic links between Europeans and North Americans
         and the exchange of people and ideas in the 19th, 20th and 21st centuries. They have in
@@ -77,7 +77,8 @@ function Hero(): JSX.Element {
         fortunes and activities of the (relatively few) returnees among the emigrants, and show the
         effect and significance of the exchange of ideas across the North Atlantic, all so far
         documented in the ten volumes published by the commission since 2012.
-        <br />
+      </p>
+      <p className="text-lg leading-relaxed">
         Search in the database will eventually permit interested users to identify key agents in the
         transatlantic cultural exchange, especially between the 1920s and 1960s. It will allow them
         to recognize the role of encounters in the biographies of scores of individuals in Central
@@ -95,6 +96,8 @@ function Hero(): JSX.Element {
   )
 }
 
+let id_feature = 1
+
 function MainMap(): JSX.Element {
   const { persons, places, relationsByPlace, relationsByPerson } = usePersonsPlaces()
   const { relationsByPersonA } = usePersonsPersons()
@@ -104,26 +107,25 @@ function MainMap(): JSX.Element {
     layer: 'places',
   }
 
-  const points1: FeatureCollection = {
-    type: 'FeatureCollection',
-    features: [],
-  }
-
-  let id_feature = 1
   const data = useMemo(() => {
+    const points: FeatureCollection = {
+      type: 'FeatureCollection',
+      features: [],
+    }
+
     places.forEach((place) => {
-      const relations: Array<Record<string, unknown>> = relationsByPlace.get(place.id)
+      const relations = relationsByPlace.get(place.id)
       if (relations) {
-        relations.forEach((relation: Record<string, unknown>) => {
+        relations.forEach((relation) => {
           if (place.lat != null && place.lng != null) {
             const profession = persons.find((x) => {
               return x.id === relation['related_person']['id']
-            }).profession[0]
+            })?.profession[0]
             let profLabel = ''
             if (profession) {
               profLabel = profession.label
             }
-            const point: Feature = {
+            const point: Feature<Point> = {
               type: 'Feature',
               geometry: { type: 'Point', coordinates: [place.lng, place.lat] },
               id: id_feature,
@@ -136,33 +138,36 @@ function MainMap(): JSX.Element {
                 relation: relation['relation_type']['label'],
                 start: relation['start_date_written'],
                 end: relation['end_date_written'],
+                startDate: relation['start_date'],
+                endDate: relation['end_date'],
                 visibility: true,
                 profession: profLabel,
                 /** NOTE: Be aware that nested objects and arrays get stringified on `event.features`. */
               },
             }
-            points1.features.push(point)
+            points.features.push(point)
             id_feature += 1
           }
         })
       }
     })
-    return points1
-  }, [places])
 
-  const lines: FeatureCollection = {
-    type: 'FeatureCollection',
-    features: [],
-  }
+    return points
+  }, [places, persons, relationsByPlace])
 
   const linesData = useMemo(() => {
+    const lines: FeatureCollection = {
+      type: 'FeatureCollection',
+      features: [],
+    }
+
     persons.forEach((person) => {
       const relationsPersA = relationsByPersonA.get(person.id)
       const relationsPlace = relationsByPerson.get(person.id)
       const lived = ['lived in', 'lived at']
       if (relationsPersA) {
         if (relationsPlace) {
-          const personPlaceA = relationsByPerson.get(person.id).find((item) => {
+          const personPlaceA = relationsByPerson.get(person.id)?.find((item) => {
             return lived.includes(item.relation_type.label)
           })
           if (personPlaceA) {
@@ -170,52 +175,60 @@ function MainMap(): JSX.Element {
               return item.id === personPlaceA.related_place.id
             })
             if (placeA) {
-              relationsPersA.forEach((relation) => {
-                const line: Feature = {
-                  type: 'Feature',
-                  id: id_feature,
-                  geometry: { type: 'LineString', coordinates: [[placeA.lng, placeA.lat]] },
-                  properties: {
-                    personA: relation['related_personA']['label'],
-                    id_personA: relation['related_personA']['id'],
-                    personB: relation['related_personB']['label'],
-                    id_personB: relation['related_personB']['id'],
-                    id_relation: relation['id'],
-                    id_places: [placeA.id],
-                    type: relation['relation_type']['label'],
-                    start: relation['start_date_written'],
-                    end: relation['end_date_written'],
-                    visibility: true,
-                  },
-                }
+              const { lng, lat } = placeA
+              if (lng != null && lat != null) {
+                relationsPersA.forEach((relation) => {
+                  const line: Feature<LineString> = {
+                    type: 'Feature',
+                    id: id_feature,
+                    geometry: { type: 'LineString', coordinates: [[lng, lat]] },
+                    properties: {
+                      personA: relation['related_personA']['label'],
+                      id_personA: relation['related_personA']['id'],
+                      personB: relation['related_personB']['label'],
+                      id_personB: relation['related_personB']['id'],
+                      id_relation: relation['id'],
+                      id_places: [placeA.id],
+                      type: relation['relation_type']['label'],
+                      start: relation['start_date_written'],
+                      end: relation['end_date_written'],
+                      startDate: relation['start_date'],
+                      endDate: relation['end_date'],
+                      visibility: true,
+                    },
+                  }
 
-                const relationsPersB = relationsByPerson.get(relation.related_personB.id)
-                if (relationsPersB) {
-                  const personPlaceB = relationsByPerson
-                    .get(relation.related_personB.id)
-                    .find((item) => {
-                      return lived.includes(item.relation_type.label)
-                    })
-                  if (personPlaceB) {
-                    const placeB = places.find((item) => {
-                      return item.id === personPlaceB.related_place.id
-                    })
-                    if (placeB) {
-                      line.geometry.coordinates.push([placeB.lng, placeB.lat])
-                      line.properties.id_places.push(placeB.id)
-                      lines.features.push(line)
-                      id_feature += 1
+                  const relationsPersB = relationsByPerson.get(relation.related_personB.id)
+                  if (relationsPersB) {
+                    const personPlaceB = relationsByPerson
+                      .get(relation.related_personB.id)
+                      ?.find((item) => {
+                        return lived.includes(item.relation_type.label)
+                      })
+                    if (personPlaceB) {
+                      const placeB = places.find((item) => {
+                        return item.id === personPlaceB.related_place.id
+                      })
+                      if (placeB) {
+                        const { lng, lat } = placeB
+                        if (lng != null && lat != null) {
+                          line.geometry.coordinates.push([lng, lat])
+                          line.properties?.['id_places'].push(placeB.id)
+                          lines.features.push(line)
+                          id_feature += 1
+                        }
+                      }
                     }
                   }
-                }
-              })
+                })
+              }
             }
           }
         }
       }
     })
     return lines
-  }, [places])
+  }, [places, relationsByPerson, persons, relationsByPersonA])
 
   const personRelationTypes: Array<string> = useMemo(() => {
     const types: Array<string> = []
@@ -235,7 +248,7 @@ function MainMap(): JSX.Element {
   const placeRelationTypes = useMemo(() => {
     const types: Array<string> = []
     places.forEach((place) => {
-      const relations: Record<string, unknown> = relationsByPlace.get(place.id)
+      const relations = relationsByPlace.get(place.id)
       if (relations) {
         relations.forEach((relation) => {
           if (!types.includes(relation.relation_type.label)) {
@@ -247,7 +260,7 @@ function MainMap(): JSX.Element {
     return types
   }, [places, relationsByPlace])
 
-  const persProf: Record<string, Array<string>> = useMemo(() => {
+  const persProf = useMemo(() => {
     const nameArray: Array<string> = []
     const profArray: Array<string> = []
     persons.forEach((person) => {
@@ -269,7 +282,6 @@ function MainMap(): JSX.Element {
     return types
   }, [persons])
 
-  let timeRange: Array<number> = [1920, 1960]
   const filters: Record<string, Array<string>> = {
     'Place relations': placeRelationTypes,
     'Person relations': personRelationTypes,
@@ -280,51 +292,54 @@ function MainMap(): JSX.Element {
 
   filters['Persons'] = persProf['Persons']
 
-  function timeRangeChange(e: Array<number>) {
-    timeRange = e
+  const [timeRange, setTimeRange] = useState<[number, number]>([1920, 1960])
+
+  function onTimeRangeChange(range: Array<number>) {
+    setTimeRange(range as [number, number])
   }
 
   function relationChange(type: string, value: Array<string>) {
     filters[type] = value
     const pointTypes = ['Place relations', 'Professions', 'Persons']
     if (pointTypes.includes(type)) {
-      togglePoints(mapRef.current)
+      onTogglePoints(mapRef.current)
     } else if (type === 'Person relations') {
       toggleLines(mapRef.current)
     } else {
-      togglePoints(mapRef.current)
+      onTogglePoints(mapRef.current)
       toggleLines(mapRef.current)
     }
   }
 
   function checkDates(start: string, end: string) {
-    const timeRangeCopy: Array<number> = [...timeRange]
-    if (timeRange[0] === 1920) {
-      timeRangeCopy[0] = 0
-    }
-    if (timeRange[1] === 1960) {
-      timeRangeCopy[1] = 2000
-    }
-    const dates: Array<string> = []
-    if (start) dates.push(start.substring(0, 4))
-    if (end) dates.push(end.substring(0, 4))
+    const [_start, _end] = timeRange
+    /** include everything before 1920 */
+    const rangeStart = _start === 1920 ? 0 : _start
+    /** include everything after 1960 */
+    const rangeEnd = _end === 1960 ? 2000 : _end
+
+    const dates: Array<number> = []
+    if (start) dates.push(new Date(start).getUTCFullYear())
+    if (end) dates.push(new Date(end).getUTCFullYear())
+
     if (dates.length === 0) {
       return true
     } else if (dates.length === 1) {
-      if (Number(dates[0]) >= timeRangeCopy[0] && Number(dates[0]) <= timeRangeCopy[1]) {
+      const date = dates[0] as number
+      if ((date as number) >= rangeStart && date <= rangeEnd) {
         return true
       }
     } else if (dates.length === 2) {
-      if (
-        (Number(dates[0]) >= timeRangeCopy[0] && Number(dates[0]) <= timeRangeCopy[1]) ||
-        (Number(dates[1]) >= timeRangeCopy[0] && Number(dates[1]) <= timeRangeCopy[1])
-      ) {
+      const [start, end] = dates as [number, number]
+      if ((start >= rangeStart && start <= rangeEnd) || (end >= rangeStart && end <= rangeEnd)) {
         return true
       }
     }
+
+    return false
   }
 
-  function togglePoints(map: MapboxMap) {
+  function onTogglePoints(map: MapboxMap) {
     const points: FeatureCollection = {
       type: 'FeatureCollection',
       features: [],
@@ -335,57 +350,65 @@ function MainMap(): JSX.Element {
     }
     const pointsDis = new Set()
     data.features.forEach((point) => {
-      if (!filters) {
-        point.properties['visibility'] = false
+      let relationFilter = false
+      let timeFilter = false
+      let professionFilter = false
+      let personFilter = false
+      // @ts-expect-error Ignore for now
+      if (filters['Place relations'].includes(point.properties.relation)) {
+        relationFilter = true
+      }
+      // @ts-expect-error Ignore for now
+      if (filters['Professions'].includes(point.properties.profession)) {
+        professionFilter = true
+      }
+      // @ts-expect-error Ignore for now
+      if (filters['Persons'].includes(point.properties.person)) {
+        personFilter = true
+      }
+      // @ts-expect-error Ignore for now
+      timeFilter = checkDates(point.properties.start, point.properties.end)
+
+      // @ts-expect-error Ignore for now
+      if (filters === placeRelationTypes && timeRange[0] === 1920 && timeRange[1] === 1960) {
+        // @ts-expect-error Ignore for now
+        point.properties['visibility'] = true
       } else {
-        let relationFilter = false
-        let timeFilter = false
-        let professionFilter = false
-        let personFilter = false
-        if (filters['Place relations'].includes(point.properties.relation)) {
-          relationFilter = true
-        }
-        if (filters['Professions'].includes(point.properties.profession)) {
-          professionFilter = true
-        }
-        if (filters['Persons'].includes(point.properties.person)) {
-          personFilter = true
-        }
-        timeFilter = checkDates(point.properties.start, point.properties.end)
-        if (filters === placeRelationTypes && timeRange === [1920, 1960]) {
+        if (
+          timeFilter === true &&
+          relationFilter === true &&
+          professionFilter === true &&
+          personFilter === true
+        ) {
+          // @ts-expect-error Ignore for now
           point.properties['visibility'] = true
-        } else if (filters === undefined) {
-          point.properties['visibility'] = false
+          points.features.push(point)
+          toggleLines(map)
         } else {
-          if (
-            timeFilter === true &&
-            relationFilter === true &&
-            professionFilter === true &&
-            personFilter === true
-          ) {
-            point.properties['visibility'] = true
-            points.features.push(point)
-            toggleLines(map)
-          } else {
-            point.properties['visibility'] = false
-            pointsDis.add(point.properties.id_place)
-          }
+          // @ts-expect-error Ignore for now
+          point.properties['visibility'] = false
+          // @ts-expect-error Ignore for now
+          pointsDis.add(point.properties.id_place)
         }
       }
     })
     linesData.features.forEach((line) => {
       let counterPointsDis = 0
+      // @ts-expect-error Ignore for now
       line.properties.id_places.forEach((id_place) => {
         if (pointsDis.has(id_place)) {
           counterPointsDis += 1
         }
       })
       if (counterPointsDis >= 2) {
+        // @ts-expect-error Ignore for now
         line.properties['visibility'] = false
       }
       lines.features.push(line)
     })
+    // @ts-expect-error Ignore for now
     map.getSource('places-data').setData(points)
+    // @ts-expect-error Ignore for now
     map.getSource('lines-data').setData(lines)
     clearSpiderifiedCluster(mapRef.current)
     map.triggerRepaint()
@@ -397,37 +420,40 @@ function MainMap(): JSX.Element {
       features: [],
     }
     linesData.features.forEach((line) => {
-      if (!filters) {
-        line.properties['visibility'] = false
+      let relationFilter = false
+      let timeFilter = false
+      // @ts-expect-error Ignore for now
+      if (filters['Person relations'].includes(line.properties.type)) {
+        relationFilter = true
+      }
+      // @ts-expect-error Ignore for now
+      timeFilter = checkDates(line.properties['start'], line.properties['end'])
+      // @ts-expect-error Ignore for now
+      if (filters === personRelationTypes && timeRange[0] === 1920 && timeRange[1] === 1960) {
+        // @ts-expect-error Ignore for now
+        line.properties['visibility'] = true
       } else {
-        let relationFilter = false
-        let timeFilter = false
-        if (filters['Person relations'].includes(line.properties.type)) {
-          relationFilter = true
-        }
-        timeFilter = checkDates(line.properties.start, line.properties.end)
-        if (filters === personRelationTypes && timeRange === [1920, 1960]) {
+        if (timeFilter === true && relationFilter === true) {
+          // @ts-expect-error Ignore for now
           line.properties['visibility'] = true
-        } else if (filters === undefined) {
-          line.properties['visibility'] = false
+          lines.features.push(line)
         } else {
-          if (timeFilter === true && relationFilter === true) {
-            line.properties['visibility'] = true
-            lines.features.push(line)
-          } else {
-            line.properties['visibility'] = false
-          }
+          // @ts-expect-error Ignore for now
+          line.properties['visibility'] = false
         }
       }
     })
+    // @ts-expect-error Ignore for now
     map.getSource('lines-data').setData(lines)
     map.triggerRepaint()
   }
 
   const mapRef = useRef<MapRef>(null)
 
-  function mouseClick(e) {
-    const features = mapRef.current.queryRenderedFeatures(e.point, {
+  function onClick(event: MapLayerMouseEvent) {
+    if (mapRef.current == null) return
+
+    const features = mapRef.current.queryRenderedFeatures(event.point, {
       layers: ['clusters'],
     })
     if (features.length > 0) {
@@ -470,7 +496,7 @@ function MainMap(): JSX.Element {
   const popover = usePopoverState()
   const { show, hide } = popover
 
-  function generatePopupContent(event) {
+  function generatePopupContent(event: { features: Array<Feature> | null; lngLat: any }) {
     if (event.features == null) return
     const features = [...event.features]
     let label = ''
@@ -480,7 +506,7 @@ function MainMap(): JSX.Element {
     const content: Array<JSX.Element> = []
     let type = ''
     features.forEach((feature) => {
-      if (feature == null || feature.properties == null) return
+      if (feature.properties == null) return
       type = feature.geometry.type
       if (type === 'Point') {
         label = feature.properties['place']
@@ -525,10 +551,13 @@ function MainMap(): JSX.Element {
     let longitude = null
     let latitude = null
     if (type === 'Point') {
-      ;[longitude, latitude] = features[0].geometry.coordinates.slice()
+      const [feature] = features
+      if (feature != null && feature.geometry.type === 'Point') {
+        ;[longitude, latitude] = feature.geometry.coordinates.slice()
+      }
     } else if (type === 'LineString') {
-      longitude = event.lngLat.lng
-      latitude = event.lngLat.lat
+      longitude = event.lngLat!.lng
+      latitude = event.lngLat!.lat
     }
     if (longitude == null || latitude == null) return
     /**
@@ -547,19 +576,17 @@ function MainMap(): JSX.Element {
       mapStyle={mapStyle.positron}
       ref={mapRef}
       interactiveLayerIds={[clusterLayer.id, unclusteredPointLayer.id, lineStyle.id]}
-      onClick={mouseClick}
+      // @ts-expect-error Ignore
+      onClick={onClick}
       clickRadius={3}
       onLoad={onMapLoad}
       maxZoom={16}
     >
       <LayerCollection
-        relationsByPlace={relationsByPlace}
         id={id}
         data={data}
         linesData={linesData}
-        generatePopupContent={(event) => {
-          return generatePopupContent(event)
-        }}
+        generatePopupContent={generatePopupContent}
       />
       {popover.isVisible ? (
         <Popup {...popover.coordinates} closeButton={false} onClose={hide}>
@@ -569,65 +596,58 @@ function MainMap(): JSX.Element {
       <ControlPanel
         filterList={filterList}
         personList={persProf['Persons']}
-        relationChange={(type, value) => {
-          return relationChange(type, value)
-        }}
-        togglePoints={(map) => {
-          return togglePoints(map)
-        }}
+        relationChange={relationChange}
+        togglePoints={onTogglePoints}
       />
-      <TimeSlider
-        timeRangeChange={(e) => {
-          return timeRangeChange(e)
-        }}
-        togglePoints={(map) => {
-          return togglePoints(map)
-        }}
-      />
+      <TimeSlider timeRangeChange={onTimeRangeChange} togglePoints={onTogglePoints} />
     </GeoMap>
   )
 }
 
 interface LayerProps {
-  id: Record<string, string>
+  id: { source: string; layer: string }
   data: FeatureCollection
   linesData: FeatureCollection
-  generatePopupContent: (event) => void
+  generatePopupContent: (event: any) => void
 }
 
 function LayerCollection(props: LayerProps): JSX.Element {
+  const { id, generatePopupContent } = props
+
   const popover = usePopoverState()
-  const { show, hide } = popover
 
   const { current: map } = useMap()
+
   useEffect(() => {
     if (map == null) return
 
+    const { hide } = popover
+
     map.on('click', 'unclustered-point', (event) => {
-      props.generatePopupContent(event)
+      generatePopupContent(event)
     })
     map.on('click', 'spider-leaves', (event) => {
-      props.generatePopupContent(event)
+      generatePopupContent(event)
     })
     map.on('click', 'clusters', (event) => {
       event.preventDefault()
     })
 
     map.on('click', 'lines', (event) => {
-      props.generatePopupContent(event)
+      generatePopupContent(event)
     })
 
     map.on('zoom', () => {
       hide()
     })
 
-    map.on('mouseenter', props.id.layer, () => {
+    map.on('mouseenter', id.layer, () => {
       map.getCanvas().style.cursor = 'pointer'
     })
-    map.on('mouseleave', props.id.layer, () => {
+    map.on('mouseleave', id.layer, () => {
       map.getCanvas().style.cursor = ''
     })
-  }, [map, props.id.layer, show])
+  }, [map, id.layer, popover, generatePopupContent])
 
   return (
     <>
@@ -660,11 +680,11 @@ interface ControlProps {
 function ControlPanel(props: ControlProps): JSX.Element {
   const { current: map } = useMap()
 
-  function toggleBasemap(value: string) {
+  function toggleBasemap(value: keyof typeof mapStyle) {
     map?.getMap().setStyle(mapStyle[value])
   }
 
-  const [selectedBasemap, setSelectedBasemap] = useState('positron')
+  const [selectedBasemap, setSelectedBasemap] = useState<keyof typeof mapStyle>('positron')
 
   return (
     <div style={controlPanelStyle.panelStyle}>
@@ -676,9 +696,10 @@ function ControlPanel(props: ControlProps): JSX.Element {
               type="radio"
               value={basemap}
               checked={selectedBasemap === basemap}
-              onChange={(e) => {
-                setSelectedBasemap(e.target.value)
-                toggleBasemap(e.target.value)
+              onChange={(event) => {
+                const baseMap = event.target.value as keyof typeof mapStyle
+                setSelectedBasemap(baseMap)
+                toggleBasemap(baseMap)
               }}
             />
             <label> {basemap}</label>
@@ -690,6 +711,7 @@ function ControlPanel(props: ControlProps): JSX.Element {
         return (
           <ListboxMultiple
             key={filter}
+            // @ts-expect-error Check later
             filterOptions={props.filterList[filter]}
             type={filter}
             relationChange={(type: string, value: Array<string>) => {
@@ -739,33 +761,37 @@ interface ListboxProps {
 }
 
 function ListboxMultiple(props: ListboxProps): JSX.Element {
+  const { filterOptions } = props
+
   const [isOpen, setIsOpen] = useState(false)
 
-  const [options, setOptions] = useState([])
-  const [selectedOptions, setselectedOptions] = useState([])
+  const [options, setOptions] = useState<Array<string>>([])
+  const [selectedOptions, setselectedOptions] = useState<Array<string>>([])
 
   useEffect(() => {
-    if (props.filterOptions.length > 0) {
-      setOptions(props.filterOptions)
-      setselectedOptions(props.filterOptions)
+    if (filterOptions.length > 0) {
+      setOptions(filterOptions)
+      setselectedOptions(filterOptions)
     }
-  }, [props.filterOptions])
+  }, [filterOptions])
 
   function isSelected(value: string) {
-    return selectedOptions.find((el) => {
-      return el === value
-    })
-      ? true
-      : false
+    return (
+      selectedOptions.find((el) => {
+        return el === value
+      }) != null
+    )
   }
-  function handleSelect(value: string) {
+
+  function handleSelect(value: Array<string>) {
+    // TODO:
     if (!isSelected(value)) {
       const selectedOptionsUpdated = [
         ...selectedOptions,
         options.find((el) => {
           return el === value
         }),
-      ]
+      ].filter(Boolean)
       setselectedOptions(selectedOptionsUpdated)
       props.relationChange(props.type, selectedOptionsUpdated)
       setChecked(true)
@@ -791,7 +817,7 @@ function ListboxMultiple(props: ListboxProps): JSX.Element {
     if (checked) {
       setselectedOptions(options)
       props.relationChange(props.type, options)
-    } else if (!checked) {
+    } else {
       setselectedOptions([])
       props.relationChange(props.type, [])
     }
@@ -804,10 +830,8 @@ function ListboxMultiple(props: ListboxProps): JSX.Element {
       as="div"
       className="space-y-1"
       value={selectedOptions}
-      onChange={(value: string) => {
-        handleSelect(value)
-      }}
-      open={isOpen}
+      onChange={handleSelect}
+      multiple
     >
       {() => {
         return (
@@ -823,8 +847,8 @@ function ListboxMultiple(props: ListboxProps): JSX.Element {
               }}
             />
             <Listbox.Label
-              className="block inline text-sm font-medium leading-5 text-gray-700"
-              for={props.type}
+              className="block text-sm font-medium leading-5 text-gray-700"
+              htmlFor={props.type}
             >
               {props.type}
             </Listbox.Label>
@@ -833,9 +857,8 @@ function ListboxMultiple(props: ListboxProps): JSX.Element {
                 <Listbox.Button
                   className="focus:shadow-outline-blue relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left transition duration-150 ease-in-out focus:border-blue-300 focus:outline-none sm:text-sm sm:leading-5"
                   onClick={() => {
-                    return setIsOpen(!isOpen)
+                    setIsOpen(!isOpen)
                   }}
-                  open={isOpen}
                 >
                   <span className="block truncate">
                     {selectedOptions.length < 1
@@ -936,15 +959,9 @@ export interface Ipeople {
 }
 
 function ComboboxMultiple(props: ComboboxProps): JSX.Element {
-  const [people, setPeople] = useState([])
-  const [selectedPeople, setSelectedPeople] = useState([])
+  const { personList: people } = props
 
-  useEffect(() => {
-    if (props.personList.length > 0) {
-      setPeople(props.personList)
-      setSelectedPeople(props.personList)
-    }
-  }, [props.personList])
+  const [selectedPeople, setSelectedPeople] = useState(people)
 
   const [query, setQuery] = useState('')
 
@@ -955,16 +972,16 @@ function ComboboxMultiple(props: ComboboxProps): JSX.Element {
           return person.toLowerCase().includes(query.toLowerCase())
         })
 
-  function handleChange(e) {
-    setSelectedPeople(e)
-    props.relationChange('Persons', e)
+  function handleChange(values: Array<string>) {
+    setSelectedPeople(values)
+    props.relationChange('Persons', values)
   }
 
   function handleChecked(checked: boolean) {
     if (checked) {
       setSelectedPeople(people)
       props.relationChange('Persons', people)
-    } else if (!checked) {
+    } else {
       setSelectedPeople([])
       props.relationChange('Persons', [])
     }
@@ -985,21 +1002,15 @@ function ComboboxMultiple(props: ComboboxProps): JSX.Element {
         }}
       />
       {'Persons'}
-      <Combobox
-        value={selectedPeople}
-        onChange={(e) => {
-          handleChange(e)
-        }}
-        multiple
-      >
+      <Combobox value={selectedPeople} onChange={handleChange} multiple>
         <div className="relative mt-1">
           <div className="focus-visible:ring-opacity-75 relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
             <Combobox.Input
               className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
               onChange={(event) => {
-                return setQuery(event.target.value)
+                setQuery(event.target.value)
               }}
-              displayValue={(people) => {
+              displayValue={(people: Array<string>) => {
                 return `Selected Persons (${people.length})`
               }}
             />

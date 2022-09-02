@@ -1,4 +1,6 @@
-import type { LayerProps } from 'react-map-gl'
+import type { LayerProps as LayerPropsWithoutId } from 'react-map-gl'
+
+type LayerProps = Required<LayerPropsWithoutId, 'id'>
 
 export const clusterLayer: LayerProps = {
   id: 'clusters',
