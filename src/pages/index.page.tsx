@@ -107,6 +107,8 @@ function MainMap(): JSX.Element {
     layer: 'places',
   }
 
+  const mapRef = useRef<MapRef>(null)
+
   const data = useMemo(() => {
     const points: FeatureCollection = {
       type: 'FeatureCollection',
@@ -282,15 +284,25 @@ function MainMap(): JSX.Element {
     return types
   }, [persons])
 
-  const filters: Record<string, Array<string>> = {
-    'Place relations': placeRelationTypes,
-    'Person relations': personRelationTypes,
-    Professions: persProf['Professions'],
-  }
+  const filterCollection: Record<string, Array<string>> = useMemo(() => {
+    const filterObj = {
+      'Place relations': placeRelationTypes,
+      'Person relations': personRelationTypes,
+      Professions: persProf['Professions'],
+      Persons: persProf['Persons'],
+    }
+    return filterObj
+  }, [persProf, personRelationTypes, placeRelationTypes])
 
-  const filterList = JSON.parse(JSON.stringify(filters))
+  const [filters, setFilters] = useState({})
+  const [filterList, setFilterList] = useState({})
 
-  filters['Persons'] = persProf['Persons']
+  useEffect(() => {
+    setFilters(JSON.parse(JSON.stringify(filterCollection)))
+    setFilterList(JSON.parse(JSON.stringify(filterCollection)))
+  }, [filterCollection])
+
+  delete filterList['Persons']
 
   const [timeRange, setTimeRange] = useState<[number, number]>([1920, 1960])
 
@@ -299,17 +311,19 @@ function MainMap(): JSX.Element {
   }
 
   function relationChange(type: string, value: Array<string>) {
-    filters[type] = value
-    const pointTypes = ['Place relations', 'Professions', 'Persons']
-    if (pointTypes.includes(type)) {
-      onTogglePoints(mapRef.current)
-    } else if (type === 'Person relations') {
-      toggleLines(mapRef.current)
-    } else {
-      onTogglePoints(mapRef.current)
-      toggleLines(mapRef.current)
-    }
+    setFilters((prevFilters) => {
+      return {
+        ...prevFilters,
+        [type]: value,
+      }
+    })
   }
+
+  useEffect(() => {
+    if (mapRef.current !== null) {
+      onTogglePoints(mapRef.current)
+    }
+  }, [filters])
 
   function checkDates(start: string, end: string) {
     const [_start, _end] = timeRange
@@ -339,24 +353,22 @@ function MainMap(): JSX.Element {
     return false
   }
 
+  const [pointsList, setPointsList] = useState(new Set())
+
   function onTogglePoints(map: MapboxMap) {
+    // declare Feature Collection for points
     const points: FeatureCollection = {
       type: 'FeatureCollection',
       features: [],
     }
-    const lines: FeatureCollection = {
-      type: 'FeatureCollection',
-      features: [],
-    }
-    const pointsDis = new Set()
+
+    // iterate through points in data set
     data.features.forEach((point) => {
-      let relationFilter = false
-      let timeFilter = false
-      let professionFilter = false
-      let personFilter = false
+      // define filter booleans for filter categories and check
+      let [placeFilter, timeFilter, professionFilter, personFilter] = Array(4).fill(false)
       // @ts-expect-error Ignore for now
       if (filters['Place relations'].includes(point.properties.relation)) {
-        relationFilter = true
+        placeFilter = true
       }
       // @ts-expect-error Ignore for now
       if (filters['Professions'].includes(point.properties.profession)) {
@@ -369,86 +381,90 @@ function MainMap(): JSX.Element {
       // @ts-expect-error Ignore for now
       timeFilter = checkDates(point.properties.start, point.properties.end)
 
-      // @ts-expect-error Ignore for now
-      if (filters === placeRelationTypes && timeRange[0] === 1920 && timeRange[1] === 1960) {
+      // check what filters return
+      if (
+        timeFilter === true &&
+        placeFilter === true &&
+        professionFilter === true &&
+        personFilter === true
+      ) {
         // @ts-expect-error Ignore for now
         point.properties['visibility'] = true
+        points.features.push(point)
+        setPointsList((prev) => {
+          return new Set(
+            [...prev].filter((x) => {
+              return x !== point.properties['id_place']
+            }),
+          )
+        })
+        toggleLines(map)
       } else {
-        if (
-          timeFilter === true &&
-          relationFilter === true &&
-          professionFilter === true &&
-          personFilter === true
-        ) {
-          // @ts-expect-error Ignore for now
-          point.properties['visibility'] = true
-          points.features.push(point)
-          toggleLines(map)
-        } else {
-          // @ts-expect-error Ignore for now
-          point.properties['visibility'] = false
-          // @ts-expect-error Ignore for now
-          pointsDis.add(point.properties.id_place)
-        }
-      }
-    })
-    linesData.features.forEach((line) => {
-      let counterPointsDis = 0
-      // @ts-expect-error Ignore for now
-      line.properties.id_places.forEach((id_place) => {
-        if (pointsDis.has(id_place)) {
-          counterPointsDis += 1
-        }
-      })
-      if (counterPointsDis >= 2) {
         // @ts-expect-error Ignore for now
-        line.properties['visibility'] = false
+        point.properties['visibility'] = false
+        // @ts-expect-error Ignore for now
+        setPointsList((prev) => {
+          return new Set(prev.add(point.properties['id_place']))
+        })
       }
-      lines.features.push(line)
     })
-    // @ts-expect-error Ignore for now
-    map.getSource('places-data').setData(points)
-    // @ts-expect-error Ignore for now
-    map.getSource('lines-data').setData(lines)
+    if (map.getSource('places-data') !== undefined) {
+      // @ts-expect-error Ignore for now
+      map.getSource('places-data').setData(points)
+    }
     clearSpiderifiedCluster(mapRef.current)
     map.triggerRepaint()
   }
+
+  useEffect(() => {
+    if (mapRef.current !== null) {
+      toggleLines(mapRef.current)
+    }
+  }, [pointsList])
 
   function toggleLines(map: MapboxMap) {
     const lines: FeatureCollection = {
       type: 'FeatureCollection',
       features: [],
     }
+
     linesData.features.forEach((line) => {
-      let relationFilter = false
+      let counterPointsDis = 0
+      let pointFilter = false
+      let placeFilter = false
       let timeFilter = false
       // @ts-expect-error Ignore for now
       if (filters['Person relations'].includes(line.properties.type)) {
-        relationFilter = true
+        placeFilter = true
       }
       // @ts-expect-error Ignore for now
       timeFilter = checkDates(line.properties['start'], line.properties['end'])
       // @ts-expect-error Ignore for now
-      if (filters === personRelationTypes && timeRange[0] === 1920 && timeRange[1] === 1960) {
+      line.properties.id_places.forEach((id_place) => {
+        if (pointsList.has(id_place)) {
+          counterPointsDis += 1
+        }
+      })
+      if (counterPointsDis < 2) {
+        // @ts-expect-error Ignore for now
+        pointFilter = true
+      }
+      if (timeFilter === true && placeFilter === true && pointFilter === true) {
         // @ts-expect-error Ignore for now
         line.properties['visibility'] = true
+        lines.features.push(line)
       } else {
-        if (timeFilter === true && relationFilter === true) {
-          // @ts-expect-error Ignore for now
-          line.properties['visibility'] = true
-          lines.features.push(line)
-        } else {
-          // @ts-expect-error Ignore for now
-          line.properties['visibility'] = false
-        }
+        // @ts-expect-error Ignore for now
+        line.properties['visibility'] = false
       }
     })
     // @ts-expect-error Ignore for now
-    map.getSource('lines-data').setData(lines)
+    if (map.getSource('lines-data') !== undefined) {
+      // @ts-expect-error Ignore for now
+      map.getSource('lines-data').setData(lines)
+    }
     map.triggerRepaint()
   }
-
-  const mapRef = useRef<MapRef>(null)
 
   function onClick(event: MapLayerMouseEvent) {
     if (mapRef.current == null) return
@@ -597,9 +613,8 @@ function MainMap(): JSX.Element {
         filterList={filterList}
         personList={persProf['Persons']}
         relationChange={relationChange}
-        togglePoints={onTogglePoints}
       />
-      <TimeSlider timeRangeChange={onTimeRangeChange} togglePoints={onTogglePoints} />
+      <TimeSlider timeRangeChange={onTimeRangeChange} />
     </GeoMap>
   )
 }
@@ -674,7 +689,6 @@ interface ControlProps {
   filterList: Array<string>
   personList: Array<string>
   relationChange: (type: string, value: Array<string>) => void
-  togglePoints: (map: MapboxMap) => void
 }
 
 function ControlPanel(props: ControlProps): JSX.Element {
@@ -761,9 +775,7 @@ interface ListboxProps {
 }
 
 function ListboxMultiple(props: ListboxProps): JSX.Element {
-  const { filterOptions } = props
-
-  const [isOpen, setIsOpen] = useState(false)
+  const { filterOptions, type, relationChange } = props
 
   const [options, setOptions] = useState<Array<string>>([])
   const [selectedOptions, setselectedOptions] = useState<Array<string>>([])
@@ -783,44 +795,16 @@ function ListboxMultiple(props: ListboxProps): JSX.Element {
     )
   }
 
-  function handleSelect(value: Array<string>) {
-    // TODO:
-    if (!isSelected(value)) {
-      const selectedOptionsUpdated = [
-        ...selectedOptions,
-        options.find((el) => {
-          return el === value
-        }),
-      ].filter(Boolean)
-      setselectedOptions(selectedOptionsUpdated)
-      props.relationChange(props.type, selectedOptionsUpdated)
-      setChecked(true)
-    } else {
-      handleDeselect(value)
-    }
-    setIsOpen(true)
-  }
-
-  function handleDeselect(value: string) {
-    const selectedOptionsUpdated = selectedOptions.filter((el) => {
-      return el !== value
-    })
-    setselectedOptions(selectedOptionsUpdated)
-    props.relationChange(props.type, selectedOptionsUpdated)
-    setIsOpen(true)
-    if (selectedOptionsUpdated.length === 0) {
-      setChecked(false)
-    }
+  function handleSelect(event: Array<string>) {
+    setselectedOptions(event)
+    relationChange(type, event)
+    event.length === 0 ? setChecked(false) : setChecked(true)
   }
 
   function handleChecked(checked: boolean) {
-    if (checked) {
-      setselectedOptions(options)
-      props.relationChange(props.type, options)
-    } else {
-      setselectedOptions([])
-      props.relationChange(props.type, [])
-    }
+    const checkOptions = checked ? options : []
+    setselectedOptions(checkOptions)
+    relationChange(type, checkOptions)
   }
 
   const [checked, setChecked] = useState(true)
@@ -830,15 +814,15 @@ function ListboxMultiple(props: ListboxProps): JSX.Element {
       as="div"
       className="space-y-1"
       value={selectedOptions}
-      onChange={handleSelect}
       multiple
+      onChange={handleSelect}
     >
       {() => {
         return (
           <>
             <input
               type="checkbox"
-              id={props.type}
+              id={type}
               className="inline"
               checked={checked}
               onChange={(e) => {
@@ -848,22 +832,17 @@ function ListboxMultiple(props: ListboxProps): JSX.Element {
             />
             <Listbox.Label
               className="block text-sm font-medium leading-5 text-gray-700"
-              htmlFor={props.type}
+              htmlFor={type}
             >
               {props.type}
             </Listbox.Label>
             <div className="relative">
               <span className="inline-block w-full rounded-md shadow-sm">
-                <Listbox.Button
-                  className="focus:shadow-outline-blue relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left transition duration-150 ease-in-out focus:border-blue-300 focus:outline-none sm:text-sm sm:leading-5"
-                  onClick={() => {
-                    setIsOpen(!isOpen)
-                  }}
-                >
+                <Listbox.Button className="focus:shadow-outline-blue relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left transition duration-150 ease-in-out focus:border-blue-300 focus:outline-none sm:text-sm sm:leading-5">
                   <span className="block truncate">
                     {selectedOptions.length < 1
                       ? 'Select filters'
-                      : `Selected ${props.type} (${selectedOptions.length})`}
+                      : `Selected ${type} (${selectedOptions.length})`}
                   </span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <svg
@@ -885,7 +864,6 @@ function ListboxMultiple(props: ListboxProps): JSX.Element {
 
               <Transition
                 unmount={false}
-                show={isOpen}
                 leave="transition ease-in duration-100"
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
@@ -961,7 +939,13 @@ export interface Ipeople {
 function ComboboxMultiple(props: ComboboxProps): JSX.Element {
   const { personList: people } = props
 
-  const [selectedPeople, setSelectedPeople] = useState(people)
+  const [selectedPeople, setSelectedPeople] = useState<Array<string>>([])
+
+  useEffect(() => {
+    if (people.length > 0) {
+      setSelectedPeople(people)
+    }
+  }, [people])
 
   const [query, setQuery] = useState('')
 
