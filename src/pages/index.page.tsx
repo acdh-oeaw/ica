@@ -323,7 +323,7 @@ function MainMap(): JSX.Element {
     if (mapRef.current !== null) {
       onTogglePoints(mapRef.current)
     }
-  }, [filters])
+  }, [filters, timeRange])
 
   function checkDates(start: string, end: string) {
     const [_start, _end] = timeRange
@@ -353,6 +353,7 @@ function MainMap(): JSX.Element {
     return false
   }
 
+  // This set helps with the toggling of relations lines when their start and end points are toggled, i.e. when there's no start or end point visible on the map. 
   const [pointsList, setPointsList] = useState(new Set())
 
   function onTogglePoints(map: MapboxMap) {
@@ -364,7 +365,7 @@ function MainMap(): JSX.Element {
 
     // iterate through points in data set
     data.features.forEach((point) => {
-      // define filter booleans for filter categories and check
+      // Define filter booleans for filter categories and check
       let [placeFilter, timeFilter, professionFilter, personFilter] = Array(4).fill(false)
       // @ts-expect-error Ignore for now
       if (filters['Place relations'].includes(point.properties.relation)) {
@@ -381,16 +382,18 @@ function MainMap(): JSX.Element {
       // @ts-expect-error Ignore for now
       timeFilter = checkDates(point.properties.start, point.properties.end)
 
-      // check what filters return
+      // Check what filters return
       if (
         timeFilter === true &&
         placeFilter === true &&
         professionFilter === true &&
         personFilter === true
       ) {
+        // If all filters are true, set visibility to True and push point into feature collection
         // @ts-expect-error Ignore for now
         point.properties['visibility'] = true
         points.features.push(point)
+        // Remove the visible point from the list of points which are not visible on the map
         setPointsList((prev) => {
           return new Set(
             [...prev].filter((x) => {
@@ -402,6 +405,7 @@ function MainMap(): JSX.Element {
       } else {
         // @ts-expect-error Ignore for now
         point.properties['visibility'] = false
+        // Add the now invisible point to the list of points which are not visible on the map
         // @ts-expect-error Ignore for now
         setPointsList((prev) => {
           return new Set(prev.add(point.properties['id_place']))
@@ -416,6 +420,7 @@ function MainMap(): JSX.Element {
     map.triggerRepaint()
   }
 
+  // toggle lines if the points visible on the map change
   useEffect(() => {
     if (mapRef.current !== null) {
       toggleLines(mapRef.current)
@@ -427,12 +432,13 @@ function MainMap(): JSX.Element {
       type: 'FeatureCollection',
       features: [],
     }
-
+    // Same as with the points; define boolean to check for the different filters
     linesData.features.forEach((line) => {
-      let counterPointsDis = 0
       let pointFilter = false
       let placeFilter = false
       let timeFilter = false
+      // This variable is used to check if both start and end point are invisible
+      let counterPointsDis = 0
       // @ts-expect-error Ignore for now
       if (filters['Person relations'].includes(line.properties.type)) {
         placeFilter = true
@@ -563,6 +569,7 @@ function MainMap(): JSX.Element {
       )
       content.push(contentPart)
     })
+    
     const contentToShow = <div> {content} </div>
     let longitude = null
     let latitude = null
@@ -614,7 +621,7 @@ function MainMap(): JSX.Element {
         personList={persProf['Persons']}
         relationChange={relationChange}
       />
-      <TimeSlider timeRangeChange={onTimeRangeChange} />
+      <TimeSlider onTimeRangeChange={onTimeRangeChange}/>
     </GeoMap>
   )
 }
@@ -745,12 +752,11 @@ function ControlPanel(props: ControlProps): JSX.Element {
 }
 
 interface TimeProps {
-  timeRangeChange: (e: Array<number>) => void
-  togglePoints: (map: MapboxMap) => void
+  onTimeRangeChange: (e: Array<number>) => void
 }
 
 function TimeSlider(props: TimeProps): JSX.Element {
-  const { current: map } = useMap()
+  const { onTimeRangeChange } = props
 
   return (
     <RangeSlider
@@ -761,8 +767,7 @@ function TimeSlider(props: TimeProps): JSX.Element {
       defaultValue={[1920, 1960]}
       graduated
       onChangeCommitted={(e) => {
-        props.timeRangeChange(e)
-        props.togglePoints(map)
+        onTimeRangeChange(e)
       }}
     />
   )
