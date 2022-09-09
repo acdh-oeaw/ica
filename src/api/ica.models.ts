@@ -111,3 +111,8 @@ export interface WorkPlaceRelation extends RelationBase {
 export interface Collection {
   id: number
 }
+
+export interface PersonPersonRelation extends RelationBase {
+  related_personA: LabeledReference
+  related_personB: LabeledReference
+}

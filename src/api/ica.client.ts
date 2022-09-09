@@ -10,6 +10,7 @@ import type {
   Institution,
   InstitutionPlaceRelation,
   Person,
+  PersonPersonRelation,
   PersonPlaceRelation,
   Place,
   PlacePlaceRelation,
@@ -428,6 +429,60 @@ export function useWorkPlaceRelations(
     options?.disabled === true ? null : ['getWorkPlaceRelations', params],
     () => {
       return getWorkPlaceRelations(params)
+    },
+    { keepPreviousData: true, ...options },
+  )
+}
+
+// PersonPerson Relation
+
+export function getSourcePersonRelations(params: {
+  ids?: Array<Person['id']>
+}): Promise<PaginatedResponse<PersonPersonRelation>> {
+  const url = createUrl({
+    baseUrl,
+    pathname: '/apis/api/relations/personperson/',
+    searchParams: { related_personA__id__in: params.ids?.join(','), limit: defaultLimit },
+  })
+  const options: RequestOptions = { responseType: 'json' }
+
+  return request(url, options)
+}
+
+export function useSourcePersonRelations(
+  params: { ids?: Array<Person['id']> },
+  options?: QueryOptions & SWRConfiguration<PaginatedResponse<PersonPersonRelation>, Error>,
+) {
+  return useQuery(
+    options?.disabled === true ? null : ['getSourcePersonRelations', params],
+    () => {
+      return getSourcePersonRelations(params)
+    },
+    { keepPreviousData: true, ...options },
+  )
+}
+
+export function getTargetPersonRelations(params: {
+  ids?: Array<Person['id']>
+}): Promise<PaginatedResponse<PersonPersonRelation>> {
+  const url = createUrl({
+    baseUrl,
+    pathname: '/apis/api/relations/personperson/',
+    searchParams: { related_personB__id__in: params.ids?.join(','), limit: defaultLimit },
+  })
+  const options: RequestOptions = { responseType: 'json' }
+
+  return request(url, options)
+}
+
+export function useTargetPersonRelations(
+  params: { ids?: Array<Person['id']> },
+  options?: QueryOptions & SWRConfiguration<PaginatedResponse<PersonPersonRelation>, Error>,
+) {
+  return useQuery(
+    options?.disabled === true ? null : ['getTargetPersonRelations', params],
+    () => {
+      return getTargetPersonRelations(params)
     },
     { keepPreviousData: true, ...options },
   )
