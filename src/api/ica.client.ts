@@ -436,27 +436,53 @@ export function useWorkPlaceRelations(
 
 // PersonPerson Relation
 
-export function getPersonPersonRelations(params: {
+export function getSourcePersonRelations(params: {
   ids?: Array<Person['id']>
 }): Promise<PaginatedResponse<PersonPersonRelation>> {
   const url = createUrl({
     baseUrl,
     pathname: '/apis/api/relations/personperson/',
-    searchParams: { related_person__id__in: params.ids?.join(','), limit: defaultLimit },
+    searchParams: { related_personA__id__in: params.ids?.join(','), limit: defaultLimit },
   })
   const options: RequestOptions = { responseType: 'json' }
 
   return request(url, options)
 }
 
-export function usePersonPersonRelations(
+export function useSourcePersonRelations(
   params: { ids?: Array<Person['id']> },
   options?: QueryOptions & SWRConfiguration<PaginatedResponse<PersonPersonRelation>, Error>,
 ) {
   return useQuery(
-    options?.disabled === true ? null : ['getPersonPersonRelations', params],
+    options?.disabled === true ? null : ['getSourcePersonRelations', params],
     () => {
-      return getPersonPersonRelations(params)
+      return getSourcePersonRelations(params)
+    },
+    { keepPreviousData: true, ...options },
+  )
+}
+
+export function getTargetPersonRelations(params: {
+  ids?: Array<Person['id']>
+}): Promise<PaginatedResponse<PersonPersonRelation>> {
+  const url = createUrl({
+    baseUrl,
+    pathname: '/apis/api/relations/personperson/',
+    searchParams: { related_personB__id__in: params.ids?.join(','), limit: defaultLimit },
+  })
+  const options: RequestOptions = { responseType: 'json' }
+
+  return request(url, options)
+}
+
+export function useTargetPersonRelations(
+  params: { ids?: Array<Person['id']> },
+  options?: QueryOptions & SWRConfiguration<PaginatedResponse<PersonPersonRelation>, Error>,
+) {
+  return useQuery(
+    options?.disabled === true ? null : ['getTargetPersonRelations', params],
+    () => {
+      return getTargetPersonRelations(params)
     },
     { keepPreviousData: true, ...options },
   )

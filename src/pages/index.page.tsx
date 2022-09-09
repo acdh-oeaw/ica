@@ -9,6 +9,7 @@ import { usePageTitleTemplate } from '@/app/metadata/use-page-title-template'
 import { GeoMap } from '@/components/geo-map'
 import { initialViewState, mapStyle } from '@/components/geo-map.config'
 import { layerStyle } from '@/components/geo-map-layers.config'
+import { usePersonsPersons } from '@/lib/use-persons-persons'
 import { usePersonsPlaces } from '@/lib/use-persons-places'
 
 export const getStaticProps = withDictionaries(['common'])
@@ -74,6 +75,11 @@ function PlacesLayer(): JSX.Element {
   }
 
   const { places, relationsByPlace } = usePersonsPlaces()
+
+  // eslint-disable-next-line
+  const { persons, personPersonRelationsBySourcePersonId, personPersonRelationsByTargetPersonId } =
+    usePersonsPersons()
+
   const data = useMemo(() => {
     const points: FeatureCollection = {
       type: 'FeatureCollection',

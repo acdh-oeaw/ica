@@ -2,64 +2,63 @@ import { groupByToMap } from '@stefanprobst/group-by'
 import { keyByToMap } from '@stefanprobst/key-by'
 import { useMemo } from 'react'
 
-import { usePersonPersonRelations, usePersons } from '@/api/ica.client'
+import { usePersons, useSourcePersonRelations, useTargetPersonRelations } from '@/api/ica.client'
 import { collection } from '~/config/ica.config'
 
-// FIXME:
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 export function usePersonsPersons() {
-  const personsAQuery = usePersons({ collection })
-  const [personIds, persons, personsById] = useMemo(() => {
-    const personsById = keyByToMap(personsAQuery.data?.results ?? [], (person) => {
+  const personsQuery = usePersons({ collection })
+
+  const [personIds, persons, _personsById] = useMemo(() => {
+    const personsById = keyByToMap(personsQuery.data?.results ?? [], (person) => {
       return person.id
     })
     const personIds = Array.from(personsById.keys())
     const persons = Array.from(personsById.values())
-    return [personIds, persons, personsById]
-  }, [personsAQuery.data])
 
-  const personPersonRelationsQuery = usePersonPersonRelations(
+    return [personIds, persons, personsById]
+  }, [personsQuery.data])
+
+  const sourcePersonRelationsQuery = useSourcePersonRelations(
     { ids: personIds },
     { disabled: personIds.length === 0 },
   )
-  const [relatedPersonAIds, relationsByPersonA] = useMemo(() => {
-    const relationsByPersonA = groupByToMap(
-      personPersonRelationsQuery.data?.results ?? [],
-      (relation) => {
-        return relation.related_personA.id
-      },
-    )
-    const relatedPersonAIds = Array.from(relationsByPersonA.keys())
-    return [relatedPersonAIds, relationsByPersonA]
-  }, [personPersonRelationsQuery.data])
-  const [relatedPersonBIds, relationsByPersonB] = useMemo(() => {
-    const relationsByPersonB = groupByToMap(
-      personPersonRelationsQuery.data?.results ?? [],
-      (relation) => {
-        return relation.related_personB.id
-      },
-    )
-    const relatedPersonBIds = Array.from(relationsByPersonB.keys())
-    return [relatedPersonBIds, relationsByPersonB]
-  }, [personPersonRelationsQuery.data])
-
-  const personsBQuery = usePersons(
-    { ids: relatedPersonBIds },
-    { disabled: relatedPersonBIds.length === 0 },
+  const targetPersonRelationsQuery = useTargetPersonRelations(
+    { ids: personIds },
+    { disabled: personIds.length === 0 },
   )
-  const [personBIds, personsB, personsBById] = useMemo(() => {
-    const personsById = keyByToMap(personsBQuery.data?.results ?? [], (person) => {
-      return person.id
-    })
-    const personIds = Array.from(personsById.keys())
-    const persons = Array.from(personsById.values())
-    return [personIds, persons, personsById]
-  }, [personsBQuery.data])
+
+  const personPersonRelationsBySourcePersonId = useMemo(() => {
+    const personPersonRelationsBySourcePersonId = groupByToMap(
+      sourcePersonRelationsQuery.data?.results ?? [],
+      (relation) => {
+        if (personIds.includes(relation.related_personB.id)) {
+          return relation.related_personA.id
+        }
+        // we only care about relations to persons in the "webclient" collection
+        return 'ignored'
+      },
+    )
+    personPersonRelationsBySourcePersonId.delete('ignored')
+    return personPersonRelationsBySourcePersonId
+  }, [sourcePersonRelationsQuery.data, personIds])
+  const personPersonRelationsByTargetPersonId = useMemo(() => {
+    const personPersonRelationsByTargetPersonId = groupByToMap(
+      targetPersonRelationsQuery.data?.results ?? [],
+      (relation) => {
+        if (personIds.includes(relation.related_personA.id)) {
+          return relation.related_personB.id
+        }
+        // we only care about relations to persons in the "webclient" collection
+        return 'ignored'
+      },
+    )
+    personPersonRelationsByTargetPersonId.delete('ignored')
+    return personPersonRelationsByTargetPersonId
+  }, [targetPersonRelationsQuery.data, personIds])
 
   return {
     persons,
-    relationsByPersonA,
-    relationsByPersonB,
+    personPersonRelationsBySourcePersonId,
+    personPersonRelationsByTargetPersonId,
   }
 }
