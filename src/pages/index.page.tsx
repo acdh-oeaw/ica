@@ -430,6 +430,7 @@ function MainMap(): JSX.Element {
         // Remove the visible point from the list of points which are not visible on the map
         setPointsList((prev) => {
           return new Set(
+            // @ts-expect-error Ignore for now
             [...prev].filter((x) => {
               if (point.properties !== null) {
                 return x !== point.properties['id_place']

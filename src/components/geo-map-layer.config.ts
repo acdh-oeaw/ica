@@ -1,5 +1,6 @@
 import type { LayerProps as LayerPropsWithoutId } from 'react-map-gl'
 
+// @ts-expect-error Ignore for now
 type LayerProps = Required<LayerPropsWithoutId, 'id'>
 
 export const clusterLayer: LayerProps = {
