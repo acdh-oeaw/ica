@@ -1,3 +1,7 @@
+interface Array<T> {
+  filter(predicate: BooleanConstructor): Array<NonNullable<T>>
+}
+
 type IsoDateString = string
 
 type UrlString = string
