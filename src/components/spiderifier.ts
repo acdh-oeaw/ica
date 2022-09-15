@@ -26,20 +26,10 @@ const SPIDER_LEGS_PAINT_OPTION = {
 
 const SPIDER_LEAVES_LAYER_NAME = 'spider-leaves'
 const SPIDER_LEAVES_PAINT_OPTION = {
-  'circle-color': [
-    'match',
-    ['get', 'profession'],
-    'historian (Q201788)',
-    'red',
-    'writer (Q36180)',
-    'yellow',
-    'journalist (Q1930187)',
-    'green',
-    'blue',
-  ],
+  'circle-color': ['match', ['get', 'type'], 'person', 'red', 'institution', 'green', 'blue'],
   'circle-radius': 8,
-  'circle-stroke-width': 1,
-  'circle-stroke-color': '#fff',
+  'circle-stroke-width': ['case', ['==', ['get', 'mainPerson'], true], 3, 1],
+  'circle-stroke-color': ['case', ['==', ['get', 'mainPerson'], true], 'orange', '#fff'],
 }
 
 let clusterMarkers: Array<any> = []

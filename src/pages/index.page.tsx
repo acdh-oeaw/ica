@@ -1,6 +1,6 @@
 import 'rsuite/dist/rsuite.min.css'
 
-import { Combobox, Listbox, Transition } from '@headlessui/react'
+import { Combobox, Listbox, Switch, Transition } from '@headlessui/react'
 import { ArrowsUpDownIcon as SelectorIcon, CheckIcon } from '@heroicons/react/20/solid'
 import { PageMetadata } from '@stefanprobst/next-page-metadata'
 import type { Feature, FeatureCollection, LineString, Point } from 'geojson'
@@ -23,6 +23,7 @@ import {
   unclusteredPointLayer,
 } from '@/components/geo-map-layer.config'
 import { clearSpiderifiedCluster, spiderifyCluster } from '@/components/spiderifier'
+import { useInstitutionPlaces } from '@/lib/use-institutions-places'
 import { usePersonsPersons } from '@/lib/use-persons-persons'
 import { usePersonsPlaces } from '@/lib/use-persons-places'
 
@@ -104,62 +105,250 @@ function MainMap(): JSX.Element {
   const { personPersonRelationsBySourcePersonId, personPersonRelationsByTargetPersonId } =
     usePersonsPersons()
 
+  const { relationsByPlaceInst } = useInstitutionPlaces()
+
   const mapRef = useRef<MapRef>(null)
 
-  const id = {
-    source: 'places-data',
-    layer: 'places',
+  const id = useMemo(() => {
+    return {
+      source: 'places-data',
+      layer: 'places',
+    }
+  }, [])
+
+  // eslint-disable-next-line
+  function buildPoint(personId: number, targetCollection: FeatureCollection, mainPerson: boolean) {
+    const relationsPlace = relationsByPerson.get(personId)
+    relationsPlace?.forEach((relation) => {
+      const place = places.find((item) => {
+        return item.id === relation.related_place.id
+      })
+      if (place) {
+        if (place.lng !== null && place.lat !== null) {
+          const point: Feature<Point> = {
+            type: 'Feature',
+            geometry: { type: 'Point', coordinates: [place.lng, place.lat] },
+            id: relation.id,
+            properties: {
+              id_place: place.id,
+              place: place.name,
+              id_person: relation['related_person']['id'],
+              person: relation['related_person']['label'],
+              relation: relation['relation_type']['label'],
+              start: relation['start_date_written'],
+              end: relation['end_date_written'],
+              startDate: relation['start_date'],
+              endDate: relation['end_date'],
+              visibility: true,
+              mainPerson: mainPerson,
+              /** NOTE: Be aware that nested objects and arrays get stringified on `event.features`. */
+            },
+          }
+          targetCollection.features.push(point)
+        }
+      }
+    })
   }
 
-  const data = useMemo(() => {
+  const [mainPerson, setMainPerson] = useState<string>('')
+  const [mainPersonId, setMainPersonId] = useState<number>(520)
+
+  function changeMainPerson(person: string) {
+    setMainPerson(person)
+  }
+
+  useEffect(() => {
+    const lastName = mainPerson.split(', ')[0]
+    const firstName = mainPerson.split(', ')[1]
+    const personForId = persons.find((person) => {
+      return person.first_name === firstName && person.name === lastName
+    })
+    if (personForId) {
+      setMainPersonId(personForId.id)
+    }
+    if (mapRef.current) {
+      // eslint-disable-next-line
+      if (mapRef.current.getSource('places-data') !== undefined) {
+        // @ts-expect-error Ignore for now
+        mapRef.current.getSource('places-data').setData(pointsSinglePerson)
+        // @ts-expect-error Ignore for now
+        mapRef.current.getSource('lines-data').setData(linesSinglePerson)
+      }
+      clearSpiderifiedCluster(mapRef.current)
+      mapRef.current.triggerRepaint()
+    }
+  }, [mainPerson])
+
+  const pointsSinglePerson = useMemo(() => {
     const points: FeatureCollection = {
       type: 'FeatureCollection',
       features: [],
     }
 
-    places.forEach((place) => {
-      const relations = relationsByPlace.get(place.id)
-      if (relations) {
-        relations.forEach((relation) => {
-          if (place.lat != null && place.lng != null) {
-            const profession = persons.find((x) => {
-              return x.id === relation['related_person']['id']
-            })?.profession[0]
-            let profLabel = ''
-            if (profession) {
-              profLabel = profession.label
+    buildPoint(mainPersonId, points, true)
+    const relationsSource = personPersonRelationsBySourcePersonId.get(mainPersonId)
+    relationsSource?.forEach((relation) => {
+      buildPoint(relation.related_personB.id, points, false)
+    })
+    const relationsTarget = personPersonRelationsByTargetPersonId.get(mainPersonId)
+    relationsTarget?.forEach((relation) => {
+      buildPoint(relation.related_personA.id, points, false)
+    })
+    return points
+  }, [
+    buildPoint,
+    personPersonRelationsBySourcePersonId,
+    personPersonRelationsByTargetPersonId,
+    mainPersonId,
+  ])
+
+  const linesSinglePerson = useMemo(() => {
+    const lines: FeatureCollection = {
+      type: 'FeatureCollection',
+      features: [],
+    }
+
+    const relationsPlace = relationsByPerson.get(mainPersonId)
+    const relationsSource = personPersonRelationsBySourcePersonId.get(mainPersonId)
+    const relationsTarget = personPersonRelationsByTargetPersonId.get(mainPersonId)
+    const relationLists = [relationsSource, relationsTarget]
+
+    relationLists.forEach((list) => {
+      const lived = ['lived in', 'lived at']
+      if (list) {
+        if (relationsPlace) {
+          const sourcePlaceRelation = relationsByPerson.get(mainPersonId)?.find((item) => {
+            return lived.includes(item.relation_type.label)
+          })
+          if (sourcePlaceRelation) {
+            const sourcePlace = places.find((item) => {
+              return item.id === sourcePlaceRelation.related_place.id
+            })
+            if (sourcePlace) {
+              const { lng, lat } = sourcePlace
+              if (lng != null && lat != null) {
+                list.forEach((relation) => {
+                  const line: Feature<LineString> = {
+                    type: 'Feature',
+                    id: id_feature,
+                    geometry: { type: 'LineString', coordinates: [[lng, lat]] },
+                    properties: {
+                      source: relation['related_personA']['label'],
+                      id_source: relation['related_personA']['id'],
+                      target: relation['related_personB']['label'],
+                      id_target: relation['related_personB']['id'],
+                      id_relation: relation['id'],
+                      id_places: [sourcePlace.id],
+                      type: relation['relation_type']['label'],
+                      start: relation['start_date_written'],
+                      end: relation['end_date_written'],
+                      startDate: relation['start_date'],
+                      endDate: relation['end_date'],
+                      visibility: true,
+                    },
+                  }
+
+                  const relationsTarget = relationsByPerson.get(relation.related_personB.id)
+                  if (relationsTarget) {
+                    const targetPlaceRelation = relationsByPerson
+                      .get(relation.related_personB.id)
+                      ?.find((item) => {
+                        return lived.includes(item.relation_type.label)
+                      })
+                    if (targetPlaceRelation) {
+                      const targetPlace = places.find((item) => {
+                        return item.id === targetPlaceRelation.related_place.id
+                      })
+                      if (targetPlace) {
+                        const { lng, lat } = targetPlace
+                        if (lng != null && lat != null) {
+                          line.geometry.coordinates.push([lng, lat])
+                          line.properties?.['id_places'].push(targetPlace.id)
+                          lines.features.push(line)
+                          id_feature += 1
+                        }
+                      }
+                    }
+                  }
+                })
+              }
             }
-            const point: Feature<Point> = {
-              type: 'Feature',
-              geometry: { type: 'Point', coordinates: [place.lng, place.lat] },
-              id: id_feature,
-              properties: {
-                id_place: place.id,
-                place: place.name,
-                id_person: relation['related_person']['id'],
-                id_relation: relation['id'],
-                person: relation['related_person']['label'],
-                relation: relation['relation_type']['label'],
-                start: relation['start_date_written'],
-                end: relation['end_date_written'],
-                startDate: relation['start_date'],
-                endDate: relation['end_date'],
-                visibility: true,
-                profession: profLabel,
-                /** NOTE: Be aware that nested objects and arrays get stringified on `event.features`. */
-              },
-            }
-            points.features.push(point)
-            id_feature += 1
           }
-        })
+        }
       }
     })
+    return lines
+  }, [
+    personPersonRelationsBySourcePersonId,
+    personPersonRelationsByTargetPersonId,
+    places,
+    relationsByPerson,
+    mainPersonId,
+  ])
 
+  const allPoints = useMemo(() => {
+    const points: FeatureCollection = {
+      type: 'FeatureCollection',
+      features: [],
+    }
+    places.forEach((place) => {
+      const relationsInst = relationsByPlaceInst.get(place.id)
+      const relationsPerson = relationsByPlace.get(place.id)
+      let relations: Array<Record<string, any>> = []
+      if (relationsInst) {
+        relations = [...relationsInst]
+      }
+      if (relationsPerson) {
+        relations = [...relations, ...relationsPerson]
+      }
+      relations.forEach((relation) => {
+        if (place.lat != null && place.lng != null) {
+          const point: Feature<Point> = {
+            type: 'Feature',
+            geometry: { type: 'Point', coordinates: [place.lng, place.lat] },
+            // @ts-expect-error Ignore for now
+            id: id,
+            properties: {
+              id_place: place.id,
+              place: place.name,
+              id_relation: relation['id'],
+              relation: relation['relation_type']['label'],
+              start: relation['start_date_written'],
+              end: relation['end_date_written'],
+              startDate: relation['start_date'],
+              endDate: relation['end_date'],
+              visibility: true,
+              /** NOTE: Be aware that nested objects and arrays get stringified on `event.features`. */
+            },
+          }
+          if (point.properties !== null) {
+            if (relation['related_person'] !== undefined) {
+              const profession = persons.find((x) => {
+                return x.id === relation['related_person']['id']
+              })?.profession[0]
+              let profLabel = ''
+              if (profession) {
+                profLabel = profession.label
+                point.properties['profession'] = profLabel
+              }
+              point.properties['id_person'] = relation['related_person']['id']
+              point.properties['person'] = relation['related_person']['label']
+              point.properties['type'] = 'person'
+            } else if (relation['related_institution'] !== undefined) {
+              point.properties['id_institution'] = relation['related_institution']['id']
+              point.properties['institution'] = relation['related_institution']['label']
+              point.properties['type'] = 'institution'
+            }
+          }
+          points.features.push(point)
+        }
+      })
+    })
     return points
-  }, [places, persons, relationsByPlace])
+  }, [places, persons, relationsByPlace, id, relationsByPlaceInst])
 
-  const linesData = useMemo(() => {
+
+  const allLines = useMemo(() => {
     const lines: FeatureCollection = {
       type: 'FeatureCollection',
       features: [],
@@ -243,6 +432,19 @@ function MainMap(): JSX.Element {
     personPersonRelationsByTargetPersonId,
     relationsByPerson,
   ])
+
+  const [pointsData, setPointsData] = useState(allPoints)
+  const [linesData, setLinesData] = useState(allLines)
+
+  function setSingleModeMap(onOff: boolean) {
+    if (onOff === false) {
+      setPointsData(allPoints)
+      setLinesData(allLines)
+    } else {
+      setPointsData(pointsSinglePerson)
+      setLinesData(linesSinglePerson)
+    }
+  }
 
   const personRelationTypes: Array<string> = useMemo(() => {
     const types: Array<string> = []
@@ -395,10 +597,13 @@ function MainMap(): JSX.Element {
     }
 
     // iterate through points in data set
-    data.features.forEach((point) => {
+    allPoints.features.forEach((point) => {
       // Define filter booleans for filter categories and check
       let [placeFilter, timeFilter, professionFilter, personFilter] = Array(4).fill(false)
       if (point.properties !== null) {
+        if (point.properties['type'] === 'institution') {
+          ;[placeFilter, timeFilter, professionFilter, personFilter] = Array(4).fill(true)
+        }
         if (filters['Place relations'].includes(point.properties['relation'])) {
           placeFilter = true
         }
@@ -474,7 +679,7 @@ function MainMap(): JSX.Element {
       features: [],
     }
     // Same as with the points; define boolean to check for the different filters
-    linesData.features.forEach((line) => {
+    allLines.features.forEach((line) => {
       let pointFilter = false
       let placeFilter = false
       let timeFilter = false
@@ -574,23 +779,31 @@ function MainMap(): JSX.Element {
     let label = ''
     let link = ''
     let text = ''
-    let persLink = ''
     const content: Array<JSX.Element> = []
     let type = ''
     features.forEach((feature) => {
       if (feature.properties == null) return
       type = feature.geometry.type
+      let persLink = ''
       if (type === 'Point') {
         label = feature.properties['place']
         link = `https://ica.acdh-dev.oeaw.ac.at/apis/entities/entity/place/${feature.properties['id_place']}/detail`
+        const pointType = feature.properties['type']
+        let featureLabel = ''
+        if (pointType === 'person') {
+          featureLabel = feature.properties['person']
+          persLink = `https://ica.acdh-dev.oeaw.ac.at/apis/entities/entity/person/${feature.properties['id_person']}/detail`
+        } else if (pointType === 'institution') {
+          featureLabel = feature.properties['institution']
+          persLink = `https://ica.acdh-dev.oeaw.ac.at/apis/entities/entity/institution/${feature.properties['id_institution']}/detail`
+        }
         text = [
-          feature.properties['person'],
+          featureLabel,
           feature.properties['relation'],
           [feature.properties['start'], feature.properties['end']].filter(Boolean).join('-'),
         ]
           .filter(Boolean)
           .join('. ')
-        persLink = `https://ica.acdh-dev.oeaw.ac.at/apis/entities/entity/person/${feature.properties['id_person']}/detail`
       } else if (type === 'LineString') {
         label = feature.properties['source']
         link = `https://ica.acdh-dev.oeaw.ac.at/apis/entities/entity/person/${feature.properties['id_source']}/detail`
@@ -657,7 +870,7 @@ function MainMap(): JSX.Element {
     >
       <LayerCollection
         id={id}
-        data={data}
+        data={pointsData}
         linesData={linesData}
         generatePopupContent={generatePopupContent}
       />
@@ -671,6 +884,8 @@ function MainMap(): JSX.Element {
         filterList={filterList}
         personList={persProf['Persons']}
         relationChange={relationChange}
+        changeMainPerson={changeMainPerson}
+        setSingleModeMap={setSingleModeMap}
       />
       <TimeSlider onTimeRangeChange={onTimeRangeChange} />
     </GeoMap>
@@ -733,7 +948,7 @@ function LayerCollection(props: LayerProps): JSX.Element {
         data={props.data}
         cluster={true}
         clusterMaxZoom={25}
-        clusterRadius={30}
+        clusterRadius={15}
       >
         <Layer {...clusterLayer} />
         <Layer {...clusterCountLayer} />
@@ -747,6 +962,8 @@ interface ControlProps {
   filterList: Array<string>
   personList: Array<string>
   relationChange: (type: string, value: Array<string>) => void
+  changeMainPerson: (person: string) => void
+  setSingleModeMap: (onOff: boolean) => void
 }
 
 function ControlPanel(props: ControlProps): JSX.Element {
@@ -756,10 +973,18 @@ function ControlPanel(props: ControlProps): JSX.Element {
     map?.getMap().setStyle(mapStyle[value])
   }
 
+  const [singlePersonMode, setSinglePersonMode] = useState(false)
+
+  function setSinglePerson(onOff: boolean) {
+    setSinglePersonMode(onOff)
+    props.setSingleModeMap(onOff)
+  }
+
   const [selectedBasemap, setSelectedBasemap] = useState<keyof typeof mapStyle>('positron')
 
   return (
     <div style={controlPanelStyle.panelStyle}>
+      <ModeSwitch setSinglePerson={setSinglePerson} />
       <h3>Basemaps: </h3>
       {Object.keys(mapStyle).map((basemap) => {
         return (
@@ -778,26 +1003,26 @@ function ControlPanel(props: ControlProps): JSX.Element {
           </div>
         )
       })}
-      <h3>Filters </h3>
-      {Object.keys(props.filterList).map((filter) => {
-        return (
-          <ListboxMultiple
-            key={filter}
-            // @ts-expect-error Check later
-            filterOptions={props.filterList[filter]}
-            type={filter}
-            relationChange={(type: string, value: Array<string>) => {
-              return props.relationChange(type, value)
-            }}
-          />
-        )
-      })}
-      <ComboboxMultiple
-        personList={props.personList}
-        relationChange={(type: string, value: Array<string>) => {
-          return props.relationChange(type, value)
-        }}
-      />
+      {!singlePersonMode && (
+        <div>
+          <h3>Filters </h3>
+          {Object.keys(props.filterList).map((filter) => {
+            return (
+              <ListboxMultiple
+                key={filter}
+                // @ts-expect-error Check later
+                filterOptions={props.filterList[filter]}
+                type={filter}
+                relationChange={props.relationChange}
+              />
+            )
+          })}
+          <ComboboxMultiple personList={props.personList} relationChange={props.relationChange} />
+        </div>
+      )}
+      {singlePersonMode && (
+        <ComboboxSingle personList={props.personList} changeMainPerson={props.changeMainPerson} />
+      )}
     </div>
   )
 }
@@ -1115,6 +1340,146 @@ function ComboboxMultiple(props: ComboboxProps): JSX.Element {
         </div>
       </Combobox>
     </>
+  )
+}
+
+interface ComboboxSingleProps {
+  personList: Array<string>
+  changeMainPerson: (person: string) => void
+}
+
+function ComboboxSingle(props: ComboboxSingleProps): JSX.Element {
+  const { personList: people } = props
+
+  const [selectedPerson, setSelectedPerson] = useState<string>('Gunther, John')
+
+  useEffect(() => {
+    if (people.length > 0) {
+      props.changeMainPerson('Gunther, John')
+    }
+  }, [props])
+
+  const [query, setQuery] = useState('')
+
+  const filteredPeople: Array<string> =
+    query === ''
+      ? people
+      : people.filter((person: string) => {
+          return person.toLowerCase().includes(query.toLowerCase())
+        })
+
+  function handleChange(value: string) {
+    setSelectedPerson(value)
+    props.changeMainPerson(value)
+  }
+
+  return (
+    <>
+      <Combobox value={selectedPerson} onChange={handleChange}>
+        <div className="relative mt-1">
+          <div className="focus-visible:ring-opacity-75 relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+            <Combobox.Input
+              className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
+              onChange={(event) => {
+                setQuery(event.target.value)
+              }}
+              displayValue={(selectedPerson: string) => {
+                return selectedPerson
+              }}
+            />
+            <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+              <SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+            </Combobox.Button>
+          </div>
+          <Transition
+            as={Fragment}
+            leave="transition ease-in duration-100"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+            afterLeave={() => {
+              return setQuery('')
+            }}
+          >
+            <Combobox.Options className="ring-opacity-5 absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black focus:outline-none sm:text-sm">
+              {filteredPeople.length === 0 && query !== '' ? (
+                <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+                  Nothing found.
+                </div>
+              ) : (
+                filteredPeople.map((person) => {
+                  return (
+                    <Combobox.Option
+                      key={person}
+                      className={({ active }) => {
+                        return `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                          active ? 'bg-teal-600 text-white' : 'text-gray-900'
+                        }`
+                      }}
+                      value={person}
+                    >
+                      {({ selected, active }) => {
+                        return (
+                          <>
+                            <span
+                              className={`block truncate ${
+                                selected ? 'font-medium' : 'font-normal'
+                              }`}
+                            >
+                              {person}
+                            </span>
+                            {selected ? (
+                              <span
+                                className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                                  active ? 'text-white' : 'text-teal-600'
+                                }`}
+                              >
+                                <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                              </span>
+                            ) : null}
+                          </>
+                        )
+                      }}
+                    </Combobox.Option>
+                  )
+                })
+              )}
+            </Combobox.Options>
+          </Transition>
+        </div>
+      </Combobox>
+    </>
+  )
+}
+
+interface ModeSwitchProps {
+  setSinglePerson: (onOff: boolean) => void
+}
+
+function ModeSwitch(props: ModeSwitchProps): JSX.Element {
+  const [enabled, setEnabled] = useState(false)
+
+  function handleChange(e: boolean) {
+    setEnabled(e)
+    props.setSinglePerson(e)
+  }
+
+  return (
+    <div>
+      <Switch
+        checked={enabled}
+        onChange={handleChange}
+        className={`${enabled ? 'bg-teal-900' : 'bg-teal-700'}
+          focus-visible:ring-opacity-75 relative inline-flex h-[24px] w-[60px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none  focus-visible:ring-2 focus-visible:ring-white`}
+      >
+        <span className="sr-only">Use setting</span>
+        <span
+          aria-hidden="true"
+          className={`${enabled ? 'translate-x-9' : 'translate-x-0'}
+            pointer-events-none inline-block h-[20px] w-[20px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
+        />
+      </Switch>
+      Single Person Mode
+    </div>
   )
 }
 
