@@ -347,7 +347,6 @@ function MainMap(): JSX.Element {
     return points
   }, [places, persons, relationsByPlace, id, relationsByPlaceInst])
 
-  console.log(allPoints)
 
   const allLines = useMemo(() => {
     const lines: FeatureCollection = {
