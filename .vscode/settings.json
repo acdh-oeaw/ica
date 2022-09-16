@@ -13,13 +13,15 @@
     "onSave": "test-only",
     "watch": false
   },
-  "jest.jestCommandLine": "npm run test",
+  "jest.jestCommandLine": "npm run test --",
   "less.validate": false,
   "scss.validate": false,
   "search.exclude": {
     "package-lock.json": true
   },
   "stylelint.enable": true,
+  "stylelint.snippet": ["css", "postcss"],
+  "stylelint.validate": ["css", "postcss"],
   "tailwindCSS.validate": true,
   "terminal.integrated.enablePersistentSessions": false,
   "typescript.enablePromptUseWorkspaceTsdk": true,

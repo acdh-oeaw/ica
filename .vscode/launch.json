@@ -23,7 +23,7 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "serverReadyAction": {
-        "pattern": "started server on .+, url: (https?:confused:/.+)",
+        "pattern": "started server on .+, url: (https?://.+)",
         "uriFormat": "%s",
         "action": "debugWithChrome"
       }
