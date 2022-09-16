@@ -8,7 +8,7 @@ import {
   lineStyle,
   unclusteredPointLayer,
 } from '@/components/geo-map-layer.config'
-import { usePopoverState } from '@/components/Popover'
+import { usePopoverState } from '@/components/popover'
 
 interface LayerProps {
   id: { source: string; layer: string }
