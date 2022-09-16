@@ -4,6 +4,7 @@ export type PopoverState =
   | { isVisible: false }
   | { isVisible: true; coordinates: { longitude: number; latitude: number }; content: JSX.Element }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function usePopoverState() {
   const [popover, setPopover] = useState<PopoverState>({ isVisible: false })
 

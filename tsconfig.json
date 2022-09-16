@@ -1,7 +1,6 @@
 {
   "extends": "@stefanprobst/tsconfig",
   "compilerOptions": {
-    "jsx": "preserve",
     "exactOptionalPropertyTypes": false,
     "baseUrl": ".",
     "paths": {
@@ -10,8 +9,8 @@
     }
   },
   "include": [
-    "app.d.ts",
     "next-env.d.ts",
+    "app.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "**/*.config.mjs",

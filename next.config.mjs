@@ -18,7 +18,6 @@ const config = {
   },
   experimental: {
     browsersListForSwc: true,
-    images: { allowFutureImage: true },
     legacyBrowsers: false,
     newNextLinkBehavior: true,
   },

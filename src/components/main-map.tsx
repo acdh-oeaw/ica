@@ -692,10 +692,10 @@ export function MainMap(): JSX.Element {
 
   const onMapLoad = useCallback(() => {
     if (mapRef.current) {
-      mapRef.current.getMap().on('click', 'clusters', function () {
+      mapRef.current.getMap().on('click', 'clusters', () => {
         clearSpiderifiedCluster(mapRef.current)
       })
-      mapRef.current.getMap().on('zoom', function () {
+      mapRef.current.getMap().on('zoom', () => {
         clearSpiderifiedCluster(mapRef.current)
       })
     }

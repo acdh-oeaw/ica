@@ -4,12 +4,10 @@ import { useMemo } from 'react'
 
 import { useInstitutionPlaceRelations, useInstitutions, usePlaces } from '@/api/ica.client'
 
-// FIXME:
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function useInstitutionPlaces() {
   const institutionsQuery = useInstitutions({})
-  const [institutionIds, institutions, institutionsById] = useMemo(() => {
+  const [institutionIds, institutions, _institutionsById] = useMemo(() => {
     const institutionsById = keyByToMap(institutionsQuery.data?.results ?? [], (institution) => {
       return institution.id
     })
@@ -32,7 +30,7 @@ export function useInstitutionPlaces() {
     const relatedPlaceIds = Array.from(relationsByPlaceInst.keys())
     return [relatedPlaceIds, relationsByPlaceInst]
   }, [institutionPlaceRelationsQuery.data])
-  const [relatedInstitutionIds, relationsByInstitution] = useMemo(() => {
+  const [_relatedInstitutionIds, relationsByInstitution] = useMemo(() => {
     const relationsByInstitution = groupByToMap(
       institutionPlaceRelationsQuery.data?.results ?? [],
       (relation) => {
@@ -47,7 +45,7 @@ export function useInstitutionPlaces() {
     { ids: relatedPlaceIds },
     { disabled: relatedPlaceIds.length === 0 },
   )
-  const [placeIds, places, placesById] = useMemo(() => {
+  const [_placeIds, places, _placesById] = useMemo(() => {
     const placesById = keyByToMap(placesQuery.data?.results ?? [], (place) => {
       return place.id
     })

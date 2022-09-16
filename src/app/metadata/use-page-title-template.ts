@@ -1,6 +1,6 @@
 import { useAppMetadata } from '@/app/metadata/use-app-metadata'
 
-export function usePageTitleTemplate() {
+export function usePageTitleTemplate(): (title?: string) => string {
   const metadata = useAppMetadata()
 
   function titleTemplate(title?: string): string {

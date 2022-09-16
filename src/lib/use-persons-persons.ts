@@ -5,6 +5,7 @@ import { useMemo } from 'react'
 import { usePersons, useSourcePersonRelations, useTargetPersonRelations } from '@/api/ica.client'
 import { collection } from '~/config/ica.config'
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function usePersonsPersons() {
   const personsQuery = usePersons({ collection })
 

@@ -36,8 +36,6 @@ const SPIDER_LEAVES_PAINT_OPTION = {
 }
 
 let clusterMarkers: Array<any> = []
-let spiderifiedCluster = {}
-let spiderLeavesCollection = []
 
 function clearSpiderifiedMarkers() {
   if (clusterMarkers.length > 0) {
@@ -53,11 +51,8 @@ function removeSourceAndLayer(map: any, id: string) {
   if (map.getSource(id) != null) map.removeSource(id)
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function clearSpiderifiedCluster(map: any) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  spiderifiedCluster = {}
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  spiderLeavesCollection = []
   removeSourceAndLayer(map.getMap(), SPIDER_LEGS_LAYER_NAME)
   removeSourceAndLayer(map.getMap(), SPIDER_LEAVES_LAYER_NAME)
   clearSpiderifiedMarkers()
@@ -116,6 +111,7 @@ function generateLeavesCoordinates(leaves: number) {
   return points
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function spiderifyCluster({ map, source, clusterToSpiderify }: any) {
   const spiderlegsCollection: Array<any> = []
   const spiderLeavesCollection: Array<any> = []

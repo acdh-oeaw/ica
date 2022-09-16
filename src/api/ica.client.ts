@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
 import type { RequestOptions } from '@stefanprobst/request'
 import { createUrl, request } from '@stefanprobst/request'
 import type { SWRConfiguration } from 'swr'

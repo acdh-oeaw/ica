@@ -9,15 +9,17 @@ import { usePageTitleTemplate } from '@/app/metadata/use-page-title-template'
 import type { Locale } from '~/config/i18n.config'
 import { createImprintUrl } from '~/config/imprint.config'
 
-interface ImprintPageProps {
-  html: string
+namespace ImprintPage {
+  export type Props = {
+    html: string
+  }
 }
 
 export const getStaticProps = withDictionaries(
   ['common'],
   async function getStaticProps(
     context: GetStaticPropsContext,
-  ): Promise<GetStaticPropsResult<ImprintPageProps>> {
+  ): Promise<GetStaticPropsResult<ImprintPage.Props>> {
     const locale = context.locale as Locale
     const html = (await request(createImprintUrl(locale), { responseType: 'text' })) as string
 
@@ -25,7 +27,7 @@ export const getStaticProps = withDictionaries(
   },
 )
 
-export default function ImprintPage(props: ImprintPageProps): JSX.Element {
+export default function ImprintPage(props: ImprintPage.Props): JSX.Element {
   const { html } = props
 
   const { t } = useI18n<'common'>()

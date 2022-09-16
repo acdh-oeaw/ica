@@ -10,6 +10,7 @@ import { Fragment } from 'react'
 
 import { AnalyticsScript } from '@/app/analytics/analytics-script'
 import { reportPageView } from '@/app/analytics/analytics-service'
+import type { DictionariesProps } from '@/app/i18n/dictionaries'
 import { useAppMetadata } from '@/app/metadata/use-app-metadata'
 import { Notifications } from '@/app/notifications/notifications'
 import { PageLayout } from '@/app/page.layout'
@@ -22,7 +23,9 @@ import { createAppUrl } from '@/lib/create-app-url'
 import { createAssetLink } from '@/lib/create-asset-link'
 import { manifestFileName, openGraphImageName } from '~/config/metadata.config'
 
-export default function App(props: AppProps): JSX.Element {
+type SharedPageProps = DictionariesProps
+
+export default function App(props: AppProps<SharedPageProps>): JSX.Element {
   const { Component, pageProps } = props
 
   const { locale } = useLocale()

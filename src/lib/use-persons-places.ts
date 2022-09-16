@@ -5,12 +5,10 @@ import { useMemo } from 'react'
 import { usePersonPlaceRelations, usePersons, usePlaces } from '@/api/ica.client'
 import { collection } from '~/config/ica.config'
 
-// FIXME:
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function usePersonsPlaces() {
   const personsQuery = usePersons({ collection })
-  const [personIds, persons, personsById] = useMemo(() => {
+  const [personIds, persons, _personsById] = useMemo(() => {
     const personsById = keyByToMap(personsQuery.data?.results ?? [], (person) => {
       return person.id
     })
@@ -33,7 +31,7 @@ export function usePersonsPlaces() {
     const relatedPlaceIds = Array.from(relationsByPlace.keys())
     return [relatedPlaceIds, relationsByPlace]
   }, [personPlaceRelationsQuery.data])
-  const [relatedPersonIds, relationsByPerson] = useMemo(() => {
+  const [_relatedPersonIds, relationsByPerson] = useMemo(() => {
     const relationsByPerson = groupByToMap(
       personPlaceRelationsQuery.data?.results ?? [],
       (relation) => {
@@ -48,7 +46,7 @@ export function usePersonsPlaces() {
     { ids: relatedPlaceIds },
     { disabled: relatedPlaceIds.length === 0 },
   )
-  const [placeIds, places, placesById] = useMemo(() => {
+  const [_placeIds, places, _placesById] = useMemo(() => {
     const placesById = keyByToMap(placesQuery.data?.results ?? [], (place) => {
       return place.id
     })
