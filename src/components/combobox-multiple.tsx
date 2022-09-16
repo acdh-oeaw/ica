@@ -2,7 +2,7 @@ import { Combobox, Transition } from '@headlessui/react'
 import { ArrowsUpDownIcon as SelectorIcon, CheckIcon } from '@heroicons/react/20/solid'
 import { Fragment, useEffect, useState } from 'react'
 
-interface ComboboxProps {
+interface ComboboxMultipleProps {
   personList: Array<string>
   relationChange: (type: string, value: Array<string>) => void
 }
@@ -11,8 +11,8 @@ export interface Ipeople {
   people: Array<string>
 }
 
-export function ComboboxMultiple(props: ComboboxProps): JSX.Element {
-  const { personList: people } = props
+export function ComboboxMultiple(props: ComboboxMultipleProps): JSX.Element {
+  const { personList: people, relationChange } = props
 
   const [selectedPeople, setSelectedPeople] = useState<Array<string>>([])
 
@@ -33,16 +33,16 @@ export function ComboboxMultiple(props: ComboboxProps): JSX.Element {
 
   function handleChange(values: Array<string>) {
     setSelectedPeople(values)
-    props.relationChange('Persons', values)
+    relationChange('Persons', values)
   }
 
   function handleChecked(checked: boolean) {
     if (checked) {
       setSelectedPeople(people)
-      props.relationChange('Persons', people)
+      relationChange('Persons', people)
     } else {
       setSelectedPeople([])
-      props.relationChange('Persons', [])
+      relationChange('Persons', [])
     }
   }
 

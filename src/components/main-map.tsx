@@ -35,70 +35,51 @@ export function MainMap(): JSX.Element {
     }
   }, [])
 
-  // eslint-disable-next-line
-  function buildPoint(personId: number, targetCollection: FeatureCollection, mainPerson: boolean) {
-    const relationsPlace = relationsByPerson.get(personId)
-    relationsPlace?.forEach((relation) => {
-      const place = places.find((item) => {
-        return item.id === relation.related_place.id
-      })
-      if (place) {
-        if (place.lng !== null && place.lat !== null) {
-          const point: Feature<Point> = {
-            type: 'Feature',
-            geometry: { type: 'Point', coordinates: [place.lng, place.lat] },
-            id: relation.id,
-            properties: {
-              id_place: place.id,
-              place: place.name,
-              id_person: relation['related_person']['id'],
-              person: relation['related_person']['label'],
-              relation: relation['relation_type']['label'],
-              start: relation['start_date_written'],
-              end: relation['end_date_written'],
-              startDate: relation['start_date'],
-              endDate: relation['end_date'],
-              visibility: true,
-              mainPerson: mainPerson,
-              /** NOTE: Be aware that nested objects and arrays get stringified on `event.features`. */
-            },
-          }
-          targetCollection.features.push(point)
-        }
-      }
-    })
-  }
-
-  const [mainPerson, setMainPerson] = useState<string>('')
-  const [mainPersonId, setMainPersonId] = useState<number>(520)
+  const [mainPerson, setMainPerson] = useState('')
+  const [mainPersonId, setMainPersonId] = useState(520)
 
   function changeMainPerson(person: string) {
     setMainPerson(person)
   }
 
-  useEffect(() => {
-    const lastName = mainPerson.split(', ')[0]
-    const firstName = mainPerson.split(', ')[1]
-    const personForId = persons.find((person) => {
-      return person.first_name === firstName && person.name === lastName
-    })
-    if (personForId) {
-      setMainPersonId(personForId.id)
-    }
-    if (mapRef.current) {
-      // eslint-disable-next-line
-      if (mapRef.current.getSource('places-data') !== undefined) {
-        // @ts-expect-error Ignore for now
-        mapRef.current.getSource('places-data').setData(pointsSinglePerson)
-        // @ts-expect-error Ignore for now
-        mapRef.current.getSource('lines-data').setData(linesSinglePerson)
-      }
-      clearSpiderifiedCluster(mapRef.current)
-      mapRef.current.triggerRepaint()
-    }
-  }, [mainPerson])
-
   const pointsSinglePerson = useMemo(() => {
+    function buildPoint(
+      personId: number,
+      targetCollection: FeatureCollection,
+      mainPerson: boolean,
+    ) {
+      const relationsPlace = relationsByPerson.get(personId)
+      relationsPlace?.forEach((relation) => {
+        const place = places.find((item) => {
+          return item.id === relation.related_place.id
+        })
+        if (place) {
+          if (place.lng !== null && place.lat !== null) {
+            const point: Feature<Point> = {
+              type: 'Feature',
+              geometry: { type: 'Point', coordinates: [place.lng, place.lat] },
+              id: relation.id,
+              properties: {
+                id_place: place.id,
+                place: place.name,
+                id_person: relation['related_person']['id'],
+                person: relation['related_person']['label'],
+                relation: relation['relation_type']['label'],
+                start: relation['start_date_written'],
+                end: relation['end_date_written'],
+                startDate: relation['start_date'],
+                endDate: relation['end_date'],
+                visibility: true,
+                mainPerson: mainPerson,
+                /** NOTE: Be aware that nested objects and arrays get stringified on `event.features`. */
+              },
+            }
+            targetCollection.features.push(point)
+          }
+        }
+      })
+    }
+
     const points: FeatureCollection = {
       type: 'FeatureCollection',
       features: [],
@@ -115,10 +96,11 @@ export function MainMap(): JSX.Element {
     })
     return points
   }, [
-    buildPoint,
     personPersonRelationsBySourcePersonId,
     personPersonRelationsByTargetPersonId,
     mainPersonId,
+    places,
+    relationsByPerson,
   ])
 
   const linesSinglePerson = useMemo(() => {
@@ -204,6 +186,28 @@ export function MainMap(): JSX.Element {
     relationsByPerson,
     mainPersonId,
   ])
+
+  useEffect(() => {
+    const lastName = mainPerson.split(', ')[0]
+    const firstName = mainPerson.split(', ')[1]
+    const personForId = persons.find((person) => {
+      return person.first_name === firstName && person.name === lastName
+    })
+    if (personForId) {
+      setMainPersonId(personForId.id)
+    }
+    if (mapRef.current) {
+      // eslint-disable-next-line
+      if (mapRef.current.getSource('places-data') !== undefined) {
+        // @ts-expect-error Ignore for now
+        mapRef.current.getSource('places-data').setData(pointsSinglePerson)
+        // @ts-expect-error Ignore for now
+        mapRef.current.getSource('lines-data').setData(linesSinglePerson)
+      }
+      clearSpiderifiedCluster(mapRef.current)
+      mapRef.current.triggerRepaint()
+    }
+  }, [mainPerson, persons, pointsSinglePerson, linesSinglePerson])
 
   const allPoints = useMemo(() => {
     const points: FeatureCollection = {
@@ -354,8 +358,8 @@ export function MainMap(): JSX.Element {
   const [pointsData, setPointsData] = useState(allPoints)
   const [linesData, setLinesData] = useState(allLines)
 
-  function setSingleModeMap(onOff: boolean) {
-    if (onOff === false) {
+  function setSingleModeMap(isSinglePersonMode: boolean) {
+    if (isSinglePersonMode === false) {
       setPointsData(allPoints)
       setLinesData(allLines)
     } else {
@@ -469,119 +473,165 @@ export function MainMap(): JSX.Element {
     })
   }
 
-  useEffect(() => {
-    if (mapRef.current !== null) {
-      // @ts-expect-error Ignore for now
-      onTogglePoints(mapRef.current)
-    }
-  }, [filters, timeRange])
+  const [_start, _end] = timeRange
+  const checkDates = useCallback(
+    function checkDates(start: string, end: string) {
+      /** include everything before 1920 */
+      const rangeStart = _start === 1920 ? 0 : _start
+      /** include everything after 1960 */
+      const rangeEnd = _end === 1960 ? 2000 : _end
 
-  function checkDates(start: string, end: string) {
-    const [_start, _end] = timeRange
-    /** include everything before 1920 */
-    const rangeStart = _start === 1920 ? 0 : _start
-    /** include everything after 1960 */
-    const rangeEnd = _end === 1960 ? 2000 : _end
+      const dates: Array<number> = []
+      if (start) dates.push(new Date(start).getUTCFullYear())
+      if (end) dates.push(new Date(end).getUTCFullYear())
 
-    const dates: Array<number> = []
-    if (start) dates.push(new Date(start).getUTCFullYear())
-    if (end) dates.push(new Date(end).getUTCFullYear())
-
-    if (dates.length === 0) {
-      return true
-    } else if (dates.length === 1) {
-      const date = dates[0] as number
-      if ((date as number) >= rangeStart && date <= rangeEnd) {
+      if (dates.length === 0) {
         return true
+      } else if (dates.length === 1) {
+        const date = dates[0] as number
+        if ((date as number) >= rangeStart && date <= rangeEnd) {
+          return true
+        }
+      } else if (dates.length === 2) {
+        const [start, end] = dates as [number, number]
+        if ((start >= rangeStart && start <= rangeEnd) || (end >= rangeStart && end <= rangeEnd)) {
+          return true
+        }
       }
-    } else if (dates.length === 2) {
-      const [start, end] = dates as [number, number]
-      if ((start >= rangeStart && start <= rangeEnd) || (end >= rangeStart && end <= rangeEnd)) {
-        return true
-      }
-    }
 
-    return false
-  }
+      return false
+    },
+    [_start, _end],
+  )
 
   // This set helps with the toggling of relations lines when their start and end points are toggled, i.e. when there's no start or end point visible on the map.
   const [pointsList, setPointsList] = useState(new Set())
 
-  function onTogglePoints(map: MapboxMap) {
-    // declare Feature Collection for points
-    const points: FeatureCollection = {
-      type: 'FeatureCollection',
-      features: [],
-    }
-
-    // iterate through points in data set
-    allPoints.features.forEach((point) => {
-      // Define filter booleans for filter categories and check
-      let [placeFilter, timeFilter, professionFilter, personFilter] = Array(4).fill(false)
-      if (point.properties !== null) {
-        if (point.properties['type'] === 'institution') {
-          ;[placeFilter, timeFilter, professionFilter, personFilter] = Array(4).fill(true)
-        }
-        if (filters['Place relations'].includes(point.properties['relation'])) {
+  const toggleLines = useCallback(
+    function toggleLines(map: MapboxMap) {
+      const lines: FeatureCollection = {
+        type: 'FeatureCollection',
+        features: [],
+      }
+      // Same as with the points; define boolean to check for the different filters
+      allLines.features.forEach((line) => {
+        let pointFilter = false
+        let placeFilter = false
+        let timeFilter = false
+        // This variable is used to check if both start and end point are invisible
+        let counterPointsDis = 0
+        // @ts-expect-error Ignore for now
+        if (filters['Person relations'].includes(line.properties.type)) {
           placeFilter = true
         }
-      }
-      if (point.properties !== null) {
-        if (filters['Professions'].includes(point.properties['profession'])) {
-          professionFilter = true
-        }
-      }
-      if (point.properties !== null) {
-        if (filters['Persons'].includes(point.properties['person'])) {
-          personFilter = true
-        }
-      }
-      // @ts-expect-error Ignore for now
-      timeFilter = checkDates(point.properties.start, point.properties.end)
-
-      // Check what filters return
-      if (
-        timeFilter === true &&
-        placeFilter === true &&
-        professionFilter === true &&
-        personFilter === true
-      ) {
-        // If all filters are true, set visibility to True and push point into feature collection
         // @ts-expect-error Ignore for now
-        point.properties['visibility'] = true
-        points.features.push(point)
-        // Remove the visible point from the list of points which are not visible on the map
-        setPointsList((prev) => {
-          return new Set(
-            // @ts-expect-error Ignore for now
-            [...prev].filter((x) => {
-              if (point.properties !== null) {
-                return x !== point.properties['id_place']
-              }
-            }),
-          )
+        timeFilter = checkDates(line.properties['start'], line.properties['end'])
+        // @ts-expect-error Ignore for now
+        line.properties.id_places.forEach((id_place) => {
+          if (pointsList.has(id_place)) {
+            counterPointsDis += 1
+          }
         })
-        toggleLines(map)
-      } else {
-        // @ts-expect-error Ignore for now
-        point.properties['visibility'] = false
-        // Add the now invisible point to the list of points which are not visible on the map
-        if (point.properties !== null) {
-          setPointsList((prev) => {
-            // @ts-expect-error Ignore for now
-            return new Set(prev.add(point.properties['id_place']))
-          })
+        if (counterPointsDis < 2) {
+          pointFilter = true
         }
+        if (timeFilter === true && placeFilter === true && pointFilter === true) {
+          // @ts-expect-error Ignore for now
+          line.properties['visibility'] = true
+          lines.features.push(line)
+        } else {
+          // @ts-expect-error Ignore for now
+          line.properties['visibility'] = false
+        }
+      })
+      // eslint-disable-next-line
+      if (map.getSource('lines-data') !== undefined) {
+        // @ts-expect-error Ignore for now
+        map.getSource('lines-data').setData(lines)
       }
-    })
-    // eslint-disable-next-line
-    if (map.getSource('places-data') !== undefined) {
-      // @ts-expect-error Ignore for now
-      map.getSource('places-data').setData(points)
-    }
-    clearSpiderifiedCluster(mapRef.current)
-    map.triggerRepaint()
-  }
+      map.triggerRepaint()
+    },
+    [allLines.features, checkDates, filters, pointsList],
+  )
+
+  const onTogglePoints = useCallback(
+    function onTogglePoints(map: MapboxMap) {
+      // declare Feature Collection for points
+      const points: FeatureCollection = {
+        type: 'FeatureCollection',
+        features: [],
+      }
+
+      // iterate through points in data set
+      allPoints.features.forEach((point) => {
+        // Define filter booleans for filter categories and check
+        let [placeFilter, timeFilter, professionFilter, personFilter] = Array(4).fill(false)
+        if (point.properties !== null) {
+          if (point.properties['type'] === 'institution') {
+            ;[placeFilter, timeFilter, professionFilter, personFilter] = Array(4).fill(true)
+          }
+          if (filters['Place relations'].includes(point.properties['relation'])) {
+            placeFilter = true
+          }
+        }
+        if (point.properties !== null) {
+          if (filters['Professions'].includes(point.properties['profession'])) {
+            professionFilter = true
+          }
+        }
+        if (point.properties !== null) {
+          if (filters['Persons'].includes(point.properties['person'])) {
+            personFilter = true
+          }
+        }
+        // @ts-expect-error Ignore for now
+        timeFilter = checkDates(point.properties.start, point.properties.end)
+
+        // Check what filters return
+        if (
+          timeFilter === true &&
+          placeFilter === true &&
+          professionFilter === true &&
+          personFilter === true
+        ) {
+          // If all filters are true, set visibility to True and push point into feature collection
+          // @ts-expect-error Ignore for now
+          point.properties['visibility'] = true
+          points.features.push(point)
+          // Remove the visible point from the list of points which are not visible on the map
+          setPointsList((prev) => {
+            return new Set(
+              // @ts-expect-error Ignore for now
+              [...prev].filter((x) => {
+                if (point.properties !== null) {
+                  return x !== point.properties['id_place']
+                }
+              }),
+            )
+          })
+          toggleLines(map)
+        } else {
+          // @ts-expect-error Ignore for now
+          point.properties['visibility'] = false
+          // Add the now invisible point to the list of points which are not visible on the map
+          if (point.properties !== null) {
+            setPointsList((prev) => {
+              // @ts-expect-error Ignore for now
+              return new Set(prev.add(point.properties['id_place']))
+            })
+          }
+        }
+      })
+      // eslint-disable-next-line
+      if (map.getSource('places-data') !== undefined) {
+        // @ts-expect-error Ignore for now
+        map.getSource('places-data').setData(points)
+      }
+      clearSpiderifiedCluster(mapRef.current)
+      map.triggerRepaint()
+    },
+    [allPoints.features, checkDates, filters, toggleLines],
+  )
 
   // toggle lines if the points visible on the map change
   useEffect(() => {
@@ -589,51 +639,14 @@ export function MainMap(): JSX.Element {
       // @ts-expect-error Ignore for now
       toggleLines(mapRef.current)
     }
-  }, [pointsList])
+  }, [pointsList, toggleLines])
 
-  function toggleLines(map: MapboxMap) {
-    const lines: FeatureCollection = {
-      type: 'FeatureCollection',
-      features: [],
+  useEffect(() => {
+    if (mapRef.current !== null) {
+      // @ts-expect-error Ignore for now
+      onTogglePoints(mapRef.current)
     }
-    // Same as with the points; define boolean to check for the different filters
-    allLines.features.forEach((line) => {
-      let pointFilter = false
-      let placeFilter = false
-      let timeFilter = false
-      // This variable is used to check if both start and end point are invisible
-      let counterPointsDis = 0
-      // @ts-expect-error Ignore for now
-      if (filters['Person relations'].includes(line.properties.type)) {
-        placeFilter = true
-      }
-      // @ts-expect-error Ignore for now
-      timeFilter = checkDates(line.properties['start'], line.properties['end'])
-      // @ts-expect-error Ignore for now
-      line.properties.id_places.forEach((id_place) => {
-        if (pointsList.has(id_place)) {
-          counterPointsDis += 1
-        }
-      })
-      if (counterPointsDis < 2) {
-        pointFilter = true
-      }
-      if (timeFilter === true && placeFilter === true && pointFilter === true) {
-        // @ts-expect-error Ignore for now
-        line.properties['visibility'] = true
-        lines.features.push(line)
-      } else {
-        // @ts-expect-error Ignore for now
-        line.properties['visibility'] = false
-      }
-    })
-    // eslint-disable-next-line
-    if (map.getSource('lines-data') !== undefined) {
-      // @ts-expect-error Ignore for now
-      map.getSource('lines-data').setData(lines)
-    }
-    map.triggerRepaint()
-  }
+  }, [filters, timeRange, onTogglePoints])
 
   function onClick(event: MapLayerMouseEvent) {
     if (mapRef.current == null) return
@@ -692,6 +705,12 @@ export function MainMap(): JSX.Element {
   const { show, hide } = popover
 
   function generatePopupContent(event: { features: Array<Feature> | null; lngLat: any }) {
+    function createUrl(pathname: string) {
+      const baseUrl = 'https://ica.acdh-dev.oeaw.ac.at/apis/entities/entity/'
+      const url = new URL(pathname, baseUrl)
+      return String(url)
+    }
+
     if (event.features == null) return
     const features = [...event.features]
     let label = ''
@@ -705,15 +724,15 @@ export function MainMap(): JSX.Element {
       let persLink = ''
       if (type === 'Point') {
         label = feature.properties['place']
-        link = `https://ica.acdh-dev.oeaw.ac.at/apis/entities/entity/place/${feature.properties['id_place']}/detail`
+        link = createUrl(`place/${feature.properties['id_place']}/detail`)
         const pointType = feature.properties['type']
         let featureLabel = ''
         if (pointType === 'institution') {
           featureLabel = feature.properties['institution']
-          persLink = `https://ica.acdh-dev.oeaw.ac.at/apis/entities/entity/institution/${feature.properties['id_institution']}/detail`
+          persLink = createUrl(`institution/${feature.properties['id_institution']}/detail`)
         } else {
           featureLabel = feature.properties['person']
-          persLink = `https://ica.acdh-dev.oeaw.ac.at/apis/entities/entity/person/${feature.properties['id_person']}/detail`
+          persLink = createUrl(`person/${feature.properties['id_person']}/detail`)
         }
         text = [
           featureLabel,
@@ -722,10 +741,9 @@ export function MainMap(): JSX.Element {
         ]
           .filter(Boolean)
           .join('. ')
-        console.log(text)
       } else if (type === 'LineString') {
         label = feature.properties['source']
-        link = `https://ica.acdh-dev.oeaw.ac.at/apis/entities/entity/person/${feature.properties['id_source']}/detail`
+        link = createUrl(`person/${feature.properties['id_source']}/detail`)
         text = [
           feature.properties['type'],
           feature.properties['target'],
@@ -733,7 +751,7 @@ export function MainMap(): JSX.Element {
         ]
           .filter(Boolean)
           .join('. ')
-        persLink = `https://ica.acdh-dev.oeaw.ac.at/apis/entities/entity/person/${feature.properties['id_target']}/detail`
+        persLink = createUrl(`person/${feature.properties['id_target']}/detail`)
       }
       const contentPart = (
         <div className="grid gap-2 font-sans text-xs leading-4 text-gray-800" key={feature['id']}>
@@ -761,7 +779,9 @@ export function MainMap(): JSX.Element {
         ;[longitude, latitude] = feature.geometry.coordinates.slice()
       }
     } else if (type === 'LineString') {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       longitude = event.lngLat!.lng
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       latitude = event.lngLat!.lat
     }
     if (longitude == null || latitude == null) return

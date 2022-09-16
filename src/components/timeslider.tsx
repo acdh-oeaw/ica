@@ -2,11 +2,11 @@ import 'rsuite/dist/rsuite.min.css'
 
 import { RangeSlider } from 'rsuite'
 
-interface TimeProps {
-  onTimeRangeChange: (e: Array<number>) => void
+interface TimeSliderProps {
+  onTimeRangeChange: (value: Array<number>) => void
 }
 
-export function TimeSlider(props: TimeProps): JSX.Element {
+export function TimeSlider(props: TimeSliderProps): JSX.Element {
   const { onTimeRangeChange } = props
 
   return (
@@ -17,9 +17,7 @@ export function TimeSlider(props: TimeProps): JSX.Element {
       max={1960}
       defaultValue={[1920, 1960]}
       graduated
-      onChangeCommitted={(e) => {
-        onTimeRangeChange(e)
-      }}
+      onChangeCommitted={onTimeRangeChange}
     />
   )
 }

@@ -17,24 +17,26 @@ interface ControlProps {
 }
 
 export function ControlPanel(props: ControlProps): JSX.Element {
+  const { setSingleModeMap } = props
+
   const { current: map } = useMap()
 
   function toggleBasemap(value: keyof typeof mapStyle) {
     map?.getMap().setStyle(mapStyle[value])
   }
 
-  const [singlePersonMode, setSinglePersonMode] = useState(false)
+  const [isSinglePersonMode, setSinglePersonMode] = useState(false)
 
-  function setSinglePerson(onOff: boolean) {
-    setSinglePersonMode(onOff)
-    props.setSingleModeMap(onOff)
+  function setSinglePerson(isSinglePersonMode: boolean) {
+    setSinglePersonMode(isSinglePersonMode)
+    setSingleModeMap(isSinglePersonMode)
   }
 
   const [selectedBasemap, setSelectedBasemap] = useState<keyof typeof mapStyle>('positron')
 
   return (
     <div style={controlPanelStyle.panelStyle}>
-      <ModeSwitch setSinglePerson={setSinglePerson} />
+      <ModeSwitch isSinglePersonMode={isSinglePersonMode} setSinglePersonMode={setSinglePerson} />
       <h3>Basemaps: </h3>
       {Object.keys(mapStyle).map((basemap) => {
         return (
@@ -53,7 +55,7 @@ export function ControlPanel(props: ControlProps): JSX.Element {
           </div>
         )
       })}
-      {!singlePersonMode && (
+      {!isSinglePersonMode ? (
         <div>
           <h3>Filters </h3>
           {Object.keys(props.filterList).map((filter) => {
@@ -69,8 +71,7 @@ export function ControlPanel(props: ControlProps): JSX.Element {
           })}
           <ComboboxMultiple personList={props.personList} relationChange={props.relationChange} />
         </div>
-      )}
-      {singlePersonMode && (
+      ) : (
         <ComboboxSingle personList={props.personList} changeMainPerson={props.changeMainPerson} />
       )}
     </div>

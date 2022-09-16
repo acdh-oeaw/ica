@@ -1,13 +1,13 @@
 import { Listbox, Transition } from '@headlessui/react'
 import { useEffect, useState } from 'react'
 
-interface ListboxProps {
+interface ListboxMultipleProps {
   filterOptions: Array<string>
   type: string
   relationChange: (type: string, value: Array<string>) => void
 }
 
-export function ListboxMultiple(props: ListboxProps): JSX.Element {
+export function ListboxMultiple(props: ListboxMultipleProps): JSX.Element {
   const { filterOptions, type, relationChange } = props
 
   const [options, setOptions] = useState<Array<string>>([])
@@ -28,10 +28,10 @@ export function ListboxMultiple(props: ListboxProps): JSX.Element {
     )
   }
 
-  function handleSelect(event: Array<string>) {
-    setselectedOptions(event)
-    relationChange(type, event)
-    event.length === 0 ? setChecked(false) : setChecked(true)
+  function handleSelect(values: Array<string>) {
+    setselectedOptions(values)
+    relationChange(type, values)
+    values.length === 0 ? setChecked(false) : setChecked(true)
   }
 
   function handleChecked(checked: boolean) {

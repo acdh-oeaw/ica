@@ -1,4 +1,7 @@
-// credit goes to: Franck Kerbiriou & Ross Alexander https://github.com/FranckKe/mapbox-gl-js-cluster-spiderify
+/**
+ * credit goes to: Franck Kerbiriou & Ross Alexander https://github.com/FranckKe/mapbox-gl-js-cluster-spiderify
+ * licensed under MIT
+ */
 
 import type { Feature } from 'maplibre-gl'
 import { Marker } from 'maplibre-gl'

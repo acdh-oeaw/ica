@@ -8,15 +8,15 @@ interface ComboboxSingleProps {
 }
 
 export function ComboboxSingle(props: ComboboxSingleProps): JSX.Element {
-  const { personList: people } = props
+  const { personList: people, changeMainPerson } = props
 
   const [selectedPerson, setSelectedPerson] = useState<string>('Gunther, John')
 
   useEffect(() => {
     if (people.length > 0) {
-      props.changeMainPerson('Gunther, John')
+      changeMainPerson('Gunther, John') // FIXME:
     }
-  }, [props])
+  }, [changeMainPerson, people])
 
   const [query, setQuery] = useState('')
 
@@ -29,7 +29,7 @@ export function ComboboxSingle(props: ComboboxSingleProps): JSX.Element {
 
   function handleChange(value: string) {
     setSelectedPerson(value)
-    props.changeMainPerson(value)
+    changeMainPerson(value)
   }
 
   return (
