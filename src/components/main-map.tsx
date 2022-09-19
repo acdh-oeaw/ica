@@ -627,7 +627,7 @@ export function MainMap(): JSX.Element {
       clearSpiderifiedCluster(mapRef.current)
       map.triggerRepaint()
     },
-    [allPoints.features, checkDates, filters, toggleLines],
+    [allPoints.features, checkDates, filters],
   )
 
   // toggle lines if the points visible on the map change
@@ -636,7 +636,7 @@ export function MainMap(): JSX.Element {
       // @ts-expect-error Ignore for now
       toggleLines(mapRef.current)
     }
-  }, [pointsList, toggleLines])
+  }, [pointsList])
 
   useEffect(() => {
     if (mapRef.current !== null) {
