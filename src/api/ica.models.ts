@@ -98,6 +98,11 @@ export interface PersonPlaceRelation extends RelationBase {
   related_place: LabeledReference
 }
 
+export interface PersonInstitutionRelation extends RelationBase {
+  related_person: LabeledReference
+  related_institution: LabeledReference
+}
+
 export interface PlacePlaceRelation extends RelationBase {
   related_placeA: LabeledReference
   related_placeB: LabeledReference

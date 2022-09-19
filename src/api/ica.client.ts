@@ -12,6 +12,7 @@ import type {
   Institution,
   InstitutionPlaceRelation,
   Person,
+  PersonInstitutionRelation,
   PersonPersonRelation,
   PersonPlaceRelation,
   Place,
@@ -343,6 +344,19 @@ export function getPersonPlaceRelations(params: {
   return request(url, options)
 }
 
+export function getPersonInstitutionRelations(params: {
+  ids?: Array<Person['id']>
+}): Promise<PaginatedResponse<PersonInstitutionRelation>> {
+  const url = createUrl({
+    baseUrl,
+    pathname: '/apis/api/relations/personinstitution/',
+    searchParams: { related_person__id__in: params.ids?.join(','), limit: defaultLimit },
+  })
+  const options: RequestOptions = { responseType: 'json' }
+
+  return request(url, options)
+}
+
 export function getPlacePlaceRelations(params: {
   ids?: Array<Place['id']>
 }): Promise<PaginatedResponse<PlacePlaceRelation>> {
@@ -405,6 +419,19 @@ export function usePersonPlaceRelations(
     options?.disabled === true ? null : ['getPersonPlaceRelations', params],
     () => {
       return getPersonPlaceRelations(params)
+    },
+    { keepPreviousData: true, ...options },
+  )
+}
+
+export function usePersonInstitutionRelations(
+  params: { ids?: Array<Person['id']> },
+  options?: QueryOptions & SWRConfiguration<PaginatedResponse<PersonInstitutionRelation>, Error>,
+) {
+  return useQuery(
+    options?.disabled === true ? null : ['getPersonInstitutionRelations', params],
+    () => {
+      return getPersonInstitutionRelations(params)
     },
     { keepPreviousData: true, ...options },
   )

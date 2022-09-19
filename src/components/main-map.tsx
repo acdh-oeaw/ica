@@ -13,6 +13,7 @@ import { usePopoverState } from '@/components/popover'
 import { clearSpiderifiedCluster, spiderifyCluster } from '@/components/spiderifier'
 import { TimeSlider } from '@/components/timeslider'
 import { useInstitutionPlaces } from '@/lib/use-institutions-places'
+import { usePersonsInstitutions } from '@/lib/use-persons-institutions'
 import { usePersonsPersons } from '@/lib/use-persons-persons'
 import { usePersonsPlaces } from '@/lib/use-persons-places'
 
@@ -24,7 +25,9 @@ export function MainMap(): JSX.Element {
   const { personPersonRelationsBySourcePersonId, personPersonRelationsByTargetPersonId } =
     usePersonsPersons()
 
-  const { relationsByPlaceInst } = useInstitutionPlaces()
+  const { relationsByPlaceInst, relationsByInstitution } = useInstitutionPlaces()
+
+  const { relationsByPerson_Inst } = usePersonsInstitutions()
 
   const mapRef = useRef<MapRef>(null)
 
@@ -48,22 +51,43 @@ export function MainMap(): JSX.Element {
       targetCollection: FeatureCollection,
       mainPerson: boolean,
     ) {
-      const relationsPlace = relationsByPerson.get(personId)
-      relationsPlace?.forEach((relation) => {
+      const relationsPerson = relationsByPerson.get(personId)
+      const relationsInst = relationsByPerson_Inst.get(personId)
+
+      let relationsPlace: Array<Record<string, any>> = []
+      if (relationsInst) {
+        relationsPlace = [...relationsInst]
+      }
+      if (relationsPerson) {
+        relationsPlace = [...relationsPlace, ...relationsPerson]
+      }
+
+      relationsPlace.forEach((relation) => {
+        let idPlace: number
+        if (relation['related_place'] !== undefined) {
+          idPlace = relation['related_place']['id']
+        } else {
+          if (relation['related_institution'] !== undefined) {
+            const instPlace = relationsByInstitution.get(relation['related_institution']['id'])
+            if (instPlace && instPlace[0]) {
+              idPlace = instPlace[0]['related_place']['id']
+            }
+          }
+        }
         const place = places.find((item) => {
-          return item.id === relation.related_place.id
+          return item.id === idPlace
         })
         if (place) {
           if (place.lng !== null && place.lat !== null) {
             const point: Feature<Point> = {
               type: 'Feature',
               geometry: { type: 'Point', coordinates: [place.lng, place.lat] },
-              id: relation.id,
+              // @ts-expect-error Ignore for now
+              id: id,
               properties: {
                 id_place: place.id,
                 place: place.name,
-                id_person: relation['related_person']['id'],
-                person: relation['related_person']['label'],
+                id_relation: relation['id'],
                 relation: relation['relation_type']['label'],
                 start: relation['start_date_written'],
                 end: relation['end_date_written'],
@@ -73,6 +97,25 @@ export function MainMap(): JSX.Element {
                 mainPerson: mainPerson,
                 /** NOTE: Be aware that nested objects and arrays get stringified on `event.features`. */
               },
+            }
+            if (point.properties !== null) {
+              if (relation['related_institution'] !== undefined) {
+                point.properties['id_institution'] = relation['related_institution']['id']
+                point.properties['institution'] = relation['related_institution']['label']
+                point.properties['type'] = 'institution'
+              } else {
+                const profession = persons.find((x) => {
+                  return x.id === relation['related_person']['id']
+                })?.profession[0]
+                let profLabel = ''
+                if (profession) {
+                  profLabel = profession.label
+                  point.properties['profession'] = profLabel
+                }
+                point.properties['id_person'] = relation['related_person']['id']
+                point.properties['person'] = relation['related_person']['label']
+                point.properties['type'] = 'person'
+              }
             }
             targetCollection.features.push(point)
           }
@@ -96,11 +139,15 @@ export function MainMap(): JSX.Element {
     })
     return points
   }, [
+    id,
+    persons,
     personPersonRelationsBySourcePersonId,
     personPersonRelationsByTargetPersonId,
     mainPersonId,
     places,
     relationsByPerson,
+    relationsByInstitution,
+    relationsByPerson_Inst,
   ])
 
   const linesSinglePerson = useMemo(() => {
