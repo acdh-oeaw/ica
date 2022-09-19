@@ -752,12 +752,12 @@ export function MainMap(): JSX.Element {
       }
       const contentPart = (
         <div className="grid gap-2 font-sans text-xs leading-4 text-gray-800" key={feature['id']}>
-          <a href={link} target="_blank" rel="noreferrer">
+          <a href={persLink} target="_blank" rel="noreferrer">
             <strong className="font-medium">{featureLabel}</strong>
           </a>
           <ul className="grid gap-1">
             <li>
-              <a href={persLink} target="_blank" rel="noreferrer">
+              <a href={link} target="_blank" rel="noreferrer">
                 {text}
               </a>
             </li>
