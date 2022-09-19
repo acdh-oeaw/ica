@@ -520,28 +520,25 @@ export function MainMap(): JSX.Element {
         let timeFilter = false
         // This variable is used to check if both start and end point are invisible
         let counterPointsDis = 0
-        // @ts-expect-error Ignore for now
-        if (filters['Person relations'].includes(line.properties.type)) {
-          placeFilter = true
-        }
-        // @ts-expect-error Ignore for now
-        timeFilter = checkDates(line.properties['start'], line.properties['end'])
-        // @ts-expect-error Ignore for now
-        line.properties.id_places.forEach((id_place) => {
-          if (pointsList.has(id_place)) {
-            counterPointsDis += 1
+        if (line.properties !== null) {
+          if (filters['Person relations'].includes(line.properties['type'])) {
+            placeFilter = true
           }
-        })
-        if (counterPointsDis < 2) {
-          pointFilter = true
-        }
-        if (timeFilter === true && placeFilter === true && pointFilter === true) {
-          // @ts-expect-error Ignore for now
-          line.properties['visibility'] = true
-          lines.features.push(line)
-        } else {
-          // @ts-expect-error Ignore for now
-          line.properties['visibility'] = false
+          timeFilter = checkDates(line.properties['start'], line.properties['end'])
+          line.properties['id_places'].forEach((id_place: Array<number>) => {
+            if (pointsList.has(id_place)) {
+              counterPointsDis += 1
+            }
+          })
+          if (counterPointsDis < 2) {
+            pointFilter = true
+          }
+          if (timeFilter === true && placeFilter === true && pointFilter === true) {
+            line.properties['visibility'] = true
+            lines.features.push(line)
+          } else {
+            line.properties['visibility'] = false
+          }
         }
       })
       // eslint-disable-next-line
@@ -585,7 +582,7 @@ export function MainMap(): JSX.Element {
           }
         }
         // @ts-expect-error Ignore for now
-        timeFilter = checkDates(point.properties.start, point.properties.end)
+        timeFilter = checkDates(point.properties['start'], point.properties['end'])
 
         // Check what filters return
         if (
@@ -594,27 +591,27 @@ export function MainMap(): JSX.Element {
           professionFilter === true &&
           personFilter === true
         ) {
-          // If all filters are true, set visibility to True and push point into feature collection
-          // @ts-expect-error Ignore for now
-          point.properties['visibility'] = true
-          points.features.push(point)
-          // Remove the visible point from the list of points which are not visible on the map
-          setPointsList((prev) => {
-            return new Set(
-              // @ts-expect-error Ignore for now
-              [...prev].filter((x) => {
-                if (point.properties !== null) {
-                  return x !== point.properties['id_place']
-                }
-              }),
-            )
-          })
-          toggleLines(map)
-        } else {
-          // @ts-expect-error Ignore for now
-          point.properties['visibility'] = false
-          // Add the now invisible point to the list of points which are not visible on the map
           if (point.properties !== null) {
+            // If all filters are true, set visibility to True and push point into feature collection
+            point.properties['visibility'] = true
+            points.features.push(point)
+            // Remove the visible point from the list of points which are not visible on the map
+            setPointsList((prev) => {
+              return new Set(
+                // @ts-expect-error Ignore for now
+                [...prev].filter((x) => {
+                  if (point.properties !== null) {
+                    return x !== point.properties['id_place']
+                  }
+                }),
+              )
+            })
+            toggleLines(map)
+          }
+        } else {
+          if (point.properties !== null) {
+            point.properties['visibility'] = false
+            // Add the now invisible point to the list of points which are not visible on the map
             setPointsList((prev) => {
               // @ts-expect-error Ignore for now
               return new Set(prev.add(point.properties['id_place']))
@@ -722,11 +719,11 @@ export function MainMap(): JSX.Element {
       if (feature.properties == null) return
       type = feature.geometry.type
       let persLink = ''
+      let featureLabel = ''
       if (type === 'Point') {
         label = feature.properties['place']
         link = createUrl(`place/${feature.properties['id_place']}/detail`)
         const pointType = feature.properties['type']
-        let featureLabel = ''
         if (pointType === 'institution') {
           featureLabel = feature.properties['institution']
           persLink = createUrl(`institution/${feature.properties['id_institution']}/detail`)
@@ -735,14 +732,14 @@ export function MainMap(): JSX.Element {
           persLink = createUrl(`person/${feature.properties['id_person']}/detail`)
         }
         text = [
-          featureLabel,
           feature.properties['relation'],
+          label,
           [feature.properties['start'], feature.properties['end']].filter(Boolean).join('-'),
         ]
           .filter(Boolean)
           .join('. ')
       } else if (type === 'LineString') {
-        label = feature.properties['source']
+        featureLabel = feature.properties['source']
         link = createUrl(`person/${feature.properties['id_source']}/detail`)
         text = [
           feature.properties['type'],
@@ -756,7 +753,7 @@ export function MainMap(): JSX.Element {
       const contentPart = (
         <div className="grid gap-2 font-sans text-xs leading-4 text-gray-800" key={feature['id']}>
           <a href={link} target="_blank" rel="noreferrer">
-            <strong className="font-medium">{label}</strong>
+            <strong className="font-medium">{featureLabel}</strong>
           </a>
           <ul className="grid gap-1">
             <li>
