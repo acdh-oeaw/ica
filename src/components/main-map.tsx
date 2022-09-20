@@ -27,7 +27,7 @@ export function MainMap(): JSX.Element {
 
   const { relationsByPlaceInst, relationsByInstitution } = useInstitutionPlaces()
 
-  const { relationsByPerson_Inst } = usePersonsInstitutions()
+  const { relationsByPerson_Inst, relationsByInstitution_Pers } = usePersonsInstitutions()
 
   const mapRef = useRef<MapRef>(null)
 
@@ -50,6 +50,7 @@ export function MainMap(): JSX.Element {
       personId: number,
       targetCollection: FeatureCollection,
       mainPerson: boolean,
+      idArray: Array<number>,
     ) {
       const relationsPerson = relationsByPerson.get(personId)
       const relationsInst = relationsByPerson_Inst.get(personId)
@@ -102,7 +103,11 @@ export function MainMap(): JSX.Element {
               if (relation['related_institution'] !== undefined) {
                 point.properties['id_institution'] = relation['related_institution']['id']
                 point.properties['institution'] = relation['related_institution']['label']
+                point.properties['person'] = relation['related_person']['label']
                 point.properties['type'] = 'institution'
+                point.properties['relations'] = relationsByInstitution_Pers.get(
+                  relation['related_institution']['id'],
+                )
               } else {
                 const profession = persons.find((x) => {
                   return x.id === relation['related_person']['id']
@@ -117,7 +122,14 @@ export function MainMap(): JSX.Element {
                 point.properties['type'] = 'person'
               }
             }
-            targetCollection.features.push(point)
+            if (point.properties !== null && point.properties['id_institution'] !== undefined) {
+              if (!idArray.includes(relation['related_institution']['id'])) {
+                targetCollection.features.push(point)
+                idArray.push(relation['related_institution']['id'])
+              }
+            } else {
+              targetCollection.features.push(point)
+            }
           }
         }
       })
@@ -128,15 +140,20 @@ export function MainMap(): JSX.Element {
       features: [],
     }
 
-    buildPoint(mainPersonId, points, true)
+    const idArray: Array<number> = []
+
+    buildPoint(mainPersonId, points, true, idArray)
     const relationsSource = personPersonRelationsBySourcePersonId.get(mainPersonId)
     relationsSource?.forEach((relation) => {
-      buildPoint(relation.related_personB.id, points, false)
+      buildPoint(relation.related_personB.id, points, false, idArray)
     })
     const relationsTarget = personPersonRelationsByTargetPersonId.get(mainPersonId)
     relationsTarget?.forEach((relation) => {
-      buildPoint(relation.related_personA.id, points, false)
+      buildPoint(relation.related_personA.id, points, false, idArray)
     })
+
+    console.log(points.features)
+
     return points
   }, [
     id,
@@ -147,6 +164,7 @@ export function MainMap(): JSX.Element {
     places,
     relationsByPerson,
     relationsByInstitution,
+    relationsByInstitution_Pers,
     relationsByPerson_Inst,
   ])
 
@@ -264,6 +282,7 @@ export function MainMap(): JSX.Element {
     places.forEach((place) => {
       const relationsInst = relationsByPlaceInst.get(place.id)
       const relationsPerson = relationsByPlace.get(place.id)
+      const idArray: Array<number> = []
       let relations: Array<Record<string, any>> = []
       if (relationsInst) {
         relations = [...relationsInst]
@@ -307,15 +326,27 @@ export function MainMap(): JSX.Element {
             } else if (relation['related_institution'] !== undefined) {
               point.properties['id_institution'] = relation['related_institution']['id']
               point.properties['institution'] = relation['related_institution']['label']
+              point.properties['relations'] = relationsByInstitution_Pers.get(
+                relation['related_institution']['id'],
+              )
               point.properties['type'] = 'institution'
             }
           }
-          points.features.push(point)
+          if (point.properties !== null && point.properties['id_institution'] !== undefined) {
+            if (!idArray.includes(relation['related_institution']['id'])) {
+              if (point.properties['relations'] !== undefined) {
+                points.features.push(point)
+                idArray.push(relation['related_institution']['id'])
+              }
+            }
+          } else {
+            points.features.push(point)
+          }
         }
       })
     })
     return points
-  }, [places, persons, relationsByPlace, id, relationsByPlaceInst])
+  }, [places, persons, relationsByPlace, id, relationsByPlaceInst, relationsByInstitution_Pers])
 
   const allLines = useMemo(() => {
     const lines: FeatureCollection = {
@@ -760,6 +791,7 @@ export function MainMap(): JSX.Element {
     let label = ''
     let link = ''
     let text = ''
+    let contentPart
     const content: Array<JSX.Element> = []
     let type = ''
     features.forEach((feature) => {
@@ -767,24 +799,84 @@ export function MainMap(): JSX.Element {
       type = feature.geometry.type
       let persLink = ''
       let featureLabel = ''
+      let addPersonForInst = ''
       if (type === 'Point') {
         label = feature.properties['place']
         link = createUrl(`place/${feature.properties['id_place']}/detail`)
         const pointType = feature.properties['type']
+
         if (pointType === 'institution') {
           featureLabel = feature.properties['institution']
           persLink = createUrl(`institution/${feature.properties['id_institution']}/detail`)
+          addPersonForInst = feature.properties['person']
+
+          content.push(
+            <a href={persLink} target="_blank" rel="noreferrer">
+              <strong className="font-medium">{featureLabel}</strong>
+            </a>,
+          )
+          if (feature.properties['relations'] !== undefined) {
+            JSON.parse(feature.properties['relations']).forEach((relation: Record<string, any>) => {
+              text = [
+                relation['related_person']['label'],
+                relation['relation_type']['label'],
+                [relation['start_date_written'], relation['end_date_written']]
+                  .filter(Boolean)
+                  .join('-'),
+              ]
+                .filter(Boolean)
+                .join('. ')
+              link = createUrl(`person/${relation['related_person']['id']}/detail`)
+
+              contentPart = (
+                <div
+                  className="grid gap-2 font-sans text-xs leading-4 text-gray-800"
+                  key={feature['id']}
+                >
+                  <ul className="grid gap-1">
+                    <li>
+                      <a href={link} target="_blank" rel="noreferrer">
+                        {text}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              )
+              content.push(contentPart)
+            })
+          }
         } else {
           featureLabel = feature.properties['person']
           persLink = createUrl(`person/${feature.properties['id_person']}/detail`)
+
+          text = [
+            addPersonForInst,
+            feature.properties['relation'],
+            label,
+            [feature.properties['start'], feature.properties['end']].filter(Boolean).join('-'),
+          ]
+            .filter(Boolean)
+            .join('. ')
+
+          contentPart = (
+            <div
+              className="grid gap-2 font-sans text-xs leading-4 text-gray-800"
+              key={feature['id']}
+            >
+              <a href={persLink} target="_blank" rel="noreferrer">
+                <strong className="font-medium">{featureLabel}</strong>
+              </a>
+              <ul className="grid gap-1">
+                <li>
+                  <a href={link} target="_blank" rel="noreferrer">
+                    {text}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          )
+          content.push(contentPart)
         }
-        text = [
-          feature.properties['relation'],
-          label,
-          [feature.properties['start'], feature.properties['end']].filter(Boolean).join('-'),
-        ]
-          .filter(Boolean)
-          .join('. ')
       } else if (type === 'LineString') {
         featureLabel = feature.properties['source']
         link = createUrl(`person/${feature.properties['id_source']}/detail`)
@@ -796,22 +888,22 @@ export function MainMap(): JSX.Element {
           .filter(Boolean)
           .join('. ')
         persLink = createUrl(`person/${feature.properties['id_target']}/detail`)
+        contentPart = (
+          <div className="grid gap-2 font-sans text-xs leading-4 text-gray-800" key={feature['id']}>
+            <a href={persLink} target="_blank" rel="noreferrer">
+              <strong className="font-medium">{featureLabel}</strong>
+            </a>
+            <ul className="grid gap-1">
+              <li>
+                <a href={link} target="_blank" rel="noreferrer">
+                  {text}
+                </a>
+              </li>
+            </ul>
+          </div>
+        )
+        content.push(contentPart)
       }
-      const contentPart = (
-        <div className="grid gap-2 font-sans text-xs leading-4 text-gray-800" key={feature['id']}>
-          <a href={persLink} target="_blank" rel="noreferrer">
-            <strong className="font-medium">{featureLabel}</strong>
-          </a>
-          <ul className="grid gap-1">
-            <li>
-              <a href={link} target="_blank" rel="noreferrer">
-                {text}
-              </a>
-            </li>
-          </ul>
-        </div>
-      )
-      content.push(contentPart)
     })
 
     const contentToShow = <div> {content} </div>

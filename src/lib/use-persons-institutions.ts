@@ -21,15 +21,15 @@ export function usePersonsInstitutions() {
     { ids: personIds },
     { disabled: personIds.length === 0 },
   )
-  const [relatedInstitutionIds, relationsByInstitution] = useMemo(() => {
-    const relationsByInstitution = groupByToMap(
+  const [relatedInstitutionIds, relationsByInstitution_Pers] = useMemo(() => {
+    const relationsByInstitution_Pers = groupByToMap(
       personInstitutionRelationsQuery.data?.results ?? [],
       (relation) => {
         return relation.related_institution.id
       },
     )
-    const relatedInstitutionIds = Array.from(relationsByInstitution.keys())
-    return [relatedInstitutionIds, relationsByInstitution]
+    const relatedInstitutionIds = Array.from(relationsByInstitution_Pers.keys())
+    return [relatedInstitutionIds, relationsByInstitution_Pers]
   }, [personInstitutionRelationsQuery.data])
   const [_relatedPersonIds, relationsByPerson_Inst] = useMemo(() => {
     const relationsByPerson_Inst = groupByToMap(
@@ -59,6 +59,6 @@ export function usePersonsInstitutions() {
     persons,
     institutions,
     relationsByPerson_Inst,
-    relationsByInstitution,
+    relationsByInstitution_Pers,
   }
 }
