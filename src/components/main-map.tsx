@@ -13,6 +13,7 @@ import { usePopoverState } from '@/components/popover'
 import { clearSpiderifiedCluster, spiderifyCluster } from '@/components/spiderifier'
 import { TimeSlider } from '@/components/timeslider'
 import { useInstitutionPlaces } from '@/lib/use-institutions-places'
+import { usePersonsInstitutions } from '@/lib/use-persons-institutions'
 import { usePersonsPersons } from '@/lib/use-persons-persons'
 import { usePersonsPlaces } from '@/lib/use-persons-places'
 
@@ -24,7 +25,9 @@ export function MainMap(): JSX.Element {
   const { personPersonRelationsBySourcePersonId, personPersonRelationsByTargetPersonId } =
     usePersonsPersons()
 
-  const { relationsByPlaceInst } = useInstitutionPlaces()
+  const { relationsByPlaceInst, relationsByInstitution } = useInstitutionPlaces()
+
+  const { relationsByPerson_Inst, relationsByInstitution_Pers } = usePersonsInstitutions()
 
   const mapRef = useRef<MapRef>(null)
 
@@ -47,23 +50,45 @@ export function MainMap(): JSX.Element {
       personId: number,
       targetCollection: FeatureCollection,
       mainPerson: boolean,
+      idArray: Array<number>,
     ) {
-      const relationsPlace = relationsByPerson.get(personId)
-      relationsPlace?.forEach((relation) => {
+      const relationsPerson = relationsByPerson.get(personId)
+      const relationsInst = relationsByPerson_Inst.get(personId)
+
+      let relationsPlace: Array<Record<string, any>> = []
+      if (relationsInst) {
+        relationsPlace = [...relationsInst]
+      }
+      if (relationsPerson) {
+        relationsPlace = [...relationsPlace, ...relationsPerson]
+      }
+
+      relationsPlace.forEach((relation) => {
+        let idPlace: number
+        if (relation['related_place'] !== undefined) {
+          idPlace = relation['related_place']['id']
+        } else {
+          if (relation['related_institution'] !== undefined) {
+            const instPlace = relationsByInstitution.get(relation['related_institution']['id'])
+            if (instPlace && instPlace[0]) {
+              idPlace = instPlace[0]['related_place']['id']
+            }
+          }
+        }
         const place = places.find((item) => {
-          return item.id === relation.related_place.id
+          return item.id === idPlace
         })
         if (place) {
           if (place.lng !== null && place.lat !== null) {
             const point: Feature<Point> = {
               type: 'Feature',
               geometry: { type: 'Point', coordinates: [place.lng, place.lat] },
-              id: relation.id,
+              // @ts-expect-error Ignore for now
+              id: id,
               properties: {
                 id_place: place.id,
                 place: place.name,
-                id_person: relation['related_person']['id'],
-                person: relation['related_person']['label'],
+                id_relation: relation['id'],
                 relation: relation['relation_type']['label'],
                 start: relation['start_date_written'],
                 end: relation['end_date_written'],
@@ -74,7 +99,37 @@ export function MainMap(): JSX.Element {
                 /** NOTE: Be aware that nested objects and arrays get stringified on `event.features`. */
               },
             }
-            targetCollection.features.push(point)
+            if (point.properties !== null) {
+              if (relation['related_institution'] !== undefined) {
+                point.properties['id_institution'] = relation['related_institution']['id']
+                point.properties['institution'] = relation['related_institution']['label']
+                point.properties['person'] = relation['related_person']['label']
+                point.properties['type'] = 'institution'
+                point.properties['relations'] = relationsByInstitution_Pers.get(
+                  relation['related_institution']['id'],
+                )
+              } else {
+                const profession = persons.find((x) => {
+                  return x.id === relation['related_person']['id']
+                })?.profession[0]
+                let profLabel = ''
+                if (profession) {
+                  profLabel = profession.label
+                  point.properties['profession'] = profLabel
+                }
+                point.properties['id_person'] = relation['related_person']['id']
+                point.properties['person'] = relation['related_person']['label']
+                point.properties['type'] = 'person'
+              }
+            }
+            if (point.properties !== null && point.properties['id_institution'] !== undefined) {
+              if (!idArray.includes(relation['related_institution']['id'])) {
+                targetCollection.features.push(point)
+                idArray.push(relation['related_institution']['id'])
+              }
+            } else {
+              targetCollection.features.push(point)
+            }
           }
         }
       })
@@ -85,22 +140,31 @@ export function MainMap(): JSX.Element {
       features: [],
     }
 
-    buildPoint(mainPersonId, points, true)
+    const idArray: Array<number> = []
+
+    buildPoint(mainPersonId, points, true, idArray)
     const relationsSource = personPersonRelationsBySourcePersonId.get(mainPersonId)
     relationsSource?.forEach((relation) => {
-      buildPoint(relation.related_personB.id, points, false)
+      buildPoint(relation.related_personB.id, points, false, idArray)
     })
     const relationsTarget = personPersonRelationsByTargetPersonId.get(mainPersonId)
     relationsTarget?.forEach((relation) => {
-      buildPoint(relation.related_personA.id, points, false)
+      buildPoint(relation.related_personA.id, points, false, idArray)
     })
+
+
     return points
   }, [
+    id,
+    persons,
     personPersonRelationsBySourcePersonId,
     personPersonRelationsByTargetPersonId,
     mainPersonId,
     places,
     relationsByPerson,
+    relationsByInstitution,
+    relationsByInstitution_Pers,
+    relationsByPerson_Inst,
   ])
 
   const linesSinglePerson = useMemo(() => {
@@ -217,6 +281,7 @@ export function MainMap(): JSX.Element {
     places.forEach((place) => {
       const relationsInst = relationsByPlaceInst.get(place.id)
       const relationsPerson = relationsByPlace.get(place.id)
+      const idArray: Array<number> = []
       let relations: Array<Record<string, any>> = []
       if (relationsInst) {
         relations = [...relationsInst]
@@ -260,15 +325,27 @@ export function MainMap(): JSX.Element {
             } else if (relation['related_institution'] !== undefined) {
               point.properties['id_institution'] = relation['related_institution']['id']
               point.properties['institution'] = relation['related_institution']['label']
+              point.properties['relations'] = relationsByInstitution_Pers.get(
+                relation['related_institution']['id'],
+              )
               point.properties['type'] = 'institution'
             }
           }
-          points.features.push(point)
+          if (point.properties !== null && point.properties['id_institution'] !== undefined) {
+            if (!idArray.includes(relation['related_institution']['id'])) {
+              if (point.properties['relations'] !== undefined) {
+                points.features.push(point)
+                idArray.push(relation['related_institution']['id'])
+              }
+            }
+          } else {
+            points.features.push(point)
+          }
         }
       })
     })
     return points
-  }, [places, persons, relationsByPlace, id, relationsByPlaceInst])
+  }, [places, persons, relationsByPlace, id, relationsByPlaceInst, relationsByInstitution_Pers])
 
   const allLines = useMemo(() => {
     const lines: FeatureCollection = {
@@ -520,28 +597,25 @@ export function MainMap(): JSX.Element {
         let timeFilter = false
         // This variable is used to check if both start and end point are invisible
         let counterPointsDis = 0
-        // @ts-expect-error Ignore for now
-        if (filters['Person relations'].includes(line.properties.type)) {
-          placeFilter = true
-        }
-        // @ts-expect-error Ignore for now
-        timeFilter = checkDates(line.properties['start'], line.properties['end'])
-        // @ts-expect-error Ignore for now
-        line.properties.id_places.forEach((id_place) => {
-          if (pointsList.has(id_place)) {
-            counterPointsDis += 1
+        if (line.properties !== null) {
+          if (filters['Person relations'].includes(line.properties['type'])) {
+            placeFilter = true
           }
-        })
-        if (counterPointsDis < 2) {
-          pointFilter = true
-        }
-        if (timeFilter === true && placeFilter === true && pointFilter === true) {
-          // @ts-expect-error Ignore for now
-          line.properties['visibility'] = true
-          lines.features.push(line)
-        } else {
-          // @ts-expect-error Ignore for now
-          line.properties['visibility'] = false
+          timeFilter = checkDates(line.properties['start'], line.properties['end'])
+          line.properties['id_places'].forEach((id_place: Array<number>) => {
+            if (pointsList.has(id_place)) {
+              counterPointsDis += 1
+            }
+          })
+          if (counterPointsDis < 2) {
+            pointFilter = true
+          }
+          if (timeFilter === true && placeFilter === true && pointFilter === true) {
+            line.properties['visibility'] = true
+            lines.features.push(line)
+          } else {
+            line.properties['visibility'] = false
+          }
         }
       })
       // eslint-disable-next-line
@@ -585,7 +659,7 @@ export function MainMap(): JSX.Element {
           }
         }
         // @ts-expect-error Ignore for now
-        timeFilter = checkDates(point.properties.start, point.properties.end)
+        timeFilter = checkDates(point.properties['start'], point.properties['end'])
 
         // Check what filters return
         if (
@@ -594,27 +668,27 @@ export function MainMap(): JSX.Element {
           professionFilter === true &&
           personFilter === true
         ) {
-          // If all filters are true, set visibility to True and push point into feature collection
-          // @ts-expect-error Ignore for now
-          point.properties['visibility'] = true
-          points.features.push(point)
-          // Remove the visible point from the list of points which are not visible on the map
-          setPointsList((prev) => {
-            return new Set(
-              // @ts-expect-error Ignore for now
-              [...prev].filter((x) => {
-                if (point.properties !== null) {
-                  return x !== point.properties['id_place']
-                }
-              }),
-            )
-          })
-          toggleLines(map)
-        } else {
-          // @ts-expect-error Ignore for now
-          point.properties['visibility'] = false
-          // Add the now invisible point to the list of points which are not visible on the map
           if (point.properties !== null) {
+            // If all filters are true, set visibility to True and push point into feature collection
+            point.properties['visibility'] = true
+            points.features.push(point)
+            // Remove the visible point from the list of points which are not visible on the map
+            setPointsList((prev) => {
+              return new Set(
+                // @ts-expect-error Ignore for now
+                [...prev].filter((x) => {
+                  if (point.properties !== null) {
+                    return x !== point.properties['id_place']
+                  }
+                }),
+              )
+            })
+            toggleLines(map)
+          }
+        } else {
+          if (point.properties !== null) {
+            point.properties['visibility'] = false
+            // Add the now invisible point to the list of points which are not visible on the map
             setPointsList((prev) => {
               // @ts-expect-error Ignore for now
               return new Set(prev.add(point.properties['id_place']))
@@ -630,7 +704,7 @@ export function MainMap(): JSX.Element {
       clearSpiderifiedCluster(mapRef.current)
       map.triggerRepaint()
     },
-    [allPoints.features, checkDates, filters, toggleLines],
+    [allPoints.features, checkDates, filters],
   )
 
   // toggle lines if the points visible on the map change
@@ -639,7 +713,7 @@ export function MainMap(): JSX.Element {
       // @ts-expect-error Ignore for now
       toggleLines(mapRef.current)
     }
-  }, [pointsList, toggleLines])
+  }, [pointsList])
 
   useEffect(() => {
     if (mapRef.current !== null) {
@@ -716,33 +790,94 @@ export function MainMap(): JSX.Element {
     let label = ''
     let link = ''
     let text = ''
+    let contentPart
     const content: Array<JSX.Element> = []
     let type = ''
     features.forEach((feature) => {
       if (feature.properties == null) return
       type = feature.geometry.type
       let persLink = ''
+      let featureLabel = ''
+      let addPersonForInst = ''
       if (type === 'Point') {
         label = feature.properties['place']
         link = createUrl(`place/${feature.properties['id_place']}/detail`)
         const pointType = feature.properties['type']
-        let featureLabel = ''
+
         if (pointType === 'institution') {
           featureLabel = feature.properties['institution']
           persLink = createUrl(`institution/${feature.properties['id_institution']}/detail`)
+          addPersonForInst = feature.properties['person']
+
+          content.push(
+            <a href={persLink} target="_blank" rel="noreferrer">
+              <strong className="font-medium">{featureLabel}</strong>
+            </a>,
+          )
+          if (feature.properties['relations'] !== undefined) {
+            JSON.parse(feature.properties['relations']).forEach((relation: Record<string, any>) => {
+              text = [
+                relation['related_person']['label'],
+                relation['relation_type']['label'],
+                [relation['start_date_written'], relation['end_date_written']]
+                  .filter(Boolean)
+                  .join('-'),
+              ]
+                .filter(Boolean)
+                .join('. ')
+              link = createUrl(`person/${relation['related_person']['id']}/detail`)
+
+              contentPart = (
+                <div
+                  className="grid gap-2 font-sans text-xs leading-4 text-gray-800"
+                  key={feature['id']}
+                >
+                  <ul className="grid gap-1">
+                    <li>
+                      <a href={link} target="_blank" rel="noreferrer">
+                        {text}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              )
+              content.push(contentPart)
+            })
+          }
         } else {
           featureLabel = feature.properties['person']
           persLink = createUrl(`person/${feature.properties['id_person']}/detail`)
+
+          text = [
+            addPersonForInst,
+            feature.properties['relation'],
+            label,
+            [feature.properties['start'], feature.properties['end']].filter(Boolean).join('-'),
+          ]
+            .filter(Boolean)
+            .join('. ')
+
+          contentPart = (
+            <div
+              className="grid gap-2 font-sans text-xs leading-4 text-gray-800"
+              key={feature['id']}
+            >
+              <a href={persLink} target="_blank" rel="noreferrer">
+                <strong className="font-medium">{featureLabel}</strong>
+              </a>
+              <ul className="grid gap-1">
+                <li>
+                  <a href={link} target="_blank" rel="noreferrer">
+                    {text}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          )
+          content.push(contentPart)
         }
-        text = [
-          featureLabel,
-          feature.properties['relation'],
-          [feature.properties['start'], feature.properties['end']].filter(Boolean).join('-'),
-        ]
-          .filter(Boolean)
-          .join('. ')
       } else if (type === 'LineString') {
-        label = feature.properties['source']
+        featureLabel = feature.properties['source']
         link = createUrl(`person/${feature.properties['id_source']}/detail`)
         text = [
           feature.properties['type'],
@@ -752,22 +887,22 @@ export function MainMap(): JSX.Element {
           .filter(Boolean)
           .join('. ')
         persLink = createUrl(`person/${feature.properties['id_target']}/detail`)
+        contentPart = (
+          <div className="grid gap-2 font-sans text-xs leading-4 text-gray-800" key={feature['id']}>
+            <a href={persLink} target="_blank" rel="noreferrer">
+              <strong className="font-medium">{featureLabel}</strong>
+            </a>
+            <ul className="grid gap-1">
+              <li>
+                <a href={link} target="_blank" rel="noreferrer">
+                  {text}
+                </a>
+              </li>
+            </ul>
+          </div>
+        )
+        content.push(contentPart)
       }
-      const contentPart = (
-        <div className="grid gap-2 font-sans text-xs leading-4 text-gray-800" key={feature['id']}>
-          <a href={link} target="_blank" rel="noreferrer">
-            <strong className="font-medium">{label}</strong>
-          </a>
-          <ul className="grid gap-1">
-            <li>
-              <a href={persLink} target="_blank" rel="noreferrer">
-                {text}
-              </a>
-            </li>
-          </ul>
-        </div>
-      )
-      content.push(contentPart)
     })
 
     const contentToShow = <div> {content} </div>
