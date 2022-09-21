@@ -152,7 +152,6 @@ export function MainMap(): JSX.Element {
       buildPoint(relation.related_personA.id, points, false, idArray)
     })
 
-
     return points
   }, [
     id,
