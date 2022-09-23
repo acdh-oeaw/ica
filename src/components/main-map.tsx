@@ -39,7 +39,7 @@ export function MainMap(): JSX.Element {
   }, [])
 
   const [mainPerson, setMainPerson] = useState('')
-  const [mainPersonId, setMainPersonId] = useState(520)
+  const [mainPersonId, setMainPersonId] = useState()
 
   function changeMainPerson(person: string) {
     setMainPerson(person)
@@ -142,11 +142,14 @@ export function MainMap(): JSX.Element {
 
     const idArray: Array<number> = []
 
+    // @ts-expect-error Ignore for now
     buildPoint(mainPersonId, points, true, idArray)
+    // @ts-expect-error Ignore for now
     const relationsSource = personPersonRelationsBySourcePersonId.get(mainPersonId)
     relationsSource?.forEach((relation) => {
       buildPoint(relation.related_personB.id, points, false, idArray)
     })
+    // @ts-expect-error Ignore for now
     const relationsTarget = personPersonRelationsByTargetPersonId.get(mainPersonId)
     relationsTarget?.forEach((relation) => {
       buildPoint(relation.related_personA.id, points, false, idArray)
@@ -171,9 +174,11 @@ export function MainMap(): JSX.Element {
       type: 'FeatureCollection',
       features: [],
     }
-
+    // @ts-expect-error Ignore for now
     const relationsPlace = relationsByPerson.get(mainPersonId)
+    // @ts-expect-error Ignore for now
     const relationsSource = personPersonRelationsBySourcePersonId.get(mainPersonId)
+    // @ts-expect-error Ignore for now
     const relationsTarget = personPersonRelationsByTargetPersonId.get(mainPersonId)
     const relationLists = [relationsSource, relationsTarget]
 
@@ -181,6 +186,7 @@ export function MainMap(): JSX.Element {
       const lived = ['lived in', 'lived at']
       if (list) {
         if (relationsPlace) {
+          // @ts-expect-error Ignore for now
           const sourcePlaceRelation = relationsByPerson.get(mainPersonId)?.find((item) => {
             return lived.includes(item.relation_type.label)
           })
@@ -257,6 +263,7 @@ export function MainMap(): JSX.Element {
       return person.first_name === firstName && person.name === lastName
     })
     if (personForId) {
+      // @ts-expect-error Ignore for now
       setMainPersonId(personForId.id)
     }
     if (mapRef.current) {
@@ -277,17 +284,24 @@ export function MainMap(): JSX.Element {
       type: 'FeatureCollection',
       features: [],
     }
+
     places.forEach((place) => {
-      const relationsInst = relationsByPlaceInst.get(place.id)
-      const relationsPerson = relationsByPlace.get(place.id)
       const idArray: Array<number> = []
-      let relations: Array<Record<string, any>> = []
-      if (relationsInst) {
-        relations = [...relationsInst]
-      }
+      const relations: Array<any> = []
+
+      const relationsPerson = relationsByPlace.get(place.id)
       if (relationsPerson) {
-        relations = [...relations, ...relationsPerson]
+        relationsPerson.forEach((toAdd) => {
+          relations.push(toAdd)
+        })
       }
+      const relationsInst = relationsByPlaceInst.get(place.id)
+      if (relationsInst) {
+        relationsInst.forEach((toAdd) => {
+          relations.push(toAdd)
+        })
+      }
+
       relations.forEach((relation) => {
         if (place.lat != null && place.lng != null) {
           const point: Feature<Point> = {

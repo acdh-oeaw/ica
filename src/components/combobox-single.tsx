@@ -16,7 +16,7 @@ export function ComboboxSingle(props: ComboboxSingleProps): JSX.Element {
     if (people.length > 0) {
       changeMainPerson('Gunther, John') // FIXME:
     }
-  }, [changeMainPerson, people])
+  }, [])
 
   const [query, setQuery] = useState('')
 
