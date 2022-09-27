@@ -287,7 +287,7 @@ export function MainMap(): JSX.Element {
 
     places.forEach((place) => {
       const idArray: Array<number> = []
-      const relations: Array<any> = []
+      const relations: Array<Record<string, any>> = []
 
       const relationsPerson = relationsByPlace.get(place.id)
       if (relationsPerson) {
@@ -302,13 +302,15 @@ export function MainMap(): JSX.Element {
         })
       }
 
+      console.log(relationsPerson, relationsInst, relations, relationsByPlace.get(0), 'here')
+
       relations.forEach((relation) => {
         if (place.lat != null && place.lng != null) {
           const point: Feature<Point> = {
             type: 'Feature',
             geometry: { type: 'Point', coordinates: [place.lng, place.lat] },
             // @ts-expect-error Ignore for now
-            id: id,
+            id: relation.id,
             properties: {
               id_place: place.id,
               place: place.name,
@@ -358,7 +360,7 @@ export function MainMap(): JSX.Element {
       })
     })
     return points
-  }, [places, persons, relationsByPlace, id, relationsByPlaceInst, relationsByInstitution_Pers])
+  }, [places, persons, relationsByPlace, relationsByPlaceInst, relationsByInstitution_Pers])
 
   const allLines = useMemo(() => {
     const lines: FeatureCollection = {
