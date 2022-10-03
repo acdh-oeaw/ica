@@ -1,8 +1,9 @@
+import '@fontsource/inter/variable-full.css'
 import 'tailwindcss/tailwind.css'
 import '@/styles/index.css'
+import '@/styles/nprogress.css'
 import '~/stories/preview.css'
 
-import { I18nProvider } from '@stefanprobst/next-i18n'
 import { action } from '@storybook/addon-actions'
 import type { DecoratorFn, Parameters } from '@storybook/react'
 import {
@@ -16,6 +17,7 @@ import { Fragment } from 'react'
 import { dictionary as common } from '@/app/i18n/common/en'
 import type { Dictionaries } from '@/app/i18n/dictionaries'
 import { Notifications } from '@/app/notifications/notifications'
+import { Providers } from '@/app/providers.context'
 import { createMockRouter } from '@/mocks/create-mock-router'
 
 initializeMockServiceWorker({ onUnhandledRequest: 'bypass' })
@@ -30,20 +32,20 @@ const withNotifications: DecoratorFn = function withNotifications(story, context
 }
 
 const withProviders: DecoratorFn = function withProviders(story, context) {
-  const partial = context.parameters['router'] as Partial<Dictionaries>
-  const dictionaries = { common, ...partial }
+  const partialDictionaries = context.parameters['dictionaries'] as Partial<Dictionaries>
+  const dictionaries = { common, ...partialDictionaries }
 
-  return <I18nProvider dictionaries={dictionaries}>{story(context)}</I18nProvider>
+  return <Providers dictionaries={dictionaries}>{story(context)}</Providers>
 }
 
 const withRouter: DecoratorFn = function withRouter(story, context) {
-  const partial = context.parameters['router'] as Partial<NextRouter>
+  const partialRouter = context.parameters['router'] as Partial<NextRouter>
   const mockRouter = createMockRouter({
     // @ts-expect-error Should return `Promise`.
     push: action('router.push'),
     // @ts-expect-error Should return `Promise`.
     replace: action('router.replace'),
-    ...partial,
+    ...partialRouter,
   })
 
   return <RouterContext.Provider value={mockRouter}>{story(context)}</RouterContext.Provider>

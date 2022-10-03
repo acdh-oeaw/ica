@@ -25,23 +25,22 @@ yarn-error.log*
 
 # local env files
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*.local
 
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
+next-env.d.ts
 
 # storybook
 storybook-static/
 
-# cypress
-cypress/downloads/
-cypress/screenshots/
-cypress/videos/
+# playwright
+playwright/.cache/
+playwright-report/
+test-results/
 
 # auto-generated favicons
 public/favicon.ico
@@ -49,8 +48,14 @@ public/icon.svg
 public/android-chrome-192x192.png
 public/android-chrome-512x512.png
 public/apple-touch-icon.png
-public/site.webmanifest
+public/app.webmanifest
 public/image.webp
 
 # auto-generated mock-service-worker
 public/mockServiceWorker.js
+
+# generated database (currently not ignored because fetching takes relatively long)
+# src/db/institutions.ts
+# src/db/persons.ts
+# src/db/places.ts
+# src/db/professions.ts

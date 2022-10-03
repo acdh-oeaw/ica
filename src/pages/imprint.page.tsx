@@ -6,10 +6,11 @@ import { Fragment } from 'react'
 import { useI18n } from '@/app/i18n/use-i18n'
 import { withDictionaries } from '@/app/i18n/with-dictionaries'
 import { usePageTitleTemplate } from '@/app/metadata/use-page-title-template'
+import { MainContent } from '@/components/main-content.component'
 import type { Locale } from '~/config/i18n.config'
 import { createImprintUrl } from '~/config/imprint.config'
 
-namespace ImprintPage {
+export namespace ImprintPage {
   export type Props = {
     html: string
   }
@@ -33,15 +34,15 @@ export default function ImprintPage(props: ImprintPage.Props): JSX.Element {
   const { t } = useI18n<'common'>()
   const titleTemplate = usePageTitleTemplate()
 
-  const metadata = { title: t(['common', 'imprint', 'metadata', 'title']) }
+  const metadata = { title: t(['common', 'pages', 'imprint', 'metadata', 'title']) }
 
   return (
     <Fragment>
       <PageMetadata nofollow noindex title={metadata.title} titleTemplate={titleTemplate} />
-      <main>
+      <MainContent>
         <h1>{metadata.title}</h1>
         <div dangerouslySetInnerHTML={{ __html: html }} />
-      </main>
+      </MainContent>
     </Fragment>
   )
 }

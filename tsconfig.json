@@ -17,5 +17,5 @@
     "**/*.config.cjs",
     "stories/main.cjs"
   ],
-  "exclude": ["node_modules", "cypress", "out", "storybook-static"]
+  "exclude": ["node_modules", "out", "storybook-static"]
 }

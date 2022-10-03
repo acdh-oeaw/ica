@@ -5,8 +5,8 @@
     "editorconfig.editorconfig",
     "esbenp.prettier-vscode",
     "mikestead.dotenv",
+    "ms-playwright.playwright",
     "orta.vscode-jest",
-    "shelex.vscode-cy-helper",
     "stylelint.vscode-stylelint"
   ]
 }

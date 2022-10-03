@@ -1,13 +1,12 @@
-import generateFavicons from '@stefanprobst/favicons'
+import generateFavicons, { generateSocialImage } from '@stefanprobst/favicons'
 import { log } from '@stefanprobst/log'
 import fs from 'fs/promises'
 import path from 'path'
-import sharp from 'sharp'
 
 import { createAssetLink } from '@/lib/create-asset-link'
 import { manifestFileName, metadata, openGraphImageName } from '~/config/metadata.config'
 
-async function generate() {
+async function generate(): Promise<void> {
   const publicFolder = path.join(process.cwd(), 'public')
 
   await Promise.all(
@@ -28,15 +27,11 @@ async function generate() {
         await fs.copyFile(inputFilePath, path.join(outputFolder, 'icon.svg'))
       }
 
-      await sharp(path.join(publicFolder, config.image.href))
-        .resize({
-          width: 1200,
-          height: 628,
-          fit: config.image.fit ?? 'contain',
-          background: 'transparent',
-        })
-        .webp()
-        .toFile(path.join(outputFolder, openGraphImageName))
+      await generateSocialImage(
+        path.join(publicFolder, config.image.href),
+        path.join(outputFolder, openGraphImageName),
+        { fit: config.image.fit },
+      )
     }),
   )
 }

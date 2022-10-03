@@ -12,6 +12,7 @@ export function withDictionaries<
 >(keys: Array<keyof Dictionaries>, fn?: GetServerSideProps<P, Q, D> | GetStaticProps<P, Q, D>) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
   return async function getProps(context: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const locale = context.locale as Locale
     const dictionaries = await load(locale, keys)
 
@@ -19,9 +20,11 @@ export function withDictionaries<
       return { props: { dictionaries } }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const result = await fn(context)
 
     if ('props' in result) {
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       return { ...result, props: { ...result.props, dictionaries } }
     }
 

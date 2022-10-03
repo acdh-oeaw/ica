@@ -1,1 +1,5 @@
+@import '@/styles/colors.css';
+@import '@/styles/typography.css';
+@import '@/styles/z-indices.css';
+
 @import '@/styles/globals.css';

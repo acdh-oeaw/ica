@@ -8,7 +8,8 @@ import { log } from '@stefanprobst/log'
 const locales = /** @type {Array<Locale>} */ (['en'])
 const defaultLocale = /** @type {Locale} */ ('en')
 
-const isProductionDeploy = process.env['NEXT_PUBLIC_BASE_URL'] === 'https://ica.acdh.oeaw.ac.at'
+const isProductionDeploy =
+  process.env['NEXT_PUBLIC_BASE_URL'] === 'https://ica-vis.acdh-dev.oeaw.ac.at/'
 
 /** @type {NextConfig} */
 const config = {

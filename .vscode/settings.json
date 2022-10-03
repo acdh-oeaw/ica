@@ -5,6 +5,7 @@
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
+  "editor.inlayHints.enabled": "offUnlessPressed",
   "editor.rulers": [100],
   "eslint.enable": true,
   "eslint.validate": ["javascript", "typescript", "typescriptreact"],
@@ -25,6 +26,7 @@
   "tailwindCSS.validate": true,
   "terminal.integrated.enablePersistentSessions": false,
   "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.inlayHints.parameterNames.enabled": "all",
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.tsdk": "node_modules/typescript/lib",
   "[markdown][mdx]": {

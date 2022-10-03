@@ -19,7 +19,7 @@ export interface AppMetadata {
   twitter: {
     handle: string
   }
-  creator?: {
+  creator: {
     name: string
     shortName?: string
     affiliation?: string
@@ -45,9 +45,10 @@ export interface AppMetadata {
 export const metadata: Record<Locale, AppMetadata> = {
   en: {
     locale: 'en',
-    title: 'Ideas Crossing the Atlantic',
+    title: 'Ideas crossing the Atlantic',
     shortTitle: 'ICA',
-    description: '',
+    description:
+      'A Geovisualisation of Transatlantic Networks and Emigration (from Central Europe)',
     logo: {
       href: '/assets/images/logo.svg',
       maskable: false,
@@ -60,9 +61,14 @@ export const metadata: Record<Locale, AppMetadata> = {
     twitter: {
       handle: '',
     },
+    creator: {
+      name: 'Austrian Centre for Digital Humanities and Cultural Heritage',
+      shortName: 'ACDH-CH',
+      website: 'https://www.oeaw.ac.at/acdh',
+    },
   },
 }
 
-export const manifestFileName = 'site.webmanifest'
+export const manifestFileName = 'app.webmanifest'
 
 export const openGraphImageName = 'image.webp'

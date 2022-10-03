@@ -1,37 +1,40 @@
+import '@fontsource/inter/variable-full.css'
 import 'tailwindcss/tailwind.css'
 import '@/styles/index.css'
+import '@/styles/nprogress.css'
 
-import { log } from '@stefanprobst/log'
 import { ErrorBoundary } from '@stefanprobst/next-error-boundary'
 import { PageMetadata } from '@stefanprobst/next-page-metadata'
-import type { AppProps, NextWebVitalsMetric } from 'next/app'
+import type { NextWebVitalsMetric } from 'next/app'
 import Head from 'next/head'
 import { Fragment } from 'react'
 
 import { AnalyticsScript } from '@/app/analytics/analytics-script'
 import { reportPageView } from '@/app/analytics/analytics-service'
-import type { DictionariesProps } from '@/app/i18n/dictionaries'
+import type { AppProps, GetLayout } from '@/app/app.types'
 import { useAppMetadata } from '@/app/metadata/use-app-metadata'
 import { Notifications } from '@/app/notifications/notifications'
 import { PageLayout } from '@/app/page.layout'
 import { Providers } from '@/app/providers.context'
-import { RootErrorBoundaryFallback } from '@/app/root-error-boundary-fallback'
+import { RootErrorBoundaryFallback } from '@/app/root-error-boundary-fallback.component'
 import { useAlternateLanguageUrls } from '@/app/route/use-alternate-language-urls'
 import { useCanonicalUrl } from '@/app/route/use-canonical-url'
 import { useLocale } from '@/app/route/use-locale'
+import { usePageLoadProgressIndicator } from '@/app/use-page-load-progress-indicator'
 import { createAppUrl } from '@/lib/create-app-url'
 import { createAssetLink } from '@/lib/create-asset-link'
 import { manifestFileName, openGraphImageName } from '~/config/metadata.config'
 
-type SharedPageProps = DictionariesProps
-
-export default function App(props: AppProps<SharedPageProps>): JSX.Element {
+export default function App(props: AppProps): JSX.Element {
   const { Component, pageProps } = props
 
   const { locale } = useLocale()
   const metadata = useAppMetadata()
   const canonicalUrl = useCanonicalUrl()
   const alternateLanguageUrls = useAlternateLanguageUrls()
+  usePageLoadProgressIndicator()
+
+  const getLayout = Component.getLayout ?? getDefaultLayout
 
   return (
     <Fragment>
@@ -71,14 +74,16 @@ export default function App(props: AppProps<SharedPageProps>): JSX.Element {
       <AnalyticsScript />
       <ErrorBoundary fallback={<RootErrorBoundaryFallback />}>
         <Providers {...pageProps}>
-          <PageLayout {...pageProps}>
-            <Component {...pageProps} />
-          </PageLayout>
+          {getLayout(<Component {...pageProps} />, pageProps)}
           <Notifications />
         </Providers>
       </ErrorBoundary>
     </Fragment>
   )
+}
+
+const getDefaultLayout: GetLayout = function getDefaultLayout(page, pageProps) {
+  return <PageLayout {...pageProps}>{page}</PageLayout>
 }
 
 export function reportWebVitals(metric: NextWebVitalsMetric): void {
@@ -92,22 +97,5 @@ export function reportWebVitals(metric: NextWebVitalsMetric): void {
       break
     default:
       break
-  }
-}
-
-if (process.env['NEXT_PUBLIC_MOCK_API'] === 'enabled') {
-  const { seed } = await import('@/mocks/db.mocks')
-  seed()
-
-  if (typeof window !== 'undefined') {
-    log.warn('API mocks enabled.')
-
-    const { worker } = await import('@/mocks/browser.mocks')
-    void worker.start({ onUnhandledRequest: 'bypass' })
-  } else {
-    log.warn('API mocks enabled.')
-
-    const { server } = await import('@/mocks/server.mocks')
-    server.listen({ onUnhandledRequest: 'bypass' })
   }
 }

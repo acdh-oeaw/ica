@@ -6,10 +6,44 @@
   min-height: 0;
   margin: 0;
   padding: 0;
+  scrollbar-gutter: stable;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:-moz-focusring {
+  outline: auto;
+}
+
+:focus,
+:focus-visible {
+  z-index: var(--z-index-focus-ring);
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+  /**
+   * Not setting `outline: none` to keep all focus outlines (irrespective of `:focus-visible`)
+   * in Windows High Contrast Mode.
+   */
+  outline: 2px solid transparent;
+}
+
+::selection {
+  background-color: var(--color-selection-background);
+  color: var(--color-selection-text);
 }
 
 :root {
-  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-family-text);
+  overflow-wrap: break-word;
+  tab-size: 4;
+  text-size-adjust: none;
+  touch-action: manipulation;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 html,
@@ -19,5 +53,123 @@ body,
 }
 
 #__next {
+  isolation: isolate;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.25em;
+  transition-timing-function: theme(transitionTimingFunction.DEFAULT);
+  transition-duration: theme(transitionDuration.DEFAULT);
+  transition-property: theme(transitionProperty.DEFAULT);
+  text-decoration-thickness: from-font;
+  text-underline-position: from-font;
+
+  &:hover {
+    color: theme(colors.primary.600);
+  }
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+}
+
+canvas,
+figure,
+iframe,
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+fieldset {
+  border: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-heading-text);
+}
+
+iframe {
+  border: none;
+}
+
+img {
+  object-fit: cover;
+}
+
+img[width][height] {
+  height: auto;
+}
+
+img[src$='.svg'] {
+  width: 100%;
+  max-width: none;
+  height: auto;
+}
+
+input[type='search']::-webkit-search-cancel-button,
+input[type='search']::-webkit-search-decoration {
+  appearance: none;
+}
+
+ol[role='list'],
+ul[role='list'] {
+  list-style: none;
+}
+
+pre {
+  overflow: auto;
+}
+
+summary {
+  cursor: pointer;
+}
+
+table {
+  border-collapse: collapse;
+  border-color: currentColor;
+  text-indent: 0;
+}
+
+textarea {
+  resize: vertical;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+[id] {
+  scroll-margin-block-start: 2ex;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    /** Not set to 0, to ensure `transitionend` and `animationend` events still fire. */
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.maplibregl-canvas-container,
+.maplibregl-control-container {
   isolation: isolate;
 }

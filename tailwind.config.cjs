@@ -1,24 +1,21 @@
-/** @typedef {import('tailwindcss').Config} TailwindConfig */
+const colors = require('tailwindcss/colors')
 
-/** @type {TailwindConfig} */
+/** @type {import('tailwindcss').Config} */
 const config = {
-  content: ['./src/**/*.@(css|tsx)'],
-  corePlugins: {
-    textOpacity: false,
-    backgroundOpacity: false,
-    borderOpacity: false,
-    divideOpacity: false,
-    placeholderOpacity: false,
-    ringOpacity: false,
-  },
-  plugins: [],
+  content: ['./src/**/*.@(css|ts|tsx)'],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      colors: {
+        neutral: { 0: colors.white, ...colors.slate, 1000: colors.black },
+        primary: colors.red,
+      },
+      zIndex: {
+        dialog: 'var(--z-index-dialog)',
+        overlay: 'var(--z-index-overlay)',
       },
     },
   },
+  plugins: [require('@headlessui/tailwindcss')],
 }
 
 module.exports = config
