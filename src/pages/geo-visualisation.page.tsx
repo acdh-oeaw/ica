@@ -1,3 +1,4 @@
+import { assert } from '@stefanprobst/assert'
 import { PageMetadata } from '@stefanprobst/next-page-metadata'
 import { Fragment, useEffect, useMemo, useState } from 'react'
 import type { LngLat, MapLayerMouseEvent } from 'react-map-gl'
@@ -17,6 +18,7 @@ import { initialViewState, mapStyle } from '@/features/map/geo-map.config'
 import type { PlaceContentArrays, PlaceFeature } from '@/features/map/persons-layer'
 import { PersonsLayer, personsLayerStyle } from '@/features/map/persons-layer'
 import { useFilters } from '@/features/map/use-filters'
+import { createKey } from '@/lib/create-key'
 
 export const getStaticProps = withDictionaries(['common'])
 
@@ -139,30 +141,54 @@ export default function GeoVisualisationPage(): JSX.Element {
               >
                 {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
                 <div
-                  className="grid gap-0.5 pt-1"
+                  className="grid gap-0.5 font-sans"
                   onClick={() => {
                     togglePopover(popover)
                   }}
                 >
-                  <h3 className="font-semibold">{popover.place.label}</h3>
+                  <h3 className="font-medium">{popover.place.label}</h3>
                   <ul className="grid gap-0.5 text-xs" role="list">
-                    {popover.content.events.map((eventId) => {
-                      const event = db.events.get(eventId)
-                      if (event == null) return null
+                    {popover.content.events.map((relationId) => {
+                      const relation = db.relations.get(relationId)
+                      assert(relation != null, 'Relation should exist.')
 
-                      return <li key={eventId}>{event.label}</li>
+                      const entity =
+                        relation.source.id === popover.place.id ? relation.target : relation.source
+                      const type = relation.type
+
+                      return (
+                        <li key={createKey(entity.id, type.id)}>
+                          {entity.label} {type.label}
+                        </li>
+                      )
                     })}
-                    {popover.content.institutions.map((institutionId) => {
-                      const event = db.institutions.get(institutionId)
-                      if (event == null) return null
+                    {popover.content.institutions.map((relationId) => {
+                      const relation = db.relations.get(relationId)
+                      assert(relation != null, 'Relation should exist.')
 
-                      return <li key={institutionId}>{event.label}</li>
+                      const entity =
+                        relation.source.id === popover.place.id ? relation.target : relation.source
+                      const type = relation.type
+
+                      return (
+                        <li key={createKey(entity.id, type.id)}>
+                          {entity.label} {type.label}
+                        </li>
+                      )
                     })}
-                    {popover.content.persons.map((personId) => {
-                      const event = db.persons.get(personId)
-                      if (event == null) return null
+                    {popover.content.persons.map((relationId) => {
+                      const relation = db.relations.get(relationId)
+                      assert(relation != null, 'Relation should exist.')
 
-                      return <li key={personId}>{event.label}</li>
+                      const entity =
+                        relation.source.id === popover.place.id ? relation.target : relation.source
+                      const type = relation.type
+
+                      return (
+                        <li key={createKey(entity.id, type.id)}>
+                          {entity.label} {type.label}
+                        </li>
+                      )
                     })}
                   </ul>
                 </div>

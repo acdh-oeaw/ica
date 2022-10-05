@@ -1,15 +1,16 @@
+import { assert } from '@stefanprobst/assert'
 import type { Feature, FeatureCollection, Point } from 'geojson'
 import { Fragment, useMemo } from 'react'
 import type { CircleLayer } from 'react-map-gl'
 import { Layer, Source } from 'react-map-gl'
 
 import { db } from '@/db'
-import type { Event, Institution, Person, Place } from '@/db/types'
+import type { Place, Relation } from '@/db/types'
 import type { Filters } from '@/features/map/use-filters'
 
 const colors: Record<Status, string> = {
   selected: '#1b1e28',
-  related: '#7983a4',
+  related: '#69c0ef',
 }
 
 export const personsLayerStyle: CircleLayer = {
@@ -30,15 +31,15 @@ export const personsLayerStyle: CircleLayer = {
 }
 
 export interface PlaceContentSets {
-  persons: Set<Person['id']>
-  institutions: Set<Institution['id']>
-  events: Set<Event['id']>
+  persons: Set<Relation['id']>
+  institutions: Set<Relation['id']>
+  events: Set<Relation['id']>
 }
 
 export interface PlaceContentArrays {
-  persons: Array<Person['id']>
-  institutions: Array<Institution['id']>
-  events: Array<Event['id']>
+  persons: Array<Relation['id']>
+  institutions: Array<Relation['id']>
+  events: Array<Relation['id']>
 }
 
 type Status = 'related' | 'selected'
@@ -100,40 +101,83 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
       /**
        * person => place
        */
-      person.places.forEach((placeId) => {
-        addPlace(places, placeId).persons.add(person.id)
+      person.places.forEach((relationId) => {
+        const relation = db.relations.get(relationId)
+        assert(relation != null, 'Relation should exist.')
+
+        const target = relation.source.id === person.id ? relation.target : relation.source
+        const place = db.places.get(target.id)
+        assert(place != null, 'Relation target has unexpected entity kind.')
+
+        addPlace(places, place.id).persons.add(relation.id)
       })
 
-      person.institutions.forEach((institutionId) => {
-        const institution = db.institutions.get(institutionId)
+      person.institutions.forEach((relationId) => {
+        const relation = db.relations.get(relationId)
+        assert(relation != null, 'Relation should exist.')
+
+        const target = relation.source.id === person.id ? relation.target : relation.source
+        const institution = db.institutions.get(target.id)
+        assert(institution != null, 'Relation target has unexpected entity kind.')
 
         /**
-         * peson => institution => place
+         * person => institution => place
          */
-        institution?.places.forEach((placeId) => {
-          addPlace(places, placeId).institutions.add(institution.id)
+        institution.places.forEach((relationId) => {
+          const relation = db.relations.get(relationId)
+          assert(relation != null, 'Relation should exist.')
+
+          const target = relation.source.id === institution.id ? relation.target : relation.source
+          const place = db.places.get(target.id)
+          assert(place != null, 'Relation target has unexpected entity kind.')
+
+          addPlace(places, place.id).institutions.add(relation.id)
         })
       })
 
-      person.persons.forEach((personId) => {
-        const person = db.persons.get(personId)
+      person.persons.forEach((relationId) => {
+        const relation = db.relations.get(relationId)
+        assert(relation != null, 'Relation should exist.')
+
+        const target = relation.source.id === person.id ? relation.target : relation.source
+        const _person = db.persons.get(target.id)
+        assert(_person != null, 'Relation target has unexpected entity kind.')
 
         /**
          * person => person => place
          */
-        person?.places.forEach((placeId) => {
-          addPlace(places, placeId).persons.add(person.id)
+        _person.places.forEach((relationId) => {
+          const relation = db.relations.get(relationId)
+          assert(relation != null, 'Relation should exist.')
+
+          const target = relation.source.id === _person.id ? relation.target : relation.source
+          const place = db.places.get(target.id)
+          assert(place != null, 'Relation target has unexpected entity kind.')
+
+          addPlace(places, place.id).persons.add(relation.id)
         })
       })
 
-      person.events.forEach((eventId) => {
-        const event = db.events.get(eventId)
+      person.events.forEach((relationId) => {
+        const relation = db.relations.get(relationId)
+        assert(relation != null, 'Relation should exist.')
+
+        const target = relation.source.id === person.id ? relation.target : relation.source
+        const event = db.events.get(target.id)
+        assert(event != null, 'Relation target has unexpected entity kind.')
 
         /**
          * person => event => place
          */
-        event?.places.forEach((placeId) => {
-          addPlace(places, placeId).events.add(event.id)
+        event.places.forEach((relationId) => {
+          const relation = db.relations.get(relationId)
+          assert(relation != null, 'Relation should exist.')
+
+          const target = relation.source.id === event.id ? relation.target : relation.source
+          const place = db.places.get(target.id)
+          assert(place != null, 'Relation target has unexpected entity kind.')
+
+          addPlace(places, place.id).events.add(relation.id)
         })
       })
     })

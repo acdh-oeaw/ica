@@ -3,12 +3,13 @@ import '@stefanprobst/request/fetch'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
+import { assert } from '@stefanprobst/assert'
 import { log } from '@stefanprobst/log'
 import config from '@stefanprobst/prettier-config'
 import type { RequestOptions } from '@stefanprobst/request'
-import { createUrl, HttpError, request } from '@stefanprobst/request'
+import { createUrl, HttpError, request as _request } from '@stefanprobst/request'
 // @ts-expect-error ts does not yet fully understand package exports.
-import { timeout } from '@stefanprobst/request/timeout'
+import { timeout, TimeoutError } from '@stefanprobst/request/timeout'
 import { format } from 'prettier'
 import serialize from 'serialize-javascript'
 
@@ -21,7 +22,33 @@ import type {
   Person,
   Place,
   ProfessionBase,
+  Relation,
+  RelationBase,
+  RelationType,
 } from '@/db/types'
+
+/**
+ * The ica api will time out when being hit with many requests,
+ * so we retry requests after a grace period.
+ */
+async function request(...args: Parameters<typeof _request>) {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const response = await _request(...args)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return response
+  } catch (error) {
+    if (error instanceof TimeoutError) {
+      log.warn('Connection timed out. Retrying after 20s...')
+      await new Promise((resolve) => {
+        setTimeout(resolve, 20000)
+      })
+      return _request(...args)
+    } else {
+      throw error
+    }
+  }
+}
 
 //
 
@@ -62,6 +89,32 @@ interface ApisRelatedEntity {
   id: number
   label: string
   type: ApisEntityType
+}
+
+interface ApisRelation {
+  id: number
+  label: string
+  relation_type: ApisRelationTypeBase
+  start_date: string | null
+  end_date: string | null
+  start_date_written: string | null
+  end_date_written: string | null
+  // TODO: add fields for all the apis relation permutations
+  related_person?: { id: number; label: string }
+  related_personA?: { id: number; label: string }
+  related_personB?: { id: number; label: string }
+  related_place?: { id: number; label: string }
+  related_placeA?: { id: number; label: string }
+  related_placeB?: { id: number; label: string }
+  related_institution?: { id: number; label: string }
+  related_institutionA?: { id: number; label: string }
+  related_institutionB?: { id: number; label: string }
+  related_event?: { id: number; label: string }
+  related_eventA?: { id: number; label: string }
+  related_eventB?: { id: number; label: string }
+  related_work?: { id: number; label: string }
+  related_workA?: { id: number; label: string }
+  related_workB?: { id: number; label: string }
 }
 
 interface ApisInstitutionBase {
@@ -204,8 +257,34 @@ function createProfessionBase(value: ApisProfessionBase): ProfessionBase {
 function createEntityBase(value: ApisRelationBase['related_entity']): EntityBase {
   return {
     id: String(value.id),
-    label: value.label,
     kind: value.type.toLowerCase() as EntityKind,
+    label: value.label,
+  }
+}
+
+function createRelationType(value: ApisRelationBase['relation_type']): RelationType {
+  return {
+    id: String(value.id),
+    label: value.label,
+  }
+}
+
+function createRelationBase(source: EntityBase, value: ApisRelationBase): RelationBase {
+  return {
+    id: String(value.id),
+    source: { id: source.id, kind: source.kind, label: source.label },
+    target: createEntityBase(value.related_entity),
+    type: createRelationType(value.relation_type),
+  }
+}
+
+function createRelation(value: ApisRelation, base: RelationBase): Relation {
+  return {
+    ...base,
+    startDate: value.start_date,
+    endDate: value.start_date_written,
+    startDateWritten: value.end_date,
+    endDateWritten: value.end_date_written,
   }
 }
 
@@ -233,31 +312,31 @@ async function addPersonById(
   }
 
   for (const value of response.relations) {
-    const entity = createEntityBase(value.related_entity)
+    const kind = value.related_entity.type.toLowerCase()
 
-    // TODO:
-    const _type = { id: String(value.relation_type.id), label: value.relation_type.label }
-
-    if (entity.kind === 'person') {
+    if (kind === 'person') {
       /** we are only interested in persons in the `webclient` collection. */
-      if (!collection.has(entity.id)) continue
+      if (!collection.has(String(value.related_entity.id))) continue
 
-      await addPersonById(entity, db, collection)
-      person.persons.add(entity.id)
-    } else if (entity.kind === 'place') {
-      person.places.add(entity.id)
-      await addPlaceById(entity, db)
-      db.places.get(entity.id)?.persons.add(person.id)
-    } else if (entity.kind === 'institution') {
-      person.institutions.add(entity.id)
-      await addInstitutionById(entity, db)
-      db.institutions.get(entity.id)?.persons.add(person.id)
-    } else if (entity.kind === 'event') {
-      person.events.add(entity.id)
-      await addEventById(entity, db)
-      db.events.get(entity.id)?.persons.add(person.id)
-    } else {
-      /** not interested in works */
+      const relation = await getRelation(person, value, db)
+      await addPersonById(relation.target, db, collection)
+      person.persons.add(relation.id)
+      db.persons.get(relation.target.id)?.persons.add(relation.id)
+    } else if (kind === 'place') {
+      const relation = await getRelation(person, value, db)
+      person.places.add(relation.id)
+      await addPlaceById(relation.target, db)
+      db.places.get(relation.target.id)?.persons.add(relation.id)
+    } else if (kind === 'institution') {
+      const relation = await getRelation(person, value, db)
+      person.institutions.add(relation.id)
+      await addInstitutionById(relation.target, db)
+      db.institutions.get(relation.target.id)?.persons.add(relation.id)
+    } else if (kind === 'event') {
+      const relation = await getRelation(person, value, db)
+      person.events.add(relation.id)
+      await addEventById(relation.target, db)
+      db.events.get(relation.target.id)?.persons.add(relation.id)
     }
   }
 }
@@ -274,14 +353,13 @@ async function addInstitutionById(value: EntityBase, db: Database): Promise<void
   db.institutions.set(institution.id, institution)
 
   for (const value of response.relations) {
-    const entity = createEntityBase(value.related_entity)
+    const kind = value.related_entity.type.toLowerCase()
 
-    if (entity.kind === 'place') {
-      institution.places.add(entity.id)
-      await addPlaceById(entity, db)
-      db.places.get(entity.id)?.institutions.add(institution.id)
-    } else if (entity.kind === 'person') {
-      //
+    if (kind === 'place') {
+      const relation = await getRelation(institution, value, db)
+      institution.places.add(relation.id)
+      await addPlaceById(relation.target, db)
+      db.places.get(relation.target.id)?.institutions.add(relation.id)
     }
   }
 }
@@ -298,12 +376,13 @@ async function addPlaceById(value: EntityBase, db: Database): Promise<void> {
   db.places.set(place.id, place)
 
   for (const value of response.relations) {
-    const entity = createEntityBase(value.related_entity)
+    const kind = value.related_entity.type.toLowerCase()
 
-    if (entity.kind === 'place') {
-      place.places.add(entity.id)
-      await addPlaceById(entity, db)
-      db.places.get(entity.id)?.places.add(place.id)
+    if (kind === 'place') {
+      const relation = await getRelation(place, value, db)
+      place.places.add(relation.id)
+      await addPlaceById(relation.target, db)
+      db.places.get(relation.target.id)?.places.add(relation.id)
     }
   }
 }
@@ -320,18 +399,53 @@ async function addEventById(value: EntityBase, db: Database): Promise<void> {
   db.events.set(event.id, event)
 
   for (const value of response.relations) {
-    const entity = createEntityBase(value.related_entity)
+    const kind = value.related_entity.type.toLowerCase()
 
-    if (entity.kind === 'place') {
-      event.places.add(entity.id)
-      await addPlaceById(entity, db)
-      db.places.get(entity.id)?.events.add(event.id)
-    } else if (entity.kind === 'institution') {
-      //
-    } else if (entity.kind === 'person') {
-      //
+    if (kind === 'place') {
+      const relation = await getRelation(event, value, db)
+      event.places.add(relation.id)
+      await addPlaceById(relation.target, db)
+      db.places.get(relation.target.id)?.events.add(relation.id)
     }
   }
+}
+
+async function addRelationById(value: RelationBase, db: Database): Promise<void> {
+  if (db.relations.has(value.id)) return
+
+  const order = ['person', 'institution', 'place', 'event', 'work'] as const
+
+  function getEndpoint(source: typeof order[number], target: typeof order[number]) {
+    return [source, target]
+      .sort((source, target) => {
+        return order.indexOf(source) > order.indexOf(target) ? 1 : -1
+      })
+      .join('')
+  }
+
+  const endpoint = getEndpoint(value.source.kind, value.target.kind)
+
+  const url = createUrl({ pathname: `relations/${endpoint}/${value.id}/`, baseUrl })
+
+  log.info(`Fetching relation from ${value.source.label} to ${value.target.label}.`)
+  const response = (await request(url, options)) as ApisRelation
+
+  const relation = createRelation(response, value)
+  db.relations.set(relation.id, relation)
+}
+
+//
+
+async function getRelation(
+  source: EntityBase,
+  base: ApisRelationBase,
+  db: Database,
+): Promise<Relation> {
+  const relationBase = createRelationBase(source, base)
+  await addRelationById(relationBase, db)
+  const relation = db.relations.get(relationBase.id)
+  assert(relation != null, 'Missing relation.')
+  return relation
 }
 
 //
@@ -370,6 +484,8 @@ async function generate() {
     professions: new Map(),
     institutions: new Map(),
     places: new Map(),
+    relations: new Map(),
+    relationTypes: new Map(),
   }
 
   /** Persons in the `webclient` collection. */

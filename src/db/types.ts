@@ -1,11 +1,34 @@
+export interface RelationType {
+  id: string
+  label: string
+}
+
+export interface RelationBase {
+  id: string
+  source: EntityBase
+  target: EntityBase
+  type: RelationType
+}
+
+export interface Relation<S extends EntityBase = EntityBase, T extends EntityBase = EntityBase> {
+  id: string
+  source: S
+  target: T
+  type: RelationType
+  startDate: IsoDateString | null
+  endDate: IsoDateString | null
+  startDateWritten: string | null
+  endDateWritten: string | null
+}
+
 export interface Institution {
   kind: 'institution'
   id: string
   label: string
-  persons: Set<Person['id']>
-  places: Set<Place['id']>
-  institutions: Set<Institution['id']>
-  events: Set<Event['id']>
+  persons: Set<Relation['id']>
+  places: Set<Relation['id']>
+  institutions: Set<Relation['id']>
+  events: Set<Relation['id']>
 }
 
 export interface Person {
@@ -20,10 +43,10 @@ export interface Person {
   startDateWritten: string | null
   endDateWritten: string | null
   professions: Set<ProfessionBase['id']>
-  persons: Set<Person['id']>
-  places: Set<Place['id']>
-  institutions: Set<Institution['id']>
-  events: Set<Event['id']>
+  persons: Set<Relation['id']>
+  places: Set<Relation['id']>
+  institutions: Set<Relation['id']>
+  events: Set<Relation['id']>
 }
 
 export interface Place {
@@ -31,10 +54,10 @@ export interface Place {
   id: string
   label: string
   coordinates: [number, number]
-  persons: Set<Person['id']>
-  places: Set<Place['id']>
-  institutions: Set<Institution['id']>
-  events: Set<Event['id']>
+  persons: Set<Relation['id']>
+  places: Set<Relation['id']>
+  institutions: Set<Relation['id']>
+  events: Set<Relation['id']>
 }
 
 export interface ProfessionBase {
@@ -47,10 +70,10 @@ export interface Event {
   kind: 'event'
   id: string
   label: string
-  persons: Set<Person['id']>
-  places: Set<Place['id']>
-  institutions: Set<Institution['id']>
-  events: Set<Event['id']>
+  persons: Set<Relation['id']>
+  places: Set<Relation['id']>
+  institutions: Set<Relation['id']>
+  events: Set<Relation['id']>
 }
 
 interface Work {
@@ -71,4 +94,6 @@ export interface Database {
   persons: Map<Person['id'], Person>
   places: Map<Place['id'], Place>
   professions: Map<ProfessionBase['id'], ProfessionBase>
+  relations: Map<Relation['id'], Relation>
+  relationTypes: Map<RelationType['id'], RelationType>
 }
