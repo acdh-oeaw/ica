@@ -137,27 +137,35 @@ export default function GeoVisualisationPage(): JSX.Element {
                   togglePopover(popover)
                 }}
               >
-                <h3 className="font-bold">{popover.place.label}</h3>
-                <ul role="list">
-                  {popover.content.events.map((eventId) => {
-                    const event = db.events.get(eventId)
-                    if (event == null) return null
+                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+                <div
+                  className="grid gap-0.5 pt-1"
+                  onClick={() => {
+                    togglePopover(popover)
+                  }}
+                >
+                  <h3 className="font-semibold">{popover.place.label}</h3>
+                  <ul className="grid gap-0.5 text-xs" role="list">
+                    {popover.content.events.map((eventId) => {
+                      const event = db.events.get(eventId)
+                      if (event == null) return null
 
-                    return <li key={eventId}>{event.label}</li>
-                  })}
-                  {popover.content.institutions.map((institutionId) => {
-                    const event = db.institutions.get(institutionId)
-                    if (event == null) return null
+                      return <li key={eventId}>{event.label}</li>
+                    })}
+                    {popover.content.institutions.map((institutionId) => {
+                      const event = db.institutions.get(institutionId)
+                      if (event == null) return null
 
-                    return <li key={institutionId}>{event.label}</li>
-                  })}
-                  {popover.content.persons.map((personId) => {
-                    const event = db.persons.get(personId)
-                    if (event == null) return null
+                      return <li key={institutionId}>{event.label}</li>
+                    })}
+                    {popover.content.persons.map((personId) => {
+                      const event = db.persons.get(personId)
+                      if (event == null) return null
 
-                    return <li key={personId}>{event.label}</li>
-                  })}
-                </ul>
+                      return <li key={personId}>{event.label}</li>
+                    })}
+                  </ul>
+                </div>
               </Popup>
             )
           })}
