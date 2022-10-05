@@ -18,13 +18,19 @@ export function HomeHeroSection(): JSX.Element {
             <h2 className="max-w-2xl text-3xl font-extrabold tracking-tight">
               {metadata.description}
             </h2>
-            <div className="mt-4">
+            <div className="mt-4 flex gap-4">
               <Link
                 className="inline-flex rounded-md bg-neutral-900 px-12 py-4 font-medium text-neutral-50 hover:bg-neutral-800 hover:text-neutral-0"
-                href={routes.visualisation()}
+                href={routes.geoVisualisation()}
               >
                 {t(['common', 'home', 'explore-map'])}
               </Link>
+              {/* <Link
+                className="inline-flex rounded-md bg-neutral-900 px-12 py-4 font-medium text-neutral-50 hover:bg-neutral-800 hover:text-neutral-0"
+                href={routes.networkVisualisation()}
+              >
+                {t(['common', 'home', 'explore-graph'])}
+              </Link> */}
             </div>
           </div>
         </div>

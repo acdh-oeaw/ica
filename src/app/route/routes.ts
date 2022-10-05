@@ -8,6 +8,10 @@ export function imprint(hash?: string): Href {
   return { pathname: '/imprint', hash }
 }
 
-export function visualisation(hash?: string): Href {
-  return { pathname: '/visualisation', hash }
+export function geoVisualisation(hash?: string): Href {
+  return { pathname: '/geo-visualisation', hash }
+}
+
+export function networkVisualisation(hash?: string): Href {
+  return { pathname: '/network-visualisation', hash }
 }

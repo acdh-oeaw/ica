@@ -1,28 +1,55 @@
 import type { Feature, FeatureCollection, Point } from 'geojson'
 import { Fragment, useMemo } from 'react'
-import { CircleLayer, Layer, Source } from 'react-map-gl'
+import type { CircleLayer } from 'react-map-gl'
+import { Layer, Source } from 'react-map-gl'
 
 import { db } from '@/db'
-import type { Person, Place } from '@/db/types'
+import type { Event, Institution, Person, Place } from '@/db/types'
 import type { Filters } from '@/features/map/use-filters'
 
-export const personsLayerStyle = {
+const colors: Record<Status, string> = {
+  selected: '#1b1e28',
+  related: '#7983a4',
+}
+
+export const personsLayerStyle: CircleLayer = {
   id: 'persons',
   type: 'circle',
   paint: {
     'circle-radius': 6,
-    'circle-color': '#6ee7b7',
+    /**
+     * For the mapbox-gl expression language @see https://docs.mapbox.com/mapbox-gl-js/style-spec/expressions
+     */
+    'circle-color': [
+      'case',
+      ['==', ['get', 'status'], 'selected'],
+      colors.selected,
+      colors.related,
+    ],
   },
-} // satisfies CircleLayer
+}
 
-export const relationsLayerStyle = {
-  id: 'relations',
-  type: 'circle',
-  paint: {
-    'circle-radius': 6,
-    'circle-color': '#fca5a5',
-  },
-} // satisfies CircleLayer
+export interface PlaceContentSets {
+  persons: Set<Person['id']>
+  institutions: Set<Institution['id']>
+  events: Set<Event['id']>
+}
+
+export interface PlaceContentArrays {
+  persons: Array<Person['id']>
+  institutions: Array<Institution['id']>
+  events: Array<Event['id']>
+}
+
+type Status = 'related' | 'selected'
+
+export type PlaceFeature = Feature<
+  Point,
+  Pick<Place, 'id' | 'kind'> & {
+    status: Status
+    content: PlaceContentArrays
+  }
+>
 
 interface PersonsLayerProps {
   filters: Filters
@@ -35,12 +62,15 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
     /**
      * Places directly related to selected persons.
      */
-    const places = new Set<Place['id']>()
+    const places = new Map<Place['id'], PlaceContentSets>()
     /**
      * Places indirectly related to selected persons, either via related institutions,
-     * or related persons, i.e. peson=>institution=>place or person=>person=>place
+     * persons, or events:
+     * - peson => institution => place
+     * - person => person => place
+     * - person => event => place
      */
-    const relatedPlaces = new Set<Place['id']>()
+    const relatedPlaces = new Map<Place['id'], PlaceContentSets>()
 
     let selectedPersons =
       filters.selectedPersons.length === 0
@@ -58,12 +88,20 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
       })
     }
 
+    function addPlace(places: Map<Place['id'], PlaceContentSets>, id: Place['id']) {
+      if (!places.has(id)) {
+        places.set(id, { persons: new Set(), institutions: new Set(), events: new Set() })
+      }
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return places.get(id)!
+    }
+
     selectedPersons.forEach((person) => {
       /**
        * person => place
        */
       person.places.forEach((placeId) => {
-        places.add(placeId)
+        addPlace(places, placeId).persons.add(person.id)
       })
 
       person.institutions.forEach((institutionId) => {
@@ -73,17 +111,8 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
          * peson => institution => place
          */
         institution?.places.forEach((placeId) => {
-          relatedPlaces.add(placeId)
+          addPlace(places, placeId).institutions.add(institution.id)
         })
-        // /**
-        //  * person => institution => person => place
-        //  */
-        // institution?.persons.forEach((personId) => {
-        //   const person = db.persons.get(personId)
-        //   person?.places.forEach((placeId) => {
-        //     relatedPlaces.add(placeId)
-        //   })
-        // })
       })
 
       person.persons.forEach((personId) => {
@@ -93,35 +122,33 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
          * person => person => place
          */
         person?.places.forEach((placeId) => {
-          relatedPlaces.add(placeId)
+          addPlace(places, placeId).persons.add(person.id)
         })
+      })
+
+      person.events.forEach((eventId) => {
+        const event = db.events.get(eventId)
 
         /**
-         * person => person => institution => place
+         * person => event => place
          */
-        // person?.institutions.forEach((institutionId) => {
-        //   const institution = db.institutions.get(institutionId)
-        //   institution?.places.forEach((placeId) => {
-        //     relatedPlaces.add(placeId)
-        //   })
-        // })
+        event?.places.forEach((placeId) => {
+          addPlace(places, placeId).events.add(event.id)
+        })
       })
     })
 
     return [places, relatedPlaces]
   }, [filters])
 
-  const placesGeoJson = useMemo(() => {
+  const geoJson = useMemo(() => {
     const geojson: FeatureCollection = {
       type: 'FeatureCollection',
       features: [],
     }
 
-    places.forEach((placeId) => {
-      const place = db.places.get(placeId)
-      if (place == null) return
-
-      const feature: Feature<Point> = {
+    function createFeature(place: Place, content: PlaceContentSets, status: Status): PlaceFeature {
+      return {
         type: 'Feature',
         geometry: {
           type: 'Point',
@@ -130,40 +157,35 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
         properties: {
           id: place.id,
           kind: place.kind,
+          status,
+          /**
+           * Note that `mapbox-gl` json-stringifies any feature properties on events.
+           *
+           * @see https://github.com/mapbox/mapbox-gl-js/issues/2434
+           */
+          content: {
+            events: Array.from(content.events),
+            institutions: Array.from(content.institutions),
+            persons: Array.from(content.persons),
+          },
         },
       }
-
-      geojson.features.push(feature)
-    })
-
-    return geojson
-  }, [places])
-
-  const relatedPlacesGeoJson = useMemo(() => {
-    const geojson: FeatureCollection = {
-      type: 'FeatureCollection',
-      features: [],
     }
 
-    relatedPlaces.forEach((placeId) => {
+    places.forEach((content, placeId) => {
+      const place = db.places.get(placeId)
+      if (place == null) return
+
+      geojson.features.push(createFeature(place, content, 'selected'))
+    })
+
+    relatedPlaces.forEach((content, placeId) => {
       if (places.has(placeId)) return
 
       const place = db.places.get(placeId)
       if (place == null) return
 
-      const feature: Feature<Point> = {
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: place.coordinates,
-        },
-        properties: {
-          id: place.id,
-          kind: place.kind,
-        },
-      }
-
-      geojson.features.push(feature)
+      geojson.features.push(createFeature(place, content, 'related'))
     })
 
     return geojson
@@ -171,10 +193,7 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
 
   return (
     <Fragment>
-      <Source type="geojson" data={relatedPlacesGeoJson}>
-        <Layer {...relationsLayerStyle} />
-      </Source>
-      <Source type="geojson" data={placesGeoJson}>
+      <Source type="geojson" data={geoJson}>
         <Layer {...personsLayerStyle} />
       </Source>
     </Fragment>

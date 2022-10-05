@@ -1,7 +1,9 @@
 import { I18nProvider } from '@stefanprobst/next-i18n'
 import type { ReactNode } from 'react'
+import { I18nProvider as UiI18nProvider, SSRProvider } from 'react-aria'
 
 import type { DictionariesProps } from '@/app/i18n/dictionaries'
+import { useLocale } from '@/app/route/use-locale'
 
 interface ProvidersProps extends DictionariesProps {
   children: ReactNode
@@ -10,5 +12,13 @@ interface ProvidersProps extends DictionariesProps {
 export function Providers(props: ProvidersProps): JSX.Element {
   const { children, dictionaries } = props
 
-  return <I18nProvider dictionaries={dictionaries}>{children}</I18nProvider>
+  const { locale } = useLocale()
+
+  return (
+    <SSRProvider>
+      <I18nProvider dictionaries={dictionaries}>
+        <UiI18nProvider locale={locale}>{children}</UiI18nProvider>
+      </I18nProvider>
+    </SSRProvider>
+  )
 }

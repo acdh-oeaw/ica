@@ -32,13 +32,19 @@ export const dictionary: Dictionary = {
         title: 'Imprint',
       },
     },
-    visualisation: {
+    'geo-visualisation': {
       metadata: {
-        title: 'Visualisation',
+        title: 'Geo-Visualisation',
+      },
+    },
+    'network-visualisation': {
+      metadata: {
+        title: 'Network-Visualisation',
       },
     },
   },
   home: {
+    'explore-graph': 'Explore Graph',
     'explore-map': 'Explore Map',
     intro: `
     <p>

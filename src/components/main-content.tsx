@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-import { mainContentId } from '@/app/skip-nav.component'
+import { mainContentId } from '@/app/skip-nav'
 
 interface MainContentProps {
   children?: ReactNode

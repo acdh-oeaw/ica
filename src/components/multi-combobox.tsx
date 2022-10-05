@@ -5,10 +5,17 @@ import {
   XMarkIcon as RemoveIcon,
 } from '@heroicons/react/20/solid'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import type { ChangeEvent, CSSProperties, ReactNode } from 'react'
+import type { ChangeEvent, ReactNode } from 'react'
 import { Fragment, useMemo, useState } from 'react'
 
 import { useElementRef } from '@/lib/use-element-ref'
+
+const defaultSelectionColor: SelectionColor = { backgroundColor: '#1b1e28', color: '#fff' }
+
+interface SelectionColor {
+  backgroundColor: string
+  color: string
+}
 
 interface Item {
   id: string
@@ -16,7 +23,7 @@ interface Item {
 }
 
 interface MultiComboBoxProps<T extends Item> {
-  getColor?: (id: T['id']) => string
+  getColor?: (id: T['id']) => SelectionColor
   items: Map<T['id'], T>
   label: ReactNode
   messages: {
@@ -105,13 +112,13 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): JSX
                   )
                 }
 
-                const color = getColor?.(key)
+                const { backgroundColor, color } = getColor?.(key) ?? defaultSelectionColor
 
                 return (
                   <li
                     key={key}
-                    className="inline-flex items-center gap-1 rounded bg-primary-200 px-2 py-1 font-medium"
-                    style={{ backgroundColor: color }}
+                    className="inline-flex items-center gap-1 rounded px-2 py-1 font-medium"
+                    style={{ backgroundColor, color }}
                   >
                     <span className="block truncate">{getDisplayLabel(key)}</span>
                     <button onClick={onRemoveSelectedKey}>
@@ -162,7 +169,7 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): JSX
               {virtualItems.map((virtualItem) => {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 const item = visibleItems[virtualItem.index]!
-                const color = getColor?.(item.id)
+                const { backgroundColor } = getColor?.(item.id) ?? defaultSelectionColor
 
                 return (
                   <Combobox.Option
@@ -182,8 +189,8 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): JSX
                           </span>
                           {selected ? (
                             <span
-                              className="absolute inset-y-0 left-0 grid place-items-center pl-3 text-primary-600"
-                              style={{ color }}
+                              className="absolute inset-y-0 left-0 grid place-items-center pl-3"
+                              style={{ color: backgroundColor }}
                             >
                               <CheckMarkIcon aria-hidden className="h-5 w-5" />
                             </span>

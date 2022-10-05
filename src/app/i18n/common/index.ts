@@ -31,13 +31,19 @@ export interface Dictionary {
         title: string
       }
     }
-    visualisation: {
+    'geo-visualisation': {
+      metadata: {
+        title: string
+      }
+    }
+    'network-visualisation': {
       metadata: {
         title: string
       }
     }
   }
   home: {
+    'explore-graph': string
     'explore-map': string
     intro: HtmlString
   }

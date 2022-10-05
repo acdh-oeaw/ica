@@ -10,7 +10,7 @@ export function PageFooter(): JSX.Element {
 
   return (
     <footer>
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-4 text-xs font-medium">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-8 py-4 text-xs font-medium">
         <span>
           &copy; {new Date().getUTCFullYear()}{' '}
           <a href={appMetadata.creator.website} rel="noreferrer" target="_blank">

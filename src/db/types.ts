@@ -1,26 +1,11 @@
-interface RelationType {
-  id: string
-  label: string
-}
-
-interface Relation<S extends Entity, T extends Entity> {
-  id: string
-  source: S['id']
-  target: T['id']
-  type: RelationType['id']
-  startDate: IsoDateString | null
-  endDate: IsoDateString | null
-  startDateWritten: string | null
-  endDateWritten: string | null
-}
-
 export interface Institution {
   kind: 'institution'
   id: string
   label: string
-  persons: Set<Relation<Person, Person>['id']>
-  places: Set<Relation<Person, Place>['id']>
-  institutions: Set<Relation<Person, Institution>['id']>
+  persons: Set<Person['id']>
+  places: Set<Place['id']>
+  institutions: Set<Institution['id']>
+  events: Set<Event['id']>
 }
 
 export interface Person {
@@ -35,10 +20,10 @@ export interface Person {
   startDateWritten: string | null
   endDateWritten: string | null
   professions: Set<ProfessionBase['id']>
-  persons: Set<Relation<Person, Person>['id']>
-  places: Set<Relation<Person, Place>['id']>
-  institutions: Set<Relation<Person, Institution>['id']>
-  events: Set<Relation<Person, Event>['id']>
+  persons: Set<Person['id']>
+  places: Set<Place['id']>
+  institutions: Set<Institution['id']>
+  events: Set<Event['id']>
 }
 
 export interface Place {
@@ -46,9 +31,10 @@ export interface Place {
   id: string
   label: string
   coordinates: [number, number]
-  persons: Set<Relation<Person, Person>['id']>
-  places: Set<Relation<Person, Place>['id']>
-  institutions: Set<Relation<Person, Institution>['id']>
+  persons: Set<Person['id']>
+  places: Set<Place['id']>
+  institutions: Set<Institution['id']>
+  events: Set<Event['id']>
 }
 
 export interface ProfessionBase {
@@ -61,9 +47,10 @@ export interface Event {
   kind: 'event'
   id: string
   label: string
-  persons: Set<Relation<Person, Person>['id']>
-  places: Set<Relation<Person, Place>['id']>
-  institutions: Set<Relation<Person, Institution>['id']>
+  persons: Set<Person['id']>
+  places: Set<Place['id']>
+  institutions: Set<Institution['id']>
+  events: Set<Event['id']>
 }
 
 interface Work {

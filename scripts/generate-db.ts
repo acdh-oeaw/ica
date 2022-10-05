@@ -144,6 +144,7 @@ function createEvent(value: ApisEvent): Event {
     persons: new Set(),
     places: new Set(),
     institutions: new Set(),
+    events: new Set(),
   }
 }
 
@@ -155,6 +156,7 @@ function createInstitution(value: ApisInstitution): Institution {
     persons: new Set(),
     places: new Set(),
     institutions: new Set(),
+    events: new Set(),
   }
 }
 
@@ -187,6 +189,7 @@ function createPlace(value: ApisPlace): Place {
     persons: new Set(),
     places: new Set(),
     institutions: new Set(),
+    events: new Set(),
   }
 }
 
@@ -269,6 +272,18 @@ async function addInstitutionById(value: EntityBase, db: Database): Promise<void
 
   const institution = createInstitution(response)
   db.institutions.set(institution.id, institution)
+
+  for (const value of response.relations) {
+    const entity = createEntityBase(value.related_entity)
+
+    if (entity.kind === 'place') {
+      institution.places.add(entity.id)
+      await addPlaceById(entity, db)
+      db.places.get(entity.id)?.institutions.add(institution.id)
+    } else if (entity.kind === 'person') {
+      //
+    }
+  }
 }
 
 async function addPlaceById(value: EntityBase, db: Database): Promise<void> {
@@ -281,6 +296,16 @@ async function addPlaceById(value: EntityBase, db: Database): Promise<void> {
 
   const place = createPlace(response)
   db.places.set(place.id, place)
+
+  for (const value of response.relations) {
+    const entity = createEntityBase(value.related_entity)
+
+    if (entity.kind === 'place') {
+      place.places.add(entity.id)
+      await addPlaceById(entity, db)
+      db.places.get(entity.id)?.places.add(place.id)
+    }
+  }
 }
 
 async function addEventById(value: EntityBase, db: Database): Promise<void> {
@@ -293,6 +318,20 @@ async function addEventById(value: EntityBase, db: Database): Promise<void> {
 
   const event = createEvent(response)
   db.events.set(event.id, event)
+
+  for (const value of response.relations) {
+    const entity = createEntityBase(value.related_entity)
+
+    if (entity.kind === 'place') {
+      event.places.add(entity.id)
+      await addPlaceById(entity, db)
+      db.places.get(entity.id)?.events.add(event.id)
+    } else if (entity.kind === 'institution') {
+      //
+    } else if (entity.kind === 'person') {
+      //
+    }
+  }
 }
 
 //

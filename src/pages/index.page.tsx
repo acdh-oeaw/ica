@@ -5,7 +5,7 @@ import { useI18n } from '@/app/i18n/use-i18n'
 import { withDictionaries } from '@/app/i18n/with-dictionaries'
 import { usePageTitleTemplate } from '@/app/metadata/use-page-title-template'
 import { HomeHeroSection } from '@/components/home-hero-section'
-import { MainContent } from '@/components/main-content.component'
+import { MainContent } from '@/components/main-content'
 
 export const getStaticProps = withDictionaries(['common'])
 
