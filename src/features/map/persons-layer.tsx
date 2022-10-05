@@ -131,7 +131,7 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
           const place = db.places.get(target.id)
           assert(place != null, 'Relation target has unexpected entity kind.')
 
-          addPlace(places, place.id).institutions.add(relation.id)
+          addPlace(relatedPlaces, place.id).institutions.add(relation.id)
         })
       })
 
@@ -154,7 +154,7 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
           const place = db.places.get(target.id)
           assert(place != null, 'Relation target has unexpected entity kind.')
 
-          addPlace(places, place.id).persons.add(relation.id)
+          addPlace(relatedPlaces, place.id).persons.add(relation.id)
         })
       })
 
@@ -177,7 +177,7 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
           const place = db.places.get(target.id)
           assert(place != null, 'Relation target has unexpected entity kind.')
 
-          addPlace(places, place.id).events.add(relation.id)
+          addPlace(relatedPlaces, place.id).events.add(relation.id)
         })
       })
     })
