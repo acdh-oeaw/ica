@@ -173,3 +173,7 @@ textarea {
 .maplibregl-control-container {
   isolation: isolate;
 }
+
+.maplibregl-popup-content {
+  cursor: default;
+}
