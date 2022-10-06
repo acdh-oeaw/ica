@@ -282,8 +282,8 @@ function createRelation(value: ApisRelation, base: RelationBase): Relation {
   return {
     ...base,
     startDate: value.start_date,
-    endDate: value.start_date_written,
-    startDateWritten: value.end_date,
+    endDate: value.end_date,
+    startDateWritten: value.start_date_written,
     endDateWritten: value.end_date_written,
   }
 }
