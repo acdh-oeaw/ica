@@ -1,4 +1,3 @@
-import { assert } from '@stefanprobst/assert'
 import { PageMetadata } from '@stefanprobst/next-page-metadata'
 import { Fragment, useEffect, useMemo, useState } from 'react'
 import type { LngLat, MapLayerMouseEvent } from 'react-map-gl'
@@ -9,6 +8,7 @@ import { withDictionaries } from '@/app/i18n/with-dictionaries'
 import { usePageTitleTemplate } from '@/app/metadata/use-page-title-template'
 import { MainContent } from '@/components/main-content'
 import { MultiComboBox } from '@/components/multi-combobox'
+import { PopoverContent } from '@/components/popover-content'
 // import { RangeSlider } from '@/components/range-slider'
 import { db } from '@/db'
 import type { Place } from '@/db/types'
@@ -20,6 +20,12 @@ import { PersonsLayer, personsLayerStyle } from '@/features/map/persons-layer'
 import { useFilters } from '@/features/map/use-filters'
 
 export const getStaticProps = withDictionaries(['common'])
+
+interface Popover {
+  place: Place
+  content: PlaceContentArrays
+  coordinates: LngLat
+}
 
 const layerIds = [personsLayerStyle.id]
 
@@ -56,12 +62,6 @@ export default function GeoVisualisationPage(): JSX.Element {
       },
     }
   }, [t])
-
-  interface Popover {
-    place: Place
-    content: PlaceContentArrays
-    coordinates: LngLat
-  }
 
   const [cursor, setCursor] = useState<'auto' | 'pointer'>('auto')
   const [popovers, setPopovers] = useState<Record<Place['id'], Popover>>({})
@@ -138,59 +138,13 @@ export default function GeoVisualisationPage(): JSX.Element {
                   togglePopover(popover)
                 }}
               >
-                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
-                <div
-                  className="grid gap-0.5 font-sans"
-                  onClick={() => {
+                <PopoverContent
+                  content={popover.content}
+                  onClose={() => {
                     togglePopover(popover)
                   }}
-                >
-                  <h3 className="font-medium">{popover.place.label}</h3>
-                  <ul className="grid gap-0.5 text-xs" role="list">
-                    {popover.content.events.map((relationId) => {
-                      const relation = db.relations.get(relationId)
-                      assert(relation != null, 'Relation should exist.')
-
-                      const entity =
-                        relation.source.id === popover.place.id ? relation.target : relation.source
-                      const type = relation.type
-
-                      return (
-                        <li key={relation.id}>
-                          {entity.label} {type.label}
-                        </li>
-                      )
-                    })}
-                    {popover.content.institutions.map((relationId) => {
-                      const relation = db.relations.get(relationId)
-                      assert(relation != null, 'Relation should exist.')
-
-                      const entity =
-                        relation.source.id === popover.place.id ? relation.target : relation.source
-                      const type = relation.type
-
-                      return (
-                        <li key={relation.id}>
-                          {entity.label} {type.label}
-                        </li>
-                      )
-                    })}
-                    {popover.content.persons.map((relationId) => {
-                      const relation = db.relations.get(relationId)
-                      assert(relation != null, 'Relation should exist.')
-
-                      const entity =
-                        relation.source.id === popover.place.id ? relation.target : relation.source
-                      const type = relation.type
-
-                      return (
-                        <li key={relation.id}>
-                          {entity.label} {type.label}
-                        </li>
-                      )
-                    })}
-                  </ul>
-                </div>
+                  place={popover.place}
+                />
               </Popup>
             )
           })}
