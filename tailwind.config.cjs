@@ -17,6 +17,9 @@ const config = {
         neutral: { 0: colors.white, ...colors.slate, 1000: colors.black },
         primary: colors.slate,
       },
+      fontFamily: {
+        sans: ['InterVariable', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
       zIndex: {
         dialog: 'var(--z-index-dialog)',
         overlay: 'var(--z-index-overlay)',
