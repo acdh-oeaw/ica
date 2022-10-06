@@ -517,4 +517,17 @@ export const events = new Map([
       events: new Set([]),
     },
   ],
+  [
+    '7790',
+    {
+      kind: 'event',
+      id: '7790',
+      label:
+        'open air concert to celebrate the end of the war in Grant Park, Chicago, attended by 60,000 people',
+      persons: new Set(['7791']),
+      places: new Set(['7792']),
+      institutions: new Set([]),
+      events: new Set([]),
+    },
+  ],
 ])

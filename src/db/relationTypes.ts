@@ -192,4 +192,7 @@ export const relationTypes = new Map([
   ['11214', { id: '11214', label: 'was a honorary professor at' }],
   ['11232', { id: '11232', label: "received a master's degree in German philology from" }],
   ['10840', { id: '10840', label: 'studied in' }],
+  ['11193', { id: '11193', label: 'taught a workshop in' }],
+  ['11194', { id: '11194', label: 'owned an apartment in' }],
+  ['11206', { id: '11206', label: 'was interned in a camp for enemy aliens in' }],
 ])
