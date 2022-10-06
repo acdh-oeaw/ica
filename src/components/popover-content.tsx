@@ -1,31 +1,27 @@
-import { assert } from '@stefanprobst/assert'
-
 import { db } from '@/db'
 import type { Place, Relation } from '@/db/types'
-import type { PlaceContentArrays } from '@/features/map/persons-layer'
+import type { SerializablePlaceRelationsMap } from '@/features/map/persons-layer'
 
 interface PopoverContentProps {
-  place: Place
-  content: PlaceContentArrays
   onClose: () => void
+  place: Place
+  relations: SerializablePlaceRelationsMap
 }
 
 export function PopoverContent(props: PopoverContentProps): JSX.Element {
-  const { content, onClose, place } = props
+  const { relations, onClose, place } = props
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div className="grid gap-0.5 font-sans" onClick={onClose}>
       <h3 className="font-medium">{place.label}</h3>
       <ul className="grid gap-0.5 text-xs" role="list">
-        {content.persons.map((id) => {
-          return <RelationsListItem key={id} id={id} place={place} />
-        })}
-        {content.institutions.map((id) => {
-          return <RelationsListItem key={id} id={id} place={place} />
-        })}
-        {content.events.map((id) => {
-          return <RelationsListItem key={id} id={id} place={place} />
+        {relations.map(([key, ids]) => {
+          return (
+            <li key={key}>
+              <RelationsLabel ids={ids} place={place} />
+            </li>
+          )
         })}
       </ul>
     </div>
@@ -33,31 +29,41 @@ export function PopoverContent(props: PopoverContentProps): JSX.Element {
 }
 
 interface RelationsListItemProps {
-  id: Relation['id']
+  ids: Array<Relation['id']>
   place: Place
 }
 
-function RelationsListItem(props: RelationsListItemProps): JSX.Element {
-  const { id, place } = props
+function RelationsLabel(props: RelationsListItemProps): JSX.Element {
+  const { ids } = props
 
-  const relation = db.relations.get(id)
-  assert(relation != null, 'Relation should exist.')
+  const relations = ids
+    .map((id) => {
+      return db.relations.get(id)
+    })
+    .filter(Boolean)
 
-  const entity = relation.source.id === place.id ? relation.target : relation.source
-  const type = relation.type
-
-  function deduplicate(startDate: string | null, endDate: string | null) {
+  function deduplicateDates(startDate: string | null, endDate: string | null) {
     if (startDate === endDate) return [startDate]
     return [startDate, endDate]
   }
 
-  const dateRange = deduplicate(relation.startDateWritten, relation.endDateWritten)
-    .filter(Boolean)
-    .join(' – ')
+  function createRelationLabel(relation: Relation) {
+    const dateRange = deduplicateDates(relation.startDateWritten, relation.endDateWritten)
+      .filter(Boolean)
+      .join(' – ')
 
-  const label = [entity.label, type.label, dateRange.length > 0 ? `(${dateRange})` : null]
-    .filter(Boolean)
-    .join(' ')
+    const label = [
+      relation.source.label,
+      relation.type.label,
+      dateRange.length > 0 ? `(${dateRange})` : null,
+    ]
+      .filter(Boolean)
+      .join(' ')
 
-  return <li key={relation.id}>{label}</li>
+    return label
+  }
+
+  const label = relations.map(createRelationLabel).join(' ')
+
+  return <li>{label}</li>
 }

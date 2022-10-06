@@ -15,7 +15,7 @@ import type { Place } from '@/db/types'
 import { FilterControlsPanel } from '@/features/map/filter-controls-panel'
 import { GeoMap } from '@/features/map/geo-map'
 import { initialViewState, mapStyle } from '@/features/map/geo-map.config'
-import type { PlaceContentArrays, PlaceFeature } from '@/features/map/persons-layer'
+import type { PlaceFeature, SerializablePlaceRelationsMap } from '@/features/map/persons-layer'
 import { PersonsLayer, personsLayerStyle } from '@/features/map/persons-layer'
 import { useFilters } from '@/features/map/use-filters'
 
@@ -23,7 +23,7 @@ export const getStaticProps = withDictionaries(['common'])
 
 interface Popover {
   place: Place
-  content: PlaceContentArrays
+  relations: SerializablePlaceRelationsMap
   coordinates: LngLat
 }
 
@@ -84,7 +84,7 @@ export default function GeoVisualisationPage(): JSX.Element {
     if (_feature == null) return
 
     const feature = _feature as unknown as PlaceFeature
-    const { id, content: stringifiedContent } = feature.properties
+    const { id, relations: stringifiedContent } = feature.properties
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const place = db.places.get(id)!
@@ -94,9 +94,11 @@ export default function GeoVisualisationPage(): JSX.Element {
      *
      * @see https://github.com/mapbox/mapbox-gl-js/issues/2434
      */
-    const content = JSON.parse(stringifiedContent as unknown as string) as PlaceContentArrays
+    const relations = JSON.parse(
+      stringifiedContent as unknown as string,
+    ) as SerializablePlaceRelationsMap
 
-    togglePopover({ place, content, coordinates: lngLat })
+    togglePopover({ place, relations, coordinates: lngLat })
   }
 
   function onMouseEnter() {
@@ -139,11 +141,11 @@ export default function GeoVisualisationPage(): JSX.Element {
                 }}
               >
                 <PopoverContent
-                  content={popover.content}
                   onClose={() => {
                     togglePopover(popover)
                   }}
                   place={popover.place}
+                  relations={popover.relations}
                 />
               </Popup>
             )
