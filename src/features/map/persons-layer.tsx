@@ -97,6 +97,11 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
       return places.get(id)!
     }
 
+    function isSelectedRelationType(relation: Relation) {
+      if (filters.selectedRelationTypes.length === 0) return true
+      return filters.selectedRelationTypes.includes(relation.type.id)
+    }
+
     selectedPersons.forEach((person) => {
       /**
        * person => place
@@ -104,6 +109,7 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
       person.places.forEach((relationId) => {
         const relation = db.relations.get(relationId)
         assert(relation != null, 'Relation should exist.')
+        if (!isSelectedRelationType(relation)) return
 
         const target = relation.source.id === person.id ? relation.target : relation.source
         const place = db.places.get(target.id)
@@ -115,6 +121,7 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
       person.institutions.forEach((relationId) => {
         const relation = db.relations.get(relationId)
         assert(relation != null, 'Relation should exist.')
+        if (!isSelectedRelationType(relation)) return
 
         const target = relation.source.id === person.id ? relation.target : relation.source
         const institution = db.institutions.get(target.id)
@@ -126,6 +133,7 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
         institution.places.forEach((relationId) => {
           const relation = db.relations.get(relationId)
           assert(relation != null, 'Relation should exist.')
+          if (!isSelectedRelationType(relation)) return
 
           const target = relation.source.id === institution.id ? relation.target : relation.source
           const place = db.places.get(target.id)
@@ -138,6 +146,7 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
       person.persons.forEach((relationId) => {
         const relation = db.relations.get(relationId)
         assert(relation != null, 'Relation should exist.')
+        if (!isSelectedRelationType(relation)) return
 
         const target = relation.source.id === person.id ? relation.target : relation.source
         const _person = db.persons.get(target.id)
@@ -149,6 +158,7 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
         _person.places.forEach((relationId) => {
           const relation = db.relations.get(relationId)
           assert(relation != null, 'Relation should exist.')
+          if (!isSelectedRelationType(relation)) return
 
           const target = relation.source.id === _person.id ? relation.target : relation.source
           const place = db.places.get(target.id)
@@ -161,6 +171,7 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
       person.events.forEach((relationId) => {
         const relation = db.relations.get(relationId)
         assert(relation != null, 'Relation should exist.')
+        if (!isSelectedRelationType(relation)) return
 
         const target = relation.source.id === person.id ? relation.target : relation.source
         const event = db.events.get(target.id)
@@ -172,6 +183,7 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
         event.places.forEach((relationId) => {
           const relation = db.relations.get(relationId)
           assert(relation != null, 'Relation should exist.')
+          if (!isSelectedRelationType(relation)) return
 
           const target = relation.source.id === event.id ? relation.target : relation.source
           const place = db.places.get(target.id)

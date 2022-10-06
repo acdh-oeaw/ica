@@ -18,7 +18,6 @@ import { initialViewState, mapStyle } from '@/features/map/geo-map.config'
 import type { PlaceContentArrays, PlaceFeature } from '@/features/map/persons-layer'
 import { PersonsLayer, personsLayerStyle } from '@/features/map/persons-layer'
 import { useFilters } from '@/features/map/use-filters'
-import { createKey } from '@/lib/create-key'
 
 export const getStaticProps = withDictionaries(['common'])
 
@@ -34,13 +33,6 @@ export default function GeoVisualisationPage(): JSX.Element {
   const formId = 'filter-controls'
   const messages = useMemo(() => {
     return {
-      places: {
-        placeholder: t(['common', 'form', 'search']),
-        nothingFound: t(['common', 'form', 'nothing-found']),
-        removeSelectedKey(label: string) {
-          return t(['common', 'form', 'remove-item'], { values: { item: label } })
-        },
-      },
       persons: {
         placeholder: t(['common', 'form', 'search']),
         nothingFound: t(['common', 'form', 'nothing-found']),
@@ -49,6 +41,13 @@ export default function GeoVisualisationPage(): JSX.Element {
         },
       },
       professions: {
+        placeholder: t(['common', 'form', 'search']),
+        nothingFound: t(['common', 'form', 'nothing-found']),
+        removeSelectedKey(label: string) {
+          return t(['common', 'form', 'remove-item'], { values: { item: label } })
+        },
+      },
+      relationTypes: {
         placeholder: t(['common', 'form', 'search']),
         nothingFound: t(['common', 'form', 'nothing-found']),
         removeSelectedKey(label: string) {
@@ -157,7 +156,7 @@ export default function GeoVisualisationPage(): JSX.Element {
                       const type = relation.type
 
                       return (
-                        <li key={createKey(entity.id, type.id)}>
+                        <li key={relation.id}>
                           {entity.label} {type.label}
                         </li>
                       )
@@ -171,7 +170,7 @@ export default function GeoVisualisationPage(): JSX.Element {
                       const type = relation.type
 
                       return (
-                        <li key={createKey(entity.id, type.id)}>
+                        <li key={relation.id}>
                           {entity.label} {type.label}
                         </li>
                       )
@@ -185,7 +184,7 @@ export default function GeoVisualisationPage(): JSX.Element {
                       const type = relation.type
 
                       return (
-                        <li key={createKey(entity.id, type.id)}>
+                        <li key={relation.id}>
                           {entity.label} {type.label}
                         </li>
                       )
@@ -197,21 +196,32 @@ export default function GeoVisualisationPage(): JSX.Element {
           })}
         </GeoMap>
         <FilterControlsPanel name={formId}>
+          <div className="grid gap-8" role="group">
+            <MultiComboBox
+              items={db.persons}
+              messages={messages.persons}
+              name="persons"
+              label="Persons"
+              onSelectionChange={filters.setSelectedPersons}
+              selectedKeys={filters.selectedPersons}
+            />
+            <MultiComboBox
+              items={db.professions}
+              messages={messages.professions}
+              name="professions"
+              label="Professions"
+              onSelectionChange={filters.setSelectedProfessions}
+              selectedKeys={filters.selectedProfessions}
+            />
+          </div>
+          <hr />
           <MultiComboBox
-            items={db.persons}
-            messages={messages.persons}
-            name="persons"
-            label="Persons"
-            onSelectionChange={filters.setSelectedPersons}
-            selectedKeys={filters.selectedPersons}
-          />
-          <MultiComboBox
-            items={db.professions}
-            messages={messages.professions}
-            name="professions"
-            label="Professions"
-            onSelectionChange={filters.setSelectedProfessions}
-            selectedKeys={filters.selectedProfessions}
+            items={db.relationTypes}
+            messages={messages.relationTypes}
+            name="relation-types"
+            label="Relation types"
+            onSelectionChange={filters.setSelectedRelationTypes}
+            selectedKeys={filters.selectedRelationTypes}
           />
           {/* <RangeSlider label="Date range" minValue={0} maxValue={20} /> */}
         </FilterControlsPanel>
