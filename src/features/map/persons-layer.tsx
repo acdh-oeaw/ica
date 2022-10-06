@@ -105,9 +105,32 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
       return places.get(id)!
     }
 
+    /**
+     * Relation type filters are applied to both relations in person => entity => place,
+     * and they match when one of those relations has a matching relation type.
+     */
     function isSelectedRelationType(relation: Relation) {
       if (filters.selectedRelationTypes.length === 0) return true
       return filters.selectedRelationTypes.includes(relation.type.id)
+    }
+
+    const [minYear, maxYear] = filters.selectedDateRange
+
+    /**
+     * Date range filters are applied to the first relation only, i.e.
+     * to person => entity, but not to the second relation in person => entity => place.
+     */
+    function isSelectedDateRange(relation: Relation) {
+      // FIXME: clarify behavior, especially for null date fields
+      if (relation.startDate != null) {
+        const startYear = new Date(relation.startDate).getUTCFullYear()
+        if (startYear < minYear) return false
+      }
+      if (relation.endDate != null) {
+        const endYear = new Date(relation.endDate).getUTCFullYear()
+        if (endYear > maxYear) return false
+      }
+      return true
     }
 
     selectedPersons.forEach((person) => {
@@ -118,6 +141,7 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
         const relation = db.relations.get(relationId)
         assert(relation != null, 'Relation should exist.')
         if (!isSelectedRelationType(relation)) return
+        if (!isSelectedDateRange(relation)) return
 
         const target = relation.source.id === person.id ? relation.target : relation.source
         const place = db.places.get(target.id)
@@ -129,7 +153,7 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
       person.institutions.forEach((relationId) => {
         const relation = db.relations.get(relationId)
         assert(relation != null, 'Relation should exist.')
-        if (!isSelectedRelationType(relation)) return
+        if (!isSelectedDateRange(relation)) return
 
         const target = relation.source.id === person.id ? relation.target : relation.source
         const _institution = db.institutions.get(target.id)
@@ -141,7 +165,7 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
         _institution.places.forEach((_relationId) => {
           const _relation = db.relations.get(_relationId)
           assert(_relation != null, 'Relation should exist.')
-          if (!isSelectedRelationType(_relation)) return
+          if (!isSelectedRelationType(relation) && !isSelectedRelationType(_relation)) return
 
           const target =
             _relation.source.id === _institution.id ? _relation.target : _relation.source
@@ -155,7 +179,7 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
       person.persons.forEach((relationId) => {
         const relation = db.relations.get(relationId)
         assert(relation != null, 'Relation should exist.')
-        if (!isSelectedRelationType(relation)) return
+        if (!isSelectedDateRange(relation)) return
 
         const target = relation.source.id === person.id ? relation.target : relation.source
         const _person = db.persons.get(target.id)
@@ -167,7 +191,7 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
         _person.places.forEach((_relationId) => {
           const _relation = db.relations.get(_relationId)
           assert(_relation != null, 'Relation should exist.')
-          if (!isSelectedRelationType(_relation)) return
+          if (!isSelectedRelationType(relation) && !isSelectedRelationType(_relation)) return
 
           const target = _relation.source.id === _person.id ? _relation.target : _relation.source
           const place = db.places.get(target.id)
@@ -180,7 +204,7 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
       person.events.forEach((relationId) => {
         const relation = db.relations.get(relationId)
         assert(relation != null, 'Relation should exist.')
-        if (!isSelectedRelationType(relation)) return
+        if (!isSelectedDateRange(relation)) return
 
         const target = relation.source.id === person.id ? relation.target : relation.source
         const _event = db.events.get(target.id)
@@ -192,7 +216,7 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
         _event.places.forEach((_relationId) => {
           const _relation = db.relations.get(_relationId)
           assert(_relation != null, 'Relation should exist.')
-          if (!isSelectedRelationType(_relation)) return
+          if (!isSelectedRelationType(relation) && !isSelectedRelationType(_relation)) return
 
           const target = _relation.source.id === _event.id ? _relation.target : _relation.source
           const place = db.places.get(target.id)
