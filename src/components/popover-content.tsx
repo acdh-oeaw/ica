@@ -14,7 +14,7 @@ export function PopoverContent(props: PopoverContentProps): JSX.Element {
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div className="grid gap-0.5 font-sans" onClick={onClose}>
-      <h3 className="font-medium">{place.label}</h3>
+      <h3 className="text-xs font-medium">{place.label}</h3>
       <ul className="grid gap-0.5 text-xs" role="list">
         {relations.map(([key, ids]) => {
           return (
