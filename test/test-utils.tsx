@@ -4,7 +4,6 @@ import type { FC } from 'react'
 
 import { dictionary as common } from '@/app/i18n/common/en'
 import type { Dictionaries } from '@/app/i18n/dictionaries'
-import { Notifications } from '@/app/notifications/notifications'
 import { Providers } from '@/app/providers.context'
 import { createMockRouter } from '@/mocks/create-mock-router'
 
@@ -27,10 +26,7 @@ export function createWrapper(args: CreateWrapperArgs): FC<WrapperProps> {
 
     return (
       <RouterContext.Provider value={mockRouter}>
-        <Providers dictionaries={dictionaries}>
-          {children}
-          <Notifications />
-        </Providers>
+        <Providers dictionaries={dictionaries}>{children}</Providers>
       </RouterContext.Provider>
     )
   }

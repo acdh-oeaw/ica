@@ -13,7 +13,6 @@ import { AnalyticsScript } from '@/app/analytics/analytics-script'
 import { reportPageView } from '@/app/analytics/analytics-service'
 import type { AppProps, GetLayout } from '@/app/app.types'
 import { useAppMetadata } from '@/app/metadata/use-app-metadata'
-import { Notifications } from '@/app/notifications/notifications'
 import { PageLayout } from '@/app/page.layout'
 import { Providers } from '@/app/providers.context'
 import { RootErrorBoundaryFallback } from '@/app/root-error-boundary-fallback'
@@ -73,10 +72,7 @@ export default function App(props: AppProps): JSX.Element {
       />
       <AnalyticsScript />
       <ErrorBoundary fallback={<RootErrorBoundaryFallback />}>
-        <Providers {...pageProps}>
-          {getLayout(<Component {...pageProps} />, pageProps)}
-          <Notifications />
-        </Providers>
+        <Providers {...pageProps}>{getLayout(<Component {...pageProps} />, pageProps)}</Providers>
       </ErrorBoundary>
     </Fragment>
   )
