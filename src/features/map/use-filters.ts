@@ -10,12 +10,15 @@ export interface Filters {
   setSelectedProfessions: Dispatch<SetStateAction<Array<Profession['id']>>>
   selectedRelationTypes: Array<RelationType['id']>
   setSelectedRelationTypes: Dispatch<SetStateAction<Array<RelationType['id']>>>
+  selectedDateRange: [number, number]
+  setSelectedDateRange: Dispatch<SetStateAction<[number, number]>>
 }
 
 export function useFilters(): Filters {
   const [selectedPersons, setSelectedPersons] = useState<Array<Person['id']>>([])
   const [selectedProfessions, setSelectedProfessions] = useState<Array<Place['id']>>([])
   const [selectedRelationTypes, setSelectedRelationTypes] = useState<Array<RelationType['id']>>([])
+  const [selectedDateRange, setSelectedDateRange] = useState<[number, number]>([1900, 2000])
 
   const filters: Filters = useMemo(() => {
     /**
@@ -37,6 +40,8 @@ export function useFilters(): Filters {
       setSelectedProfessions: _setSelectedProfessions,
       selectedRelationTypes,
       setSelectedRelationTypes,
+      selectedDateRange,
+      setSelectedDateRange,
     }
   }, [
     selectedPersons,
@@ -45,6 +50,8 @@ export function useFilters(): Filters {
     setSelectedProfessions,
     selectedRelationTypes,
     setSelectedRelationTypes,
+    selectedDateRange,
+    setSelectedDateRange,
   ])
 
   return filters

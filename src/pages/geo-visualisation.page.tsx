@@ -9,7 +9,7 @@ import { usePageTitleTemplate } from '@/app/metadata/use-page-title-template'
 import { MainContent } from '@/components/main-content'
 import { MultiComboBox } from '@/components/multi-combobox'
 import { PopoverContent } from '@/components/popover-content'
-// import { RangeSlider } from '@/components/range-slider'
+import { RangeSlider } from '@/components/range-slider'
 import { db } from '@/db'
 import type { Place } from '@/db/types'
 import { FilterControlsPanel } from '@/features/map/filter-controls-panel'
@@ -177,7 +177,14 @@ export default function GeoVisualisationPage(): JSX.Element {
             onSelectionChange={filters.setSelectedRelationTypes}
             selectedKeys={filters.selectedRelationTypes}
           />
-          {/* <RangeSlider label="Date range" minValue={0} maxValue={20} /> */}
+          <RangeSlider
+            label="Date range"
+            minValue={1900}
+            maxValue={2000}
+            name="date-range"
+            onChange={filters.setSelectedDateRange}
+            value={filters.selectedDateRange}
+          />
         </FilterControlsPanel>
       </MainContent>
     </Fragment>
