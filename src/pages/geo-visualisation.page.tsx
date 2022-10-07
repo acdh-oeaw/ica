@@ -6,18 +6,18 @@ import { Popup } from 'react-map-gl'
 import { useI18n } from '@/app/i18n/use-i18n'
 import { withDictionaries } from '@/app/i18n/with-dictionaries'
 import { usePageTitleTemplate } from '@/app/metadata/use-page-title-template'
+import { FilterControlsPanel } from '@/components/filter-controls-panel'
 import { MainContent } from '@/components/main-content'
 import { MultiComboBox } from '@/components/multi-combobox'
 import { PopoverContent } from '@/components/popover-content'
 import { RangeSlider } from '@/components/range-slider'
 import { db } from '@/db'
 import type { Place } from '@/db/types'
-import { FilterControlsPanel } from '@/features/map/filter-controls-panel'
 import { GeoMap } from '@/features/map/geo-map'
 import { initialViewState, mapStyle } from '@/features/map/geo-map.config'
 import type { PlaceFeature, SerializablePlaceRelationsMap } from '@/features/map/persons-layer'
 import { PersonsLayer, personsLayerStyle } from '@/features/map/persons-layer'
-import { useFilters } from '@/features/map/use-filters'
+import { useGeoMapFilters } from '@/features/map/use-geo-map-filters'
 
 export const getStaticProps = withDictionaries(['common'])
 
@@ -32,11 +32,11 @@ const layerIds = [personsLayerStyle.id]
 export default function GeoVisualisationPage(): JSX.Element {
   const { t } = useI18n<'common'>()
   const titleTemplate = usePageTitleTemplate()
-  const filters = useFilters()
+  const filters = useGeoMapFilters()
 
   const metadata = { title: t(['common', 'pages', 'geo-visualisation', 'metadata', 'title']) }
 
-  const formId = 'filter-controls'
+  const formId = 'geo-visualisation-filter-controls'
   const messages = useMemo(() => {
     return {
       persons: {

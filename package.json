@@ -59,6 +59,7 @@
     "@stefanprobst/request": "^0.2.1",
     "@tanstack/react-virtual": "^3.0.0-beta.18",
     "clsx": "^1.2.1",
+    "d3": "^7.6.1",
     "force-graph": "^1.42.13",
     "mapbox-gl": "npm:empty-npm-package@^1.0.0",
     "maplibre-gl": "^2.4.0",
@@ -105,6 +106,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
+    "@types/d3": "^7.4.0",
     "@types/node": "^16.11.62",
     "@types/nprogress": "^0.2.0",
     "@types/prettier": "^2.7.1",
@@ -152,7 +154,6 @@
   "eslintConfig": {
     "extends": [
       "@stefanprobst/eslint-config",
-      "@stefanprobst/eslint-config/type-checking",
       "@stefanprobst/eslint-config-react",
       "@stefanprobst/eslint-config-next",
       "@stefanprobst/eslint-config-jest",
