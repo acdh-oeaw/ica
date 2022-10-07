@@ -117,7 +117,7 @@ export default function GeoVisualisationPage(): JSX.Element {
   return (
     <Fragment>
       <PageMetadata title={metadata.title} titleTemplate={titleTemplate} />
-      <MainContent className="relative grid">
+      <MainContent className="relative grid grid-cols-[1fr_384px]">
         <GeoMap
           cursor={cursor}
           initialViewState={initialViewState}
@@ -152,41 +152,49 @@ export default function GeoVisualisationPage(): JSX.Element {
           })}
         </GeoMap>
         <FilterControlsPanel name={formId}>
-          <div className="grid gap-8" role="group">
-            <MultiComboBox
-              items={db.persons}
-              messages={messages.persons}
-              name="persons"
-              label="Persons"
-              onSelectionChange={filters.setSelectedPersons}
-              selectedKeys={filters.selectedPersons}
-            />
-            <MultiComboBox
-              items={db.professions}
-              messages={messages.professions}
-              name="professions"
-              label="Professions"
-              onSelectionChange={filters.setSelectedProfessions}
-              selectedKeys={filters.selectedProfessions}
-            />
-          </div>
+          <section className="grid gap-4">
+            <h2 className="text-sm font-medium text-neutral-600">Filter persons</h2>
+            <div className="grid gap-6" role="group">
+              <MultiComboBox
+                items={db.persons}
+                messages={messages.persons}
+                name="persons"
+                label="Persons"
+                onSelectionChange={filters.setSelectedPersons}
+                selectedKeys={filters.selectedPersons}
+              />
+              <MultiComboBox
+                items={db.professions}
+                messages={messages.professions}
+                name="professions"
+                label="Professions"
+                onSelectionChange={filters.setSelectedProfessions}
+                selectedKeys={filters.selectedProfessions}
+              />
+            </div>
+          </section>
           <hr />
-          <MultiComboBox
-            items={db.relationTypes}
-            messages={messages.relationTypes}
-            name="relation-types"
-            label="Relation types"
-            onSelectionChange={filters.setSelectedRelationTypes}
-            selectedKeys={filters.selectedRelationTypes}
-          />
-          <RangeSlider
-            label="Date range"
-            minValue={1900}
-            maxValue={2000}
-            name="date-range"
-            onChange={filters.setSelectedDateRange}
-            value={filters.selectedDateRange}
-          />
+          <section className="grid gap-4">
+            <h2 className="text-sm font-medium text-neutral-600">Filter relations</h2>
+            <div className="grid gap-6">
+              <MultiComboBox
+                items={db.relationTypes}
+                messages={messages.relationTypes}
+                name="relation-types"
+                label="Relation types"
+                onSelectionChange={filters.setSelectedRelationTypes}
+                selectedKeys={filters.selectedRelationTypes}
+              />
+              <RangeSlider
+                label="Date range"
+                minValue={1900}
+                maxValue={2000}
+                name="date-range"
+                onChange={filters.setSelectedDateRange}
+                value={filters.selectedDateRange}
+              />
+            </div>
+          </section>
         </FilterControlsPanel>
       </MainContent>
     </Fragment>

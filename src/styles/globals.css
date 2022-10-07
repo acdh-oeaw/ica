@@ -175,5 +175,12 @@ textarea {
 }
 
 .maplibregl-popup-content {
+  overflow-y: auto;
+  max-height: 320px;
   cursor: default;
+}
+
+.force-graph-container div.graph-tooltip {
+  font-size: 0.75rem;
+  font-family: var(--font-family-text);
 }

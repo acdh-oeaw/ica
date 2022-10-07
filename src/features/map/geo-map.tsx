@@ -20,7 +20,7 @@ export const GeoMap = forwardRef<MapRef, GeoMapProps>(function GeoMap(props, ref
   const [element, setElement] = useElementRef()
 
   return (
-    <div ref={setElement} className="isolate grid h-full w-full border border-neutral-200">
+    <div ref={setElement} className="isolate grid h-full w-full">
       {/* @ts-expect-error Type mismatch between `maplibre-gl` and `mapbox-gl`. */}
       <Map ref={ref} {...props} mapLib={maplibregl}>
         <AutoResize element={element} />
