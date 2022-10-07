@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
-  "type": "module",
   "scripts": {
     "analyze-bundle": "cross-env BUNDLE_ANALYZER='enabled' NEXT_PUBLIC_MOCK_API='disabled' next build --no-lint",
     "build": "next build",
