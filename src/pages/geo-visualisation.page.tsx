@@ -6,18 +6,18 @@ import { Popup } from 'react-map-gl'
 import { useI18n } from '@/app/i18n/use-i18n'
 import { withDictionaries } from '@/app/i18n/with-dictionaries'
 import { usePageTitleTemplate } from '@/app/metadata/use-page-title-template'
+import { FilterControlsPanel } from '@/components/filter-controls-panel'
 import { MainContent } from '@/components/main-content'
 import { MultiComboBox } from '@/components/multi-combobox'
 import { PopoverContent } from '@/components/popover-content'
 import { RangeSlider } from '@/components/range-slider'
 import { db } from '@/db'
 import type { Place } from '@/db/types'
-import { FilterControlsPanel } from '@/features/map/filter-controls-panel'
 import { GeoMap } from '@/features/map/geo-map'
 import { initialViewState, mapStyle } from '@/features/map/geo-map.config'
 import type { PlaceFeature, SerializablePlaceRelationsMap } from '@/features/map/persons-layer'
 import { PersonsLayer, personsLayerStyle } from '@/features/map/persons-layer'
-import { useFilters } from '@/features/map/use-filters'
+import { useGeoMapFilters } from '@/features/map/use-geo-map-filters'
 
 export const getStaticProps = withDictionaries(['common'])
 
@@ -32,11 +32,11 @@ const layerIds = [personsLayerStyle.id]
 export default function GeoVisualisationPage(): JSX.Element {
   const { t } = useI18n<'common'>()
   const titleTemplate = usePageTitleTemplate()
-  const filters = useFilters()
+  const filters = useGeoMapFilters()
 
   const metadata = { title: t(['common', 'pages', 'geo-visualisation', 'metadata', 'title']) }
 
-  const formId = 'filter-controls'
+  const formId = 'geo-visualisation-filter-controls'
   const messages = useMemo(() => {
     return {
       persons: {
@@ -117,7 +117,7 @@ export default function GeoVisualisationPage(): JSX.Element {
   return (
     <Fragment>
       <PageMetadata title={metadata.title} titleTemplate={titleTemplate} />
-      <MainContent className="relative grid">
+      <MainContent className="relative grid grid-cols-[1fr_384px]">
         <GeoMap
           cursor={cursor}
           initialViewState={initialViewState}
@@ -152,41 +152,49 @@ export default function GeoVisualisationPage(): JSX.Element {
           })}
         </GeoMap>
         <FilterControlsPanel name={formId}>
-          <div className="grid gap-8" role="group">
-            <MultiComboBox
-              items={db.persons}
-              messages={messages.persons}
-              name="persons"
-              label="Persons"
-              onSelectionChange={filters.setSelectedPersons}
-              selectedKeys={filters.selectedPersons}
-            />
-            <MultiComboBox
-              items={db.professions}
-              messages={messages.professions}
-              name="professions"
-              label="Professions"
-              onSelectionChange={filters.setSelectedProfessions}
-              selectedKeys={filters.selectedProfessions}
-            />
-          </div>
+          <section className="grid gap-4">
+            <h2 className="text-sm font-medium text-neutral-600">Filter persons</h2>
+            <div className="grid gap-6" role="group">
+              <MultiComboBox
+                items={db.persons}
+                messages={messages.persons}
+                name="persons"
+                label="Persons"
+                onSelectionChange={filters.setSelectedPersons}
+                selectedKeys={filters.selectedPersons}
+              />
+              <MultiComboBox
+                items={db.professions}
+                messages={messages.professions}
+                name="professions"
+                label="Professions"
+                onSelectionChange={filters.setSelectedProfessions}
+                selectedKeys={filters.selectedProfessions}
+              />
+            </div>
+          </section>
           <hr />
-          <MultiComboBox
-            items={db.relationTypes}
-            messages={messages.relationTypes}
-            name="relation-types"
-            label="Relation types"
-            onSelectionChange={filters.setSelectedRelationTypes}
-            selectedKeys={filters.selectedRelationTypes}
-          />
-          <RangeSlider
-            label="Date range"
-            minValue={1900}
-            maxValue={2000}
-            name="date-range"
-            onChange={filters.setSelectedDateRange}
-            value={filters.selectedDateRange}
-          />
+          <section className="grid gap-4">
+            <h2 className="text-sm font-medium text-neutral-600">Filter relations</h2>
+            <div className="grid gap-6">
+              <MultiComboBox
+                items={db.relationTypes}
+                messages={messages.relationTypes}
+                name="relation-types"
+                label="Relation types"
+                onSelectionChange={filters.setSelectedRelationTypes}
+                selectedKeys={filters.selectedRelationTypes}
+              />
+              <RangeSlider
+                label="Date range"
+                minValue={1900}
+                maxValue={2000}
+                name="date-range"
+                onChange={filters.setSelectedDateRange}
+                value={filters.selectedDateRange}
+              />
+            </div>
+          </section>
         </FilterControlsPanel>
       </MainContent>
     </Fragment>

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "analyze-bundle": "cross-env BUNDLE_ANALYZER='enabled' NEXT_PUBLIC_MOCK_API='disabled' next build --no-lint",
     "build": "next build",
@@ -19,6 +20,7 @@
     "lint:code:fix": "npm run lint:code:check -- --fix",
     "lint:styles:check": "stylelint \"**/*.css\" --allow-empty-input --cache --cache-location .next/cache/stylelint/ --ignore-path .gitignore",
     "lint:styles:fix": "npm run lint:styles:check -- --fix",
+    "postinstall": "patch-package",
     "prepare": "run-s setup generate",
     "setup": "simple-git-hooks || exit 0",
     "start": "next start",
@@ -58,6 +60,7 @@
     "@stefanprobst/request": "^0.2.1",
     "@tanstack/react-virtual": "^3.0.0-beta.18",
     "clsx": "^1.2.1",
+    "d3": "^7.6.1",
     "force-graph": "^1.42.13",
     "mapbox-gl": "npm:empty-npm-package@^1.0.0",
     "maplibre-gl": "^2.4.0",
@@ -104,6 +107,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
+    "@types/d3": "^7.4.0",
     "@types/node": "^16.11.62",
     "@types/nprogress": "^0.2.0",
     "@types/prettier": "^2.7.1",
@@ -122,6 +126,7 @@
     "msw": "^0.47.3",
     "msw-storybook-addon": "^1.6.3",
     "npm-run-all": "^4.1.5",
+    "patch-package": "^6.4.7",
     "playwright": "^1.26.1",
     "postcss": "^8.4.17",
     "postcss-custom-media": "^8.0.2",
@@ -131,7 +136,7 @@
     "serialize-javascript": "^6.0.0",
     "simple-git-hooks": "^2.8.0",
     "stylelint": "^14.13.0",
-    "typescript": "^4.9.1-beta"
+    "typescript": "^4.8.4"
   },
   "browserslist": {
     "development": [
@@ -151,7 +156,6 @@
   "eslintConfig": {
     "extends": [
       "@stefanprobst/eslint-config",
-      "@stefanprobst/eslint-config/type-checking",
       "@stefanprobst/eslint-config-react",
       "@stefanprobst/eslint-config-next",
       "@stefanprobst/eslint-config-jest",

@@ -7,7 +7,7 @@ export function PageHeader(): JSX.Element {
   const { t } = useI18n<'common'>()
 
   return (
-    <header>
+    <header className="border-b border-neutral-200">
       <div className="gep-4 mx-auto flex max-w-7xl items-center justify-between px-8 py-4 text-sm font-medium">
         <div>
           <Link href={routes.home()}>{t(['common', 'pages', 'home', 'metadata', 'title'])}</Link>
@@ -19,11 +19,11 @@ export function PageHeader(): JSX.Element {
                 {t(['common', 'pages', 'geo-visualisation', 'metadata', 'title'])}
               </Link>
             </li>
-            {/* <li>
+            <li>
               <Link href={routes.networkVisualisation()}>
                 {t(['common', 'pages', 'network-visualisation', 'metadata', 'title'])}
               </Link>
-            </li> */}
+            </li>
           </ul>
         </nav>
       </div>

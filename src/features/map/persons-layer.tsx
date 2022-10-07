@@ -6,7 +6,7 @@ import { Layer, Source } from 'react-map-gl'
 
 import { db } from '@/db'
 import type { Place, Relation } from '@/db/types'
-import type { Filters } from '@/features/map/use-filters'
+import type { GeoMapFilters } from '@/features/map/use-geo-map-filters'
 import { createKey } from '@/lib/create-key'
 
 const colors: Record<Status, string> = {
@@ -60,7 +60,7 @@ export type PlaceFeature = Feature<
 >
 
 interface PersonsLayerProps {
-  filters: Filters
+  filters: GeoMapFilters
 }
 
 export function PersonsLayer(props: PersonsLayerProps): JSX.Element {

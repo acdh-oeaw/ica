@@ -1,68 +1,74 @@
 import { PageMetadata } from '@stefanprobst/next-page-metadata'
-import type { ForceGraphInstance } from 'force-graph'
-import { Fragment, useEffect, useMemo, useState } from 'react'
+import { Fragment, useMemo } from 'react'
 
 import { useI18n } from '@/app/i18n/use-i18n'
 import { withDictionaries } from '@/app/i18n/with-dictionaries'
 import { usePageTitleTemplate } from '@/app/metadata/use-page-title-template'
+import { FilterControlsPanel } from '@/components/filter-controls-panel'
 import { MainContent } from '@/components/main-content'
+import { MultiComboBox } from '@/components/multi-combobox'
+import { db } from '@/db'
+import { NetworkGraph } from '@/features/network-visualisation/network-graph'
+import { useNetworkGraphFilters } from '@/features/network-visualisation/use-network-graph-filters'
 
 export const getStaticProps = withDictionaries(['common'])
 
 export default function GeoVisualisationPage(): JSX.Element {
   const { t } = useI18n<'common'>()
   const titleTemplate = usePageTitleTemplate()
+  const filters = useNetworkGraphFilters()
 
   const metadata = { title: t(['common', 'pages', 'network-visualisation', 'metadata', 'title']) }
+
+  const formId = 'network-visualisation-filter-controls'
+  const messages = useMemo(() => {
+    return {
+      persons: {
+        placeholder: t(['common', 'form', 'search']),
+        nothingFound: t(['common', 'form', 'nothing-found']),
+        removeSelectedKey(label: string) {
+          return t(['common', 'form', 'remove-item'], { values: { item: label } })
+        },
+      },
+      professions: {
+        placeholder: t(['common', 'form', 'search']),
+        nothingFound: t(['common', 'form', 'nothing-found']),
+        removeSelectedKey(label: string) {
+          return t(['common', 'form', 'remove-item'], { values: { item: label } })
+        },
+      },
+    }
+  }, [t])
 
   return (
     <Fragment>
       <PageMetadata title={metadata.title} titleTemplate={titleTemplate} />
-      <MainContent className="relative grid">
-        <NetworkGraph />
+      <MainContent className="relative grid grid-cols-[1fr_384px]">
+        <NetworkGraph filters={filters} />
+        <FilterControlsPanel name={formId}>
+          <section className="grid gap-4">
+            <h2 className="text-sm font-medium text-neutral-600">Filter persons</h2>
+            <div className="grid gap-6" role="group">
+              <MultiComboBox
+                items={db.persons}
+                messages={messages.persons}
+                name="persons"
+                label="Persons"
+                onSelectionChange={filters.setSelectedPersons}
+                selectedKeys={filters.selectedPersons}
+              />
+              <MultiComboBox
+                items={db.professions}
+                messages={messages.professions}
+                name="professions"
+                label="Professions"
+                onSelectionChange={filters.setSelectedProfessions}
+                selectedKeys={filters.selectedProfessions}
+              />
+            </div>
+          </section>
+        </FilterControlsPanel>
       </MainContent>
     </Fragment>
   )
-}
-
-function NetworkGraph(): JSX.Element {
-  const [element, setElement] = useState<HTMLDivElement | null>(null)
-  const [forceGraph, setForceGraph] = useState<ForceGraphInstance | null>(null)
-
-  useEffect(() => {
-    let isCanceled = false
-    let fg: ForceGraphInstance | null = null
-
-    async function init() {
-      if (element == null) return
-
-      const ForceGraph = await import('force-graph').then((mod) => {
-        return mod.default
-      })
-
-      if (!isCanceled) {
-        fg = ForceGraph()(element)
-        setForceGraph(fg)
-      }
-    }
-
-    void init()
-
-    return () => {
-      isCanceled = true
-      fg?._destructor()
-    }
-  }, [element])
-
-  const graphData = useMemo(() => {
-    const graphData = { nodes: [], links: [] }
-
-    return graphData
-  }, [])
-
-  useEffect(() => {
-    forceGraph?.graphData(graphData)
-  }, [forceGraph, graphData])
-
-  return <div ref={setElement} />
 }

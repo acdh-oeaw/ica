@@ -9,7 +9,7 @@ export function PageFooter(): JSX.Element {
   const appMetadata = useAppMetadata()
 
   return (
-    <footer>
+    <footer className="border-t border-neutral-200">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-8 py-4 text-xs font-medium">
         <span>
           &copy; {new Date().getUTCFullYear()}{' '}

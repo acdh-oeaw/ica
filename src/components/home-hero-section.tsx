@@ -25,12 +25,12 @@ export function HomeHeroSection(): JSX.Element {
               >
                 {t(['common', 'home', 'explore-map'])}
               </Link>
-              {/* <Link
+              <Link
                 className="inline-flex rounded-md bg-neutral-900 px-12 py-4 font-medium text-neutral-50 hover:bg-neutral-800 hover:text-neutral-0"
                 href={routes.networkVisualisation()}
               >
                 {t(['common', 'home', 'explore-graph'])}
-              </Link> */}
+              </Link>
             </div>
           </div>
         </div>

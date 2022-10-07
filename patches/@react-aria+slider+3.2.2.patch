@@ -1,0 +1,28 @@
+diff --git a/node_modules/@react-aria/slider/dist/types.d.ts b/node_modules/@react-aria/slider/dist/types.d.ts
+index dc44e97..fcd9e76 100644
+--- a/node_modules/@react-aria/slider/dist/types.d.ts
++++ b/node_modules/@react-aria/slider/dist/types.d.ts
+@@ -22,7 +22,7 @@ export interface SliderAria {
+  * accepts click and drag motions, so that the closest thumb will follow clicks and drags on
+  * the track.
+  */
+-export function useSlider(props: AriaSliderProps, state: SliderState, trackRef: RefObject<Element>): SliderAria;
++export function useSlider<T = number | number[]>(props: AriaSliderProps<T>, state: SliderState, trackRef: RefObject<Element>): SliderAria;
+ export interface SliderThumbAria {
+     /** Props for the root thumb element; handles the dragging motion. */
+     thumbProps: DOMAttributes;
+diff --git a/node_modules/@react-aria/slider/src/useSlider.ts b/node_modules/@react-aria/slider/src/useSlider.ts
+index 3eb5994..5b47db5 100644
+--- a/node_modules/@react-aria/slider/src/useSlider.ts
++++ b/node_modules/@react-aria/slider/src/useSlider.ts
+@@ -44,8 +44,8 @@ export interface SliderAria {
+  * accepts click and drag motions, so that the closest thumb will follow clicks and drags on
+  * the track.
+  */
+-export function useSlider(
+-  props: AriaSliderProps,
++export function useSlider<T = number | number[]>(
++  props: AriaSliderProps<T>,
+   state: SliderState,
+   trackRef: RefObject<Element>
+ ): SliderAria {
