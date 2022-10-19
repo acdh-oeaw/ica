@@ -1,4 +1,4 @@
-import '@fontsource/inter/variable.css'
+import '@fontsource/inter/variable-full.css'
 import 'tailwindcss/tailwind.css'
 import '@/styles/index.css'
 import '@/styles/nprogress.css'

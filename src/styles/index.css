@@ -1,5 +1,5 @@
-@import '@/styles/colors.css';
-@import '@/styles/typography.css';
-@import '@/styles/z-indices.css';
+@import url('@/styles/colors.css');
+@import url('@/styles/typography.css');
+@import url('@/styles/z-indices.css');
 
-@import '@/styles/globals.css';
+@import url('@/styles/globals.css');
