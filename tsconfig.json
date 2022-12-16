@@ -21,5 +21,6 @@
     "experimentalSpecifierResolution": "node",
     "swc": false,
     "transpileOnly": true
-  }
+  },
+  "exclude": ["node_modules"]
 }

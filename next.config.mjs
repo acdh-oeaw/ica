@@ -13,6 +13,9 @@ const config = {
     dirs: [process.cwd()],
     ignoreDuringBuilds: true,
   },
+  experimental: {
+    appDir: false,
+  },
   headers() {
     const headers = [
       {

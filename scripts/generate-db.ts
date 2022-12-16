@@ -432,6 +432,9 @@ async function addRelationById(value: RelationBase, db: Database): Promise<void>
 
   const relation = createRelation(response, value)
   db.relations.set(relation.id, relation)
+
+  const type = relation.type
+  db.relationTypes.set(type.id, type)
 }
 
 //
