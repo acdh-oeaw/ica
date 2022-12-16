@@ -140,9 +140,12 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): JSX
               displayValue={() => {
                 return searchTerm
               }}
+              onBlur={() => {
+                setSearchTerm('')
+              }}
               onChange={onInputChange}
               placeholder={messages.placeholder}
-              // value={searchTerm}
+              value={searchTerm}
             />
             <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2 text-neutral-400">
               <SelectorIcon aria-hidden className="h-5 w-5" />
