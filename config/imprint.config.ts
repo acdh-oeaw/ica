@@ -11,7 +11,7 @@ const redmineId = process.env['NEXT_PUBLIC_REDMINE_ID']
 export function createImprintUrl(locale: Locale): URL {
   assert(
     redmineId != null,
-    'Failed to generate imprint. Please provide a redmine service issue via NEXT_PUBLIC_REDMINE_ID environment variable.',
+    'Failed to generate imprint. Please provide a redmine service issue id via the NEXT_PUBLIC_REDMINE_ID environment variable.',
   )
 
   return createUrl({

@@ -1,6 +1,7 @@
 import { db } from '@/db'
 import type { Place, Relation } from '@/db/types'
 import type { SerializablePlaceRelationsMap } from '@/features/map/persons-layer'
+import { isNonNullable } from '@/lib/is-non-nullable'
 
 interface PopoverContentProps {
   onClose: () => void
@@ -40,7 +41,7 @@ function RelationsLabel(props: RelationsListItemProps): JSX.Element {
     .map((id) => {
       return db.relations.get(id)
     })
-    .filter(Boolean)
+    .filter(isNonNullable)
 
   function deduplicateDates(startDate: string | null, endDate: string | null) {
     if (startDate === endDate) return [startDate]
@@ -49,7 +50,7 @@ function RelationsLabel(props: RelationsListItemProps): JSX.Element {
 
   function createRelationLabel(relation: Relation) {
     const dateRange = deduplicateDates(relation.startDateWritten, relation.endDateWritten)
-      .filter(Boolean)
+      .filter(isNonNullable)
       .join(' – ')
 
     const label = [
@@ -57,7 +58,7 @@ function RelationsLabel(props: RelationsListItemProps): JSX.Element {
       relation.type.label,
       dateRange.length > 0 ? `(${dateRange})` : null,
     ]
-      .filter(Boolean)
+      .filter(isNonNullable)
       .join(' ')
 
     return label

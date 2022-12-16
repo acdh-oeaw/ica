@@ -6,21 +6,19 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "editor.inlayHints.enabled": "offUnlessPressed",
+  "editor.quickSuggestions": {
+    "strings": true
+  },
   "editor.rulers": [100],
   "eslint.enable": true,
   "eslint.validate": ["javascript", "typescript", "typescriptreact"],
   "explorer.excludeGitIgnore": true,
-  "files.eol": "\n",
-  "jest.autoRun": {
-    "onSave": "test-only",
-    "watch": false
+  "files.associations": {
+    "*.css": "tailwindcss"
   },
-  "jest.jestCommandLine": "npm run test --",
+  "files.eol": "\n",
   "less.validate": false,
   "scss.validate": false,
-  "search.exclude": {
-    "package-lock.json": true
-  },
   "stylelint.enable": true,
   "stylelint.snippet": ["css", "postcss"],
   "stylelint.validate": ["css", "postcss"],

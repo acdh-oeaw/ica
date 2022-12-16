@@ -3,18 +3,17 @@
   "build": {
     "dockerfile": "Dockerfile",
     "args": {
-      "VARIANT": "16-bullseye"
+      "VARIANT": "18-bullseye"
     }
   },
   "customizations": {
     "vscode": {
       "extensions": [
+        "bradlc.vscode-tailwindcss",
         "dbaeumer.vscode-eslint",
         "editorconfig.editorconfig",
         "esbenp.prettier-vscode",
         "mikestead.dotenv",
-        "orta.vscode-jest",
-        "shelex.vscode-cy-helper",
         "stylelint.vscode-stylelint"
       ]
     }
@@ -23,6 +22,6 @@
     "github-cli": "latest"
   },
   "forwardPorts": [3000],
-  "postCreateCommand": "npm install",
+  "postCreateCommand": "pnpm install",
   "remoteUser": "node"
 }

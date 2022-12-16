@@ -1,8 +1,13 @@
 name: Validate
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   pull_request:
-    branches: [main, dev]
+    branches:
+      - main
 
 jobs:
   validate:
@@ -13,8 +18,10 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        node-version: [16.x]
-        os: [ubuntu-latest]
+        node-version:
+          - 18.x
+        os:
+          - ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -26,16 +33,16 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci --no-audit --no-fund
+        run: pnpm install --frozen-lockfile
 
       - name: Format
-        run: npm run format
+        run: pnpm run format:check
 
       - name: Lint
-        run: npm run lint
+        run: pnpm run lint:check
 
       - name: Typecheck
-        run: npm run typecheck
+        run: pnpm run types:check
 
-      - name: Run tests
-        run: npm run test:ci
+      - name: Unit tests
+        run: pnpm run test

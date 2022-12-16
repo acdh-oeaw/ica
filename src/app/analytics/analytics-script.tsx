@@ -10,7 +10,6 @@ export function AnalyticsScript(): JSX.Element | null {
   return <Script dangerouslySetInnerHTML={{ __html: script }} id="analytics" />
 }
 
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 const script = `var _paq = window._paq = window._paq || [];
 _paq.push(['disableCookies']);
 _paq.push(['enableHeartBeatTimer']);

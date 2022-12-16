@@ -8,6 +8,7 @@ import { useVirtualizer } from '@tanstack/react-virtual'
 import type { ChangeEvent, ReactNode } from 'react'
 import { Fragment, useMemo, useState } from 'react'
 
+import { isNonNullable } from '@/lib/is-non-nullable'
 import { useElementRef } from '@/lib/use-element-ref'
 
 const defaultSelectionColor: SelectionColor = { backgroundColor: '#1b1e28', color: '#fff' }
@@ -50,7 +51,7 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): JSX
   }
 
   const visibleItems = useMemo(() => {
-    const searchTerms = searchTerm.toLowerCase().split(/\s+/).filter(Boolean)
+    const searchTerms = searchTerm.toLowerCase().split(/\s+/).filter(isNonNullable)
 
     if (searchTerms.length === 0) return Array.from(items.values())
 

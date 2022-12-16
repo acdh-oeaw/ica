@@ -49,10 +49,10 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             NEXT_PUBLIC_BASE_URL=https://ica-vis.acdh-dev.oeaw.ac.at
-            NEXT_PUBLIC_MOCK_API=disabled
             NEXT_PUBLIC_REDMINE_ID=20399
             NEXT_PUBLIC_MATOMO_BASE_URL=https://matomo.acdh.oeaw.ac.at
             NEXT_PUBLIC_MATOMO_ID=225
+            NEXT_PUBLIC_BOTS=enabled
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
