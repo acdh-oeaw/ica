@@ -1,20 +1,25 @@
-export interface RelationType {
+export interface RelationTypeBase {
   id: string
   label: string
+}
+
+export interface RelationType extends RelationTypeBase {
+  source: EntityBase['kind']
+  target: EntityBase['kind']
 }
 
 export interface RelationBase {
   id: string
   source: EntityBase
   target: EntityBase
-  type: RelationType
+  type: RelationTypeBase
 }
 
 export interface Relation<S extends EntityBase = EntityBase, T extends EntityBase = EntityBase> {
   id: string
   source: S
   target: T
-  type: RelationType
+  type: RelationTypeBase
   startDate: IsoDateString | null
   endDate: IsoDateString | null
   startDateWritten: string | null
