@@ -150,6 +150,5 @@ export function NetworkGraph(props: NetworkGraphProps): JSX.Element {
 }
 
 declare module 'force-graph' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface NodeObject extends EntityBase {}
 }

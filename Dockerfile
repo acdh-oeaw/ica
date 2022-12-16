@@ -1,35 +1,40 @@
 # syntax=docker/dockerfile:1
 
 # build
-FROM node:16-slim AS build
+FROM node:18-slim AS build
+
+RUN corepack enable
 
 RUN mkdir /app && chown -R node:node /app
 WORKDIR /app
 
 USER node
 
-COPY --chown=node:node package.json package-lock.json .npmrc ./
-COPY --chown=node:node next.config.mjs tsconfig.json app.d.ts tailwind.config.cjs ./
+COPY --chown=node:node .npmrc package.json pnpm-lock.yaml ./
+
+RUN pnpm fetch
+
+COPY --chown=node:node env.d.ts next.config.mjs tailwind.config.cjs tsconfig.json ./
 COPY --chown=node:node scripts ./scripts
 COPY --chown=node:node config ./config
 COPY --chown=node:node public ./public
 COPY --chown=node:node src ./src
 
-RUN npm ci --no-audit --no-fund
+RUN pnpm install --frozen-lockfile --offline
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
 ARG NEXT_PUBLIC_BASE_URL
-ARG NEXT_PUBLIC_MOCK_API
 ARG NEXT_PUBLIC_REDMINE_ID
 ARG NEXT_PUBLIC_MATOMO_BASE_URL
 ARG NEXT_PUBLIC_MATOMO_ID
+ARG NEXT_PUBLIC_BOTS
 
-RUN npm run build
+RUN pnpm run build
 
 # serve
-FROM node:16-slim AS serve
+FROM node:18-slim AS serve
 
 RUN mkdir /app && chown -R node:node /app
 WORKDIR /app

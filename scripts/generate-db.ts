@@ -26,6 +26,7 @@ import type {
   RelationBase,
   RelationType,
 } from '@/db/types'
+import { isNonNullable } from '@/lib/is-non-nullable'
 
 /**
  * The ica api will time out when being hit with many requests,
@@ -33,9 +34,8 @@ import type {
  */
 async function request(...args: Parameters<typeof _request>) {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const response = await _request(...args)
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+
     return response
   } catch (error) {
     if (error instanceof TimeoutError) {
@@ -217,7 +217,7 @@ function createPerson(person: ApisPersonBase): Person {
   return {
     kind: 'person',
     id: String(person.id),
-    label: [person.first_name, person.name].filter(Boolean).join(' '),
+    label: [person.first_name, person.name].filter(isNonNullable).join(' '),
     startDate: person.start_date,
     endDate: person.end_date,
     startDateWritten: person.start_date_written,

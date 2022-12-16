@@ -1,5 +1,4 @@
 /** @typedef {import('next').NextConfig} NextConfig */
-/** @typedef {import('webpack').Configuration} WebpackConfig */
 /** @typedef {import('~/config/i18n.config').Locale} Locale */
 
 import createBundleAnalyzerPlugin from '@next/bundle-analyzer'
@@ -8,19 +7,11 @@ import { log } from '@stefanprobst/log'
 const locales = /** @type {Array<Locale>} */ (['en'])
 const defaultLocale = /** @type {Locale} */ ('en')
 
-const isProductionDeploy =
-  process.env['NEXT_PUBLIC_BASE_URL'] === 'https://ica-vis.acdh-dev.oeaw.ac.at'
-
 /** @type {NextConfig} */
 const config = {
   eslint: {
     dirs: [process.cwd()],
     ignoreDuringBuilds: true,
-  },
-  experimental: {
-    browsersListForSwc: true,
-    legacyBrowsers: false,
-    newNextLinkBehavior: true,
   },
   headers() {
     const headers = [
@@ -44,7 +35,7 @@ const config = {
       },
     ]
 
-    if (!isProductionDeploy) {
+    if (process.env['NEXT_PUBLIC_BOTS'] !== 'enabled') {
       headers.push({
         source: '/:path*',
         headers: [
@@ -67,15 +58,8 @@ const config = {
   output: 'standalone',
   pageExtensions: ['page.tsx', 'api.ts'],
   reactStrictMode: true,
-  swcMinify: true,
   typescript: {
     ignoreBuildErrors: true,
-  },
-  webpack(/** @type {WebpackConfig} */ config) {
-    config.experiments = config.experiments ?? {}
-    config.experiments.topLevelAwait = true
-
-    return config
   },
 }
 

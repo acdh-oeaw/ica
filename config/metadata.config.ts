@@ -8,11 +8,11 @@ export interface AppMetadata {
   shortTitle: string
   description: string
   logo: {
-    href: string
+    path: string
     maskable: boolean
   }
   image: {
-    href: string
+    path: string
     alt: string
     fit?: keyof FitEnum
   }
@@ -30,7 +30,7 @@ export interface AppMetadata {
       city: string
     }
     image?: {
-      href: string
+      path: string
       alt: string
       fit?: keyof FitEnum
     }
@@ -47,14 +47,13 @@ export const metadata: Record<Locale, AppMetadata> = {
     locale: 'en',
     title: 'Ideas crossing the Atlantic',
     shortTitle: 'ICA',
-    description:
-      'A Geovisualisation of Transatlantic Networks and Emigration (from Central Europe)',
+    description: 'A Visualisation of Transatlantic Networks and Emigration (from Central Europe)',
     logo: {
-      href: '/assets/images/logo.svg',
+      path: './public/assets/images/logo.svg',
       maskable: false,
     },
     image: {
-      href: '/assets/images/logo.svg',
+      path: './public/assets/images/logo.svg',
       alt: '',
       fit: 'contain',
     },

@@ -1,7 +1,8 @@
+import fs from 'node:fs/promises'
+import path from 'node:path'
+
 import generateFavicons, { generateSocialImage } from '@stefanprobst/favicons'
 import { log } from '@stefanprobst/log'
-import fs from 'fs/promises'
-import path from 'path'
 
 import { createAssetLink } from '@/lib/create-asset-link'
 import { manifestFileName, metadata, openGraphImageName } from '~/config/metadata.config'
@@ -11,15 +12,15 @@ async function generate(): Promise<void> {
 
   await Promise.all(
     Object.values(metadata).map(async (config) => {
-      const inputFilePath = path.join(publicFolder, config.logo.href)
+      const inputFilePath = path.join(process.cwd(), config.logo.path)
       const outputFolder = path.join(publicFolder, createAssetLink({ locale: config.locale }))
 
       await generateFavicons({
         inputFilePath,
-        outputFolder,
-        maskable: config.logo.maskable,
         manifestFileName,
+        maskable: config.logo.maskable,
         name: config.title,
+        outputFolder,
         shortName: config.shortTitle,
       })
 
@@ -28,7 +29,7 @@ async function generate(): Promise<void> {
       }
 
       await generateSocialImage(
-        path.join(publicFolder, config.image.href),
+        path.join(process.cwd(), config.image.path),
         path.join(outputFolder, openGraphImageName),
         { fit: config.image.fit },
       )

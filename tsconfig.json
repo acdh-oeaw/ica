@@ -1,8 +1,8 @@
 {
   "extends": "@stefanprobst/tsconfig",
   "compilerOptions": {
-    "exactOptionalPropertyTypes": false,
     "baseUrl": ".",
+    "exactOptionalPropertyTypes": false,
     "paths": {
       "@/*": ["./src/*"],
       "~/*": ["./*"]
@@ -10,12 +10,16 @@
   },
   "include": [
     "next-env.d.ts",
-    "app.d.ts",
+    "env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "**/*.config.mjs",
     "**/*.config.cjs",
-    "stories/main.cjs"
+    "**/*.config.mjs"
   ],
-  "exclude": ["node_modules", "out", "storybook-static"]
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node",
+    "swc": false,
+    "transpileOnly": true
+  }
 }
