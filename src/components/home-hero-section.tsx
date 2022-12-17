@@ -11,22 +11,24 @@ export function HomeHeroSection(): JSX.Element {
 
   return (
     <Fragment>
-      <section className="border-b border-t border-neutral-200 bg-neutral-100">
+      <section className="border-b border-t border-primary-200 bg-primary-50">
         <div className="mx-auto max-w-7xl px-8 py-8">
-          <div className="grid gap-4 py-32">
-            <h1 className="text-6xl font-extrabold tracking-tighter">{metadata.title}</h1>
-            <h2 className="max-w-2xl text-3xl font-extrabold tracking-tight">
+          <div className="grid justify-items-center gap-4 py-32">
+            <h1 className="text-center text-5xl font-extrabold tracking-tighter md:text-6xl lg:text-7xl">
+              {metadata.title}
+            </h1>
+            <h2 className="max-w-2xl text-center text-2xl font-extrabold tracking-tight md:text-3xl">
               {metadata.description}
             </h2>
-            <div className="mt-4 flex gap-4">
+            <div className="mx-auto mt-4 flex flex-col gap-4 xs:flex-row">
               <Link
-                className="inline-flex rounded-md bg-neutral-900 px-12 py-4 font-medium text-neutral-50 hover:bg-neutral-800 hover:text-neutral-0"
+                className="inline-flex rounded-md bg-primary-600 px-12 py-4 text-center font-medium text-neutral-0 hover:bg-primary-700 hover:text-neutral-0 focus-visible:bg-primary-700 focus-visible:ring"
                 href={routes.geoVisualisation()}
               >
                 {t(['common', 'home', 'explore-map'])}
               </Link>
               <Link
-                className="inline-flex rounded-md bg-neutral-900 px-12 py-4 font-medium text-neutral-50 hover:bg-neutral-800 hover:text-neutral-0"
+                className="inline-flex rounded-md bg-primary-600 px-12 py-4 text-center font-medium text-neutral-0 hover:bg-primary-700 hover:text-neutral-0 focus-visible:bg-primary-700 focus-visible:ring"
                 href={routes.networkVisualisation()}
               >
                 {t(['common', 'home', 'explore-graph'])}
@@ -38,7 +40,7 @@ export function HomeHeroSection(): JSX.Element {
       <section>
         <div className="mx-auto max-w-7xl px-8 py-8">
           <div
-            className="grid max-w-xl gap-4 font-medium leading-relaxed"
+            className="mx-auto grid max-w-xl items-start gap-4 font-medium leading-relaxed"
             dangerouslySetInnerHTML={{ __html: t(['common', 'home', 'intro']) }}
           />
         </div>

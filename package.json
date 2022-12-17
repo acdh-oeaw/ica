@@ -9,7 +9,7 @@
     "build": "next build",
     "create:db": "run-ts-script ./scripts/generate-db",
     "dev": "next dev",
-    "format:check": "prettier . --cache --check --ignore-path .gitignore",
+    "format:check": "prettier . --cache --check --ignore-path .gitignore --plugin prettier-plugin-tailwindcss",
     "format:fix": "pnpm run format:check --write",
     "generate": "run-p 'generate:*'",
     "generate:favicons": "run-ts-script ./scripts/generate-favicons",
@@ -125,13 +125,13 @@
   "lint-staged": {
     "*.@(cjs|js|mjs|ts|tsx)": [
       "eslint --cache --cache-location .next/cache/eslint/ --fix",
-      "prettier --cache --write"
+      "prettier --cache --plugin prettier-plugin-tailwindcss --write"
     ],
     "*.css": [
       "stylelint --cache --cache-location .next/cache/stylelint/ --fix",
-      "prettier --cache --write"
+      "prettier --cache --plugin prettier-plugin-tailwindcss --write"
     ],
-    "*.!(cjs|css|js|mjs|ts|tsx)": "prettier --cache --ignore-unknown --write"
+    "*.!(cjs|css|js|mjs|ts|tsx)": "prettier --cache --ignore-unknown --plugin prettier-plugin-tailwindcss --write"
   },
   "postcss": {
     "plugins": {
