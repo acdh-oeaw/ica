@@ -97,6 +97,12 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
       })
     }
 
+    if (filters.selectedGender !== 'all') {
+      selectedPersons = selectedPersons.filter((person) => {
+        return person.gender === filters.selectedGender
+      })
+    }
+
     function addPlace(places: Map<Place['id'], PlaceRelationsMap>, id: Place['id']) {
       if (!places.has(id)) {
         places.set(id, new Map())

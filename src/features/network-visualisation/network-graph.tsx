@@ -125,6 +125,12 @@ export function NetworkGraph(props: NetworkGraphProps): JSX.Element {
       })
     }
 
+    if (filters.selectedGender !== 'all') {
+      selectedPersons = selectedPersons.filter((person) => {
+        return person.gender === filters.selectedGender
+      })
+    }
+
     function isSelectedRelationType(relation: Relation) {
       if (filters.selectedRelationTypes.length === 0) return true
       return filters.selectedRelationTypes.includes(relation.type.id)
