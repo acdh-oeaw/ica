@@ -15,10 +15,13 @@ const config = {
     extend: {
       colors: {
         neutral: { 0: colors.white, ...colors.slate, 1000: colors.black },
-        primary: colors.slate,
+        primary: colors.sky,
       },
       fontFamily: {
         sans: ['InterVariable', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
+      screens: {
+        xs: '480px',
       },
       zIndex: {
         dialog: 'var(--z-index-dialog)',

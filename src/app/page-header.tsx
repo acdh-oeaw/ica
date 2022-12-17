@@ -9,18 +9,29 @@ export function PageHeader(): JSX.Element {
   return (
     <header className="border-b border-neutral-200">
       <div className="gep-4 mx-auto flex max-w-7xl items-center justify-between px-8 py-4 text-sm font-medium">
-        <div>
-          <Link href={routes.home()}>{t(['common', 'pages', 'home', 'metadata', 'title'])}</Link>
+        <div className="flex-shrink-0">
+          <Link
+            className="hover:text-primary-700 focus-visible:text-primary-700"
+            href={routes.home()}
+          >
+            {t(['common', 'pages', 'home', 'metadata', 'title'])}
+          </Link>
         </div>
         <nav>
-          <ul className="flex items-center justify-end gap-4" role="list">
+          <ul className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2" role="list">
             <li>
-              <Link href={routes.geoVisualisation()}>
+              <Link
+                className="hover:text-primary-700 focus-visible:text-primary-700"
+                href={routes.geoVisualisation()}
+              >
                 {t(['common', 'pages', 'geo-visualisation', 'metadata', 'title'])}
               </Link>
             </li>
             <li>
-              <Link href={routes.networkVisualisation()}>
+              <Link
+                className="hover:text-primary-700 focus-visible:text-primary-700"
+                href={routes.networkVisualisation()}
+              >
                 {t(['common', 'pages', 'network-visualisation', 'metadata', 'title'])}
               </Link>
             </li>
