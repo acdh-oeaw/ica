@@ -24,7 +24,7 @@ import type {
   ProfessionBase,
   Relation,
   RelationBase,
-  RelationType,
+  RelationTypeBase,
 } from '@/db/types'
 import { isNonNullable } from '@/lib/is-non-nullable'
 
@@ -262,7 +262,7 @@ function createEntityBase(value: ApisRelationBase['related_entity']): EntityBase
   }
 }
 
-function createRelationType(value: ApisRelationBase['relation_type']): RelationType {
+function createRelationType(value: ApisRelationBase['relation_type']): RelationTypeBase {
   return {
     id: String(value.id),
     label: value.label,
@@ -415,12 +415,12 @@ async function addRelationById(value: RelationBase, db: Database): Promise<void>
 
   const order = ['person', 'institution', 'place', 'event', 'work'] as const
 
+  function sort(source: typeof order[number], target: typeof order[number]) {
+    return order.indexOf(source) > order.indexOf(target) ? 1 : -1
+  }
+
   function getEndpoint(source: typeof order[number], target: typeof order[number]) {
-    return [source, target]
-      .sort((source, target) => {
-        return order.indexOf(source) > order.indexOf(target) ? 1 : -1
-      })
-      .join('')
+    return [source, target].sort(sort).join('')
   }
 
   const endpoint = getEndpoint(value.source.kind, value.target.kind)
@@ -434,7 +434,11 @@ async function addRelationById(value: RelationBase, db: Database): Promise<void>
   db.relations.set(relation.id, relation)
 
   const type = relation.type
-  db.relationTypes.set(type.id, type)
+  const [source, target] = [relation.source.kind, relation.target.kind].sort(sort) as [
+    EntityBase['kind'],
+    EntityBase['kind'],
+  ]
+  db.relationTypes.set(type.id, { ...type, source, target })
 }
 
 //

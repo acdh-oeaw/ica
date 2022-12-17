@@ -122,6 +122,7 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
      */
     function isSelectedDateRange(relation: Relation) {
       // FIXME: clarify behavior, especially for null date fields
+      // @see https://github.com/acdh-oeaw/ica/issues/24
       if (relation.startDate != null) {
         const startYear = new Date(relation.startDate).getUTCFullYear()
         if (startYear < minYear) return false

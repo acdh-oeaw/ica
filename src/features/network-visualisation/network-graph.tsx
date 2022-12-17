@@ -1,8 +1,9 @@
+import { assert } from '@stefanprobst/assert'
 import type { ForceGraphInstance } from 'force-graph'
 import { useEffect, useMemo, useState } from 'react'
 
 import { db } from '@/db'
-import type { EntityBase, RelationBase } from '@/db/types'
+import type { EntityBase, Relation, RelationBase } from '@/db/types'
 import type { NetworkGraphFilters } from '@/features/network-visualisation/use-network-graph-filters'
 import { useElementDimensions } from '@/lib/use-element-dimensions'
 import { useElementRef } from '@/lib/use-element-ref'
@@ -11,6 +12,10 @@ interface NetworkGraphProps {
   filters: NetworkGraphFilters
 }
 
+type GraphNodeKey = `${EntityBase['kind']}__${EntityBase['id']}`
+
+type GraphNode = EntityBase & { key: GraphNodeKey }
+
 export function NetworkGraph(props: NetworkGraphProps): JSX.Element {
   const { filters } = props
 
@@ -18,14 +23,14 @@ export function NetworkGraph(props: NetworkGraphProps): JSX.Element {
   const [forceGraph, setForceGraph] = useState<{ instance: ForceGraphInstance } | null>(null)
   const dimensions = useElementDimensions({ element })
 
-  /**
-   * Using dynamic import for `force-graph` only because of issues with d3 esm-only packaging.
-   */
   useEffect(() => {
     let isCanceled = false
     let instance: ForceGraphInstance | null = null
 
     async function init() {
+      /**
+       * Using dynamic import for `force-graph` only because of issues with d3 esm-only packaging.
+       */
       const forceGraph = await import('force-graph').then((mod) => {
         return mod.default
       })
@@ -33,6 +38,7 @@ export function NetworkGraph(props: NetworkGraphProps): JSX.Element {
       if (!isCanceled) {
         instance = forceGraph()
 
+        instance.nodeId('key')
         instance.nodeLabel((node) => {
           return node.label
         })
@@ -52,7 +58,7 @@ export function NetworkGraph(props: NetworkGraphProps): JSX.Element {
         })
 
         instance.linkColor(() => {
-          return '#eee'
+          return '#dfdfdf'
         })
 
         setForceGraph({ instance })
@@ -81,10 +87,14 @@ export function NetworkGraph(props: NetworkGraphProps): JSX.Element {
   }, [dimensions, forceGraph])
 
   const graphData = useMemo(() => {
-    const nodes = new Set<EntityBase>()
+    function createKey(entity: EntityBase) {
+      return [entity.kind, entity.id].join('__') as GraphNodeKey
+    }
+
+    const nodes = new Map<GraphNode['key'], GraphNode>()
     const edges = new Map<
       RelationBase['id'],
-      { source: EntityBase['id']; target: EntityBase['id'] }
+      { source: GraphNode['key']; target: GraphNode['key'] }
     >()
 
     let selectedPersons =
@@ -103,43 +113,112 @@ export function NetworkGraph(props: NetworkGraphProps): JSX.Element {
       })
     }
 
+    function isSelectedRelationType(relation: Relation) {
+      if (filters.selectedRelationTypes.length === 0) return true
+      return filters.selectedRelationTypes.includes(relation.type.id)
+    }
+
+    const [minYear, maxYear] = filters.selectedDateRange
+
+    function isSelectedDateRange(relation: Relation) {
+      // FIXME: clarify behavior, especially for null date fields
+      // @see https://github.com/acdh-oeaw/ica/issues/24
+      if (relation.startDate != null) {
+        const startYear = new Date(relation.startDate).getUTCFullYear()
+        if (startYear < minYear) return false
+      }
+      if (relation.endDate != null) {
+        const endYear = new Date(relation.endDate).getUTCFullYear()
+        if (endYear > maxYear) return false
+      }
+      return true
+    }
+
     selectedPersons.forEach((person) => {
-      nodes.add({ kind: person.kind, id: person.id, label: person.label })
+      const personKey = createKey(person)
+      // FIXME: should we only add a person node when it is actually part of a relation?
+      // @see https://github.com/acdh-oeaw/ica/issues/25
+      nodes.set(personKey, {
+        key: personKey,
+        kind: person.kind,
+        id: person.id,
+        label: person.label,
+      })
 
       person.persons.forEach((relationId) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const relation = db.relations.get(relationId)!
-        const target = relation.target
-        nodes.add({ kind: target.kind, id: target.id, label: target.label })
-        edges.set(relation.id, { source: person.id, target: target.id })
+        const relation = db.relations.get(relationId)
+        assert(relation != null, 'Relation should exist.')
+        if (!isSelectedRelationType(relation)) return
+        if (!isSelectedDateRange(relation)) return
+
+        const target = relation.source.id === person.id ? relation.target : relation.source
+        const targetKey = createKey(target)
+
+        nodes.set(targetKey, {
+          key: targetKey,
+          kind: target.kind,
+          id: target.id,
+          label: target.label,
+        })
+        edges.set(relation.id, { source: personKey, target: targetKey })
       })
 
       person.institutions.forEach((relationId) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const relation = db.relations.get(relationId)!
-        const target = relation.target
-        nodes.add({ kind: target.kind, id: target.id, label: target.label })
-        edges.set(relation.id, { source: person.id, target: target.id })
+        const relation = db.relations.get(relationId)
+        assert(relation != null, 'Relation should exist.')
+        if (!isSelectedRelationType(relation)) return
+        if (!isSelectedDateRange(relation)) return
+
+        const target = relation.source.id === person.id ? relation.target : relation.source
+        const targetKey = createKey(target)
+
+        nodes.set(targetKey, {
+          key: targetKey,
+          kind: target.kind,
+          id: target.id,
+          label: target.label,
+        })
+        edges.set(relation.id, { source: personKey, target: targetKey })
       })
 
       person.places.forEach((relationId) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const relation = db.relations.get(relationId)!
-        const target = relation.target
-        nodes.add({ kind: target.kind, id: target.id, label: target.label })
-        edges.set(relation.id, { source: person.id, target: target.id })
+        const relation = db.relations.get(relationId)
+        assert(relation != null, 'Relation should exist.')
+        if (!isSelectedRelationType(relation)) return
+        if (!isSelectedDateRange(relation)) return
+
+        const target = relation.source.id === person.id ? relation.target : relation.source
+        const targetKey = createKey(target)
+
+        nodes.set(targetKey, {
+          key: targetKey,
+          kind: target.kind,
+          id: target.id,
+          label: target.label,
+        })
+        edges.set(relation.id, { source: personKey, target: targetKey })
       })
 
       person.events.forEach((relationId) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const relation = db.relations.get(relationId)!
-        const target = relation.target
-        nodes.add({ kind: target.kind, id: target.id, label: target.label })
-        edges.set(relation.id, { source: person.id, target: target.id })
+        const relation = db.relations.get(relationId)
+        assert(relation != null, 'Relation should exist.')
+        if (!isSelectedRelationType(relation)) return
+        if (!isSelectedDateRange(relation)) return
+
+        const target = relation.source.id === person.id ? relation.target : relation.source
+        const targetKey = createKey(target)
+
+        nodes.set(targetKey, {
+          key: targetKey,
+          kind: target.kind,
+          id: target.id,
+          label: target.label,
+        })
+        edges.set(relation.id, { source: personKey, target: targetKey })
       })
     })
 
-    return { nodes: Array.from(nodes), links: Array.from(edges.values()) }
+    return { nodes: Array.from(nodes.values()), links: Array.from(edges.values()) }
   }, [filters])
 
   useEffect(() => {
@@ -150,5 +229,5 @@ export function NetworkGraph(props: NetworkGraphProps): JSX.Element {
 }
 
 declare module 'force-graph' {
-  interface NodeObject extends EntityBase {}
+  interface NodeObject extends GraphNode {}
 }

@@ -56,10 +56,10 @@
     "next": "^13.0.7",
     "nprogress": "^0.2.0",
     "react": "^18.2.0",
-    "react-aria": "3.21.1-nightly.3621",
+    "react-aria": "^3.22.0",
     "react-dom": "^18.2.0",
     "react-map-gl": "^7.0.20",
-    "react-stately": "3.19.1-nightly.3621",
+    "react-stately": "^3.20.0",
     "sharp": "^0.31.2",
     "tailwindcss": "^3.2.4"
   },
