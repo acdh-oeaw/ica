@@ -435,8 +435,8 @@ async function addRelationById(value: RelationBase, db: Database): Promise<void>
 
   const type = relation.type
   const [source, target] = [relation.source.kind, relation.target.kind].sort(sort) as [
-    EntityBase['kind'],
-    EntityBase['kind'],
+    EntityKind,
+    EntityKind,
   ]
   db.relationTypes.set(type.id, { ...type, source, target })
 }

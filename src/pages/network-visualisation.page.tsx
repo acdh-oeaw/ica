@@ -9,7 +9,9 @@ import { FilterControlsPanel } from '@/components/filter-controls-panel'
 import { MainContent } from '@/components/main-content'
 import { MultiComboBox } from '@/components/multi-combobox'
 import { RangeSlider } from '@/components/range-slider'
+import { Select } from '@/components/select'
 import { db } from '@/db'
+import { type Gender, genders } from '@/db/genders'
 import { type EntityBase } from '@/db/types'
 import { NetworkGraph } from '@/features/network-visualisation/network-graph'
 import { useNetworkGraphFilters } from '@/features/network-visualisation/use-network-graph-filters'
@@ -40,6 +42,9 @@ export default function GeoVisualisationPage(): JSX.Element {
           return t(['common', 'form', 'remove-item'], { values: { item: label } })
         },
       },
+      gender: {
+        placeholder: t(['common', 'form', 'select-option']),
+      },
       relationTypes: {
         placeholder: t(['common', 'form', 'search']),
         nothingFound: t(['common', 'form', 'nothing-found']),
@@ -62,10 +67,19 @@ export default function GeoVisualisationPage(): JSX.Element {
     return relationTypes
   }, [])
 
+  const labeledGenders = useMemo(() => {
+    const labeledGenders = new Map<Gender, { id: Gender; label: string }>()
+
+    genders.forEach((id) => {
+      labeledGenders.set(id, { id, label: t(['common', 'gender', id]) })
+    })
+
+    return labeledGenders
+  }, [t])
+
   const [selectedEntity, setSelectedEntity] = useState<EntityBase | null>(null)
 
   function onNodeClick(entity: EntityBase | null) {
-    //
     setSelectedEntity(entity)
   }
 
@@ -80,19 +94,27 @@ export default function GeoVisualisationPage(): JSX.Element {
             <div className="grid gap-6" role="group">
               <MultiComboBox
                 items={db.persons}
+                label={t(['common', 'filter', 'person'])}
                 messages={messages.persons}
                 name="persons"
-                label="Persons"
                 onSelectionChange={filters.setSelectedPersons}
                 selectedKeys={filters.selectedPersons}
               />
               <MultiComboBox
                 items={db.professions}
+                label={t(['common', 'filter', 'profession'])}
                 messages={messages.professions}
                 name="professions"
-                label="Professions"
                 onSelectionChange={filters.setSelectedProfessions}
                 selectedKeys={filters.selectedProfessions}
+              />
+              <Select
+                items={labeledGenders}
+                label={t(['common', 'filter', 'gender'])}
+                messages={messages.gender}
+                name="gender"
+                onSelectionChange={filters.setSelectedGender}
+                selectedKey={filters.selectedGender}
               />
             </div>
           </section>
@@ -106,14 +128,14 @@ export default function GeoVisualisationPage(): JSX.Element {
                  * display corresponding relation types in the combobox.
                  */
                 items={personRelationTypes}
+                label={t(['common', 'filter', 'relation-type'])}
                 messages={messages.relationTypes}
                 name="relation-types"
-                label="Relation types"
                 onSelectionChange={filters.setSelectedRelationTypes}
                 selectedKeys={filters.selectedRelationTypes}
               />
               <RangeSlider
-                label="Date range"
+                label={t(['common', 'filter', 'date-range'])}
                 minValue={1900}
                 maxValue={2000}
                 name="date-range"
