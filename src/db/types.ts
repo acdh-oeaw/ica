@@ -91,7 +91,7 @@ export type Entity = Event | Institution | Person | Place | Work
 
 export type EntityKind = Entity['kind']
 
-export type EntityBase = Pick<Entity, 'id' | 'kind' | 'label'>
+export type EntityBase = DistributivePick<Entity, 'id' | 'kind' | 'label'>
 
 export interface Database {
   events: Map<Event['id'], Event>

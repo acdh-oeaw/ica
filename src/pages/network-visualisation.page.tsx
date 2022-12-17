@@ -1,14 +1,16 @@
 import { PageMetadata } from '@stefanprobst/next-page-metadata'
-import { Fragment, useMemo } from 'react'
+import { Fragment, useMemo, useState } from 'react'
 
 import { useI18n } from '@/app/i18n/use-i18n'
 import { withDictionaries } from '@/app/i18n/with-dictionaries'
 import { usePageTitleTemplate } from '@/app/metadata/use-page-title-template'
+import { EntityDetails } from '@/components/entity-details'
 import { FilterControlsPanel } from '@/components/filter-controls-panel'
 import { MainContent } from '@/components/main-content'
 import { MultiComboBox } from '@/components/multi-combobox'
 import { RangeSlider } from '@/components/range-slider'
 import { db } from '@/db'
+import { type EntityBase } from '@/db/types'
 import { NetworkGraph } from '@/features/network-visualisation/network-graph'
 import { useNetworkGraphFilters } from '@/features/network-visualisation/use-network-graph-filters'
 
@@ -60,11 +62,18 @@ export default function GeoVisualisationPage(): JSX.Element {
     return relationTypes
   }, [])
 
+  const [selectedEntity, setSelectedEntity] = useState<EntityBase | null>(null)
+
+  function onNodeClick(entity: EntityBase | null) {
+    //
+    setSelectedEntity(entity)
+  }
+
   return (
     <Fragment>
       <PageMetadata title={metadata.title} titleTemplate={titleTemplate} />
       <MainContent className="relative grid grid-cols-[1fr_384px]">
-        <NetworkGraph filters={filters} />
+        <NetworkGraph filters={filters} onNodeClick={onNodeClick} />
         <FilterControlsPanel name={formId}>
           <section className="grid gap-4">
             <h2 className="text-sm font-medium text-neutral-600">Filter persons</h2>
@@ -113,6 +122,14 @@ export default function GeoVisualisationPage(): JSX.Element {
               />
             </div>
           </section>
+          {selectedEntity != null ? (
+            <>
+              <hr />
+              <section className="grid gap-4">
+                <EntityDetails entity={selectedEntity} />
+              </section>
+            </>
+          ) : null}
         </FilterControlsPanel>
       </MainContent>
     </Fragment>

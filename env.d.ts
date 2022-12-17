@@ -1,3 +1,5 @@
+type DistributivePick<T, K extends PropertyType> = T extends unknown ? Pick<T, K> : never
+
 type HtmlString = string
 
 type IsoDateString = string
