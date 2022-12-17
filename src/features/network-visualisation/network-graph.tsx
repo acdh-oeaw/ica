@@ -7,9 +7,11 @@ import type { EntityBase, Relation, RelationBase } from '@/db/types'
 import type { NetworkGraphFilters } from '@/features/network-visualisation/use-network-graph-filters'
 import { useElementDimensions } from '@/lib/use-element-dimensions'
 import { useElementRef } from '@/lib/use-element-ref'
+import { useEvent } from '@/lib/use-event'
 
 interface NetworkGraphProps {
   filters: NetworkGraphFilters
+  onNodeClick: (node: GraphNode | null) => void
 }
 
 type GraphNodeKey = `${EntityBase['kind']}__${EntityBase['id']}`
@@ -17,7 +19,7 @@ type GraphNodeKey = `${EntityBase['kind']}__${EntityBase['id']}`
 type GraphNode = EntityBase & { key: GraphNodeKey }
 
 export function NetworkGraph(props: NetworkGraphProps): JSX.Element {
-  const { filters } = props
+  const { filters, onNodeClick } = props
 
   const [element, setElement] = useElementRef<HTMLElement>()
   const [forceGraph, setForceGraph] = useState<{ instance: ForceGraphInstance } | null>(null)
@@ -72,6 +74,16 @@ export function NetworkGraph(props: NetworkGraphProps): JSX.Element {
       instance?._destructor()
     }
   }, [])
+
+  const _onNodeClick = useEvent(onNodeClick)
+  useEffect(() => {
+    forceGraph?.instance.onNodeClick((node) => {
+      _onNodeClick(node as GraphNode)
+    })
+    forceGraph?.instance.onBackgroundClick(() => {
+      _onNodeClick(null)
+    })
+  }, [forceGraph, _onNodeClick])
 
   useEffect(() => {
     if (element == null) return
@@ -229,5 +241,5 @@ export function NetworkGraph(props: NetworkGraphProps): JSX.Element {
 }
 
 declare module 'force-graph' {
-  interface NodeObject extends GraphNode {}
+  interface NodeObject extends Omit<GraphNode, 'id'> {}
 }

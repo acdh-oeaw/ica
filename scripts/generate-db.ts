@@ -27,6 +27,7 @@ import type {
   RelationTypeBase,
 } from '@/db/types'
 import { isNonNullable } from '@/lib/is-non-nullable'
+import { baseUrl } from '~/config/api.config'
 
 /**
  * The ica api will time out when being hit with many requests,
@@ -52,7 +53,6 @@ async function request(...args: Parameters<typeof _request>) {
 
 //
 
-const baseUrl = 'https://ica.acdh-dev.oeaw.ac.at/apis/api/'
 const options: RequestOptions = {
   responseType: 'json',
   fetch: (timeout as (ms: number) => typeof global.fetch)(60000),
