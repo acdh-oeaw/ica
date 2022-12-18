@@ -1,4 +1,4 @@
-import { useLocale } from '@/app/route/use-locale'
+import { useLocale } from '@/lib/route/use-locale'
 import type { AppMetadata } from '~/config/metadata.config'
 import { metadata } from '~/config/metadata.config'
 

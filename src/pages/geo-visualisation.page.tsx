@@ -3,9 +3,6 @@ import { Fragment, useEffect, useMemo, useState } from 'react'
 import type { LngLat, MapLayerMouseEvent } from 'react-map-gl'
 import { Popup } from 'react-map-gl'
 
-import { useI18n } from '@/app/i18n/use-i18n'
-import { withDictionaries } from '@/app/i18n/with-dictionaries'
-import { usePageTitleTemplate } from '@/app/metadata/use-page-title-template'
 import { FilterControlsPanel } from '@/components/filter-controls-panel'
 import { MainContent } from '@/components/main-content'
 import { MultiComboBox } from '@/components/multi-combobox'
@@ -20,6 +17,9 @@ import { initialViewState, mapStyle } from '@/features/map/geo-map.config'
 import type { PlaceFeature, SerializablePlaceRelationsMap } from '@/features/map/persons-layer'
 import { PersonsLayer, personsLayerStyle } from '@/features/map/persons-layer'
 import { useGeoMapFilters } from '@/features/map/use-geo-map-filters'
+import { useI18n } from '@/lib/i18n/use-i18n'
+import { withDictionaries } from '@/lib/i18n/with-dictionaries'
+import { usePageTitleTemplate } from '@/lib/metadata/use-page-title-template'
 
 export const getStaticProps = withDictionaries(['common'])
 

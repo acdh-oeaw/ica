@@ -1,10 +1,10 @@
 import Link from 'next/link'
 
-import { useI18n } from '@/app/i18n/use-i18n'
-import { useLocale } from '@/app/route/use-locale'
-import { usePathname } from '@/app/route/use-pathname'
-import { useSearchParams } from '@/app/route/use-search-params'
-import { useUrlFragment } from '@/app/route/use-url-fragment'
+import { useI18n } from '@/lib/i18n/use-i18n'
+import { useLocale } from '@/lib/route/use-locale'
+import { usePathname } from '@/lib/route/use-pathname'
+import { useSearchParams } from '@/lib/route/use-search-params'
+import { useUrlFragment } from '@/lib/route/use-url-fragment'
 
 export function LanguageToggle(): JSX.Element {
   const { locale } = useLocale()

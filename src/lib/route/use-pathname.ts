@@ -1,4 +1,4 @@
-import { useRoute } from '@/app/route/use-route'
+import { useRoute } from '@/lib/route/use-route'
 
 export interface UsePathnameResult {
   pathname: string

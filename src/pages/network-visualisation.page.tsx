@@ -1,9 +1,6 @@
 import { PageMetadata } from '@stefanprobst/next-page-metadata'
 import { Fragment, useMemo, useState } from 'react'
 
-import { useI18n } from '@/app/i18n/use-i18n'
-import { withDictionaries } from '@/app/i18n/with-dictionaries'
-import { usePageTitleTemplate } from '@/app/metadata/use-page-title-template'
 import { EntityDetails } from '@/components/entity-details'
 import { FilterControlsPanel } from '@/components/filter-controls-panel'
 import { MainContent } from '@/components/main-content'
@@ -15,6 +12,9 @@ import { type Gender, genders } from '@/db/genders'
 import { type EntityBase } from '@/db/types'
 import { NetworkGraph } from '@/features/network-visualisation/network-graph'
 import { useNetworkGraphFilters } from '@/features/network-visualisation/use-network-graph-filters'
+import { useI18n } from '@/lib/i18n/use-i18n'
+import { withDictionaries } from '@/lib/i18n/with-dictionaries'
+import { usePageTitleTemplate } from '@/lib/metadata/use-page-title-template'
 
 export const getStaticProps = withDictionaries(['common'])
 

@@ -1,4 +1,4 @@
-import type { Dictionaries } from '@/app/i18n/dictionaries'
+import type { Dictionaries } from '@/lib/i18n/dictionaries'
 import type { Locale } from '~/config/i18n.config'
 import { defaultLocale } from '~/config/i18n.config'
 
@@ -14,7 +14,7 @@ export async function load<K extends keyof Dictionaries>(
             default:
               return [
                 namespace,
-                await import('@/app/i18n/common/en').then((module) => {
+                await import('@/lib/i18n/common/en').then((module) => {
                   return module.dictionary
                 }),
               ] as const

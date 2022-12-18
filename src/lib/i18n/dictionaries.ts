@@ -1,4 +1,4 @@
-import type { Dictionary as CommonDictionary } from '@/app/i18n/common'
+import type { Dictionary as CommonDictionary } from '@/lib/i18n/common'
 
 export type Plurals = Partial<Record<Intl.LDMLPluralRule, string>>
 

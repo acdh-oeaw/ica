@@ -1,8 +1,8 @@
 import type { GetServerSideProps, GetStaticProps, PreviewData } from 'next'
 import type { ParsedUrlQuery } from 'querystring'
 
-import type { Dictionaries } from '@/app/i18n/dictionaries'
-import { load } from '@/app/i18n/load'
+import type { Dictionaries } from '@/lib/i18n/dictionaries'
+import { load } from '@/lib/i18n/load'
 import type { Locale } from '~/config/i18n.config'
 
 export function withDictionaries<

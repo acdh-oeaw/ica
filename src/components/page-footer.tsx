@@ -1,8 +1,8 @@
 import Link from 'next/link'
 
-import { useI18n } from '@/app/i18n/use-i18n'
-import { useAppMetadata } from '@/app/metadata/use-app-metadata'
-import * as routes from '@/app/route/routes'
+import { useI18n } from '@/lib/i18n/use-i18n'
+import { useAppMetadata } from '@/lib/metadata/use-app-metadata'
+import * as routes from '@/lib/route/routes'
 
 export function PageFooter(): JSX.Element {
   const { t } = useI18n<'common'>()

@@ -1,7 +1,7 @@
 import { MoonIcon, SunIcon } from '@heroicons/react/24/outline'
 import { useTheme } from '@stefanprobst/next-theme'
 
-import { useI18n } from '@/app/i18n/use-i18n'
+import { useI18n } from '@/lib/i18n/use-i18n'
 
 export function ColorSchemeToggle(): JSX.Element | null {
   const { t } = useI18n<'common'>()
