@@ -4,8 +4,8 @@ export interface RelationTypeBase {
 }
 
 export interface RelationType extends RelationTypeBase {
-  source: EntityBase['kind']
-  target: EntityBase['kind']
+  source: EntityKind
+  target: EntityKind
 }
 
 export interface RelationBase {

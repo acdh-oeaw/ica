@@ -1,5 +1,6 @@
 import { isNonEmptyString } from '@stefanprobst/is-nonempty-string'
 
+import { useI18n } from '@/app/i18n/use-i18n'
 import { db } from '@/db'
 import { type EntityBase, Event, Institution, Person, Place } from '@/db/types'
 import { createEntityUrl } from '@/lib/create-entity-url'
@@ -32,6 +33,8 @@ interface EventProps {
 function Event(props: EventProps): JSX.Element | null {
   const { id } = props
 
+  const { t } = useI18n<'common'>()
+
   const event = db.events.get(id)
 
   if (event == null) return null
@@ -43,20 +46,20 @@ function Event(props: EventProps): JSX.Element | null {
           <h2 className="text-lg font-medium text-neutral-600">{event.label}</h2>
         </div>
         <a
-          aria-label={`See entry for ${event.label} in database`}
+          aria-label={t(['common', 'see-database-entry-for'], { values: { label: event.label } })}
           className="text-xs underline hover:text-primary-700 focus-visible:text-primary-700"
           href={createEntityUrl(event)}
           rel="noreferrer"
           target="_blank"
         >
-          See entry in database
+          {t(['common', 'see-database-entry'])}
         </a>
       </div>
       <dl className="grid gap-y-3">
         {event.persons.size > 0 ? (
           <div className="grid gap-1 text-sm">
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-              Related persons
+              {t(['common', 'details', 'related-persons'])}
             </dt>
             <dd>
               {Array.from(event.persons)
@@ -74,7 +77,7 @@ function Event(props: EventProps): JSX.Element | null {
         {event.places.size > 0 ? (
           <div className="grid gap-1 text-sm">
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-              Related places
+              {t(['common', 'details', 'related-places'])}
             </dt>
             <dd>
               {Array.from(event.places)
@@ -92,7 +95,7 @@ function Event(props: EventProps): JSX.Element | null {
         {event.institutions.size > 0 ? (
           <div className="grid gap-1 text-sm">
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-              Related institutions
+              {t(['common', 'details', 'related-institutions'])}
             </dt>
             <dd>
               {Array.from(event.institutions)
@@ -110,7 +113,7 @@ function Event(props: EventProps): JSX.Element | null {
         {event.events.size > 0 ? (
           <div className="grid gap-1 text-sm">
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-              Professions
+              {t(['common', 'details', 'related-events'])}
             </dt>
             <dd>
               {Array.from(event.events)
@@ -137,6 +140,8 @@ interface InstitutionProps {
 function Institution(props: InstitutionProps): JSX.Element | null {
   const { id } = props
 
+  const { t } = useI18n<'common'>()
+
   const institution = db.institutions.get(id)
 
   if (institution == null) return null
@@ -148,20 +153,22 @@ function Institution(props: InstitutionProps): JSX.Element | null {
           <h2 className="text-lg font-medium text-neutral-600">{institution.label}</h2>
         </div>
         <a
-          aria-label={`See entry for ${institution.label} in database`}
+          aria-label={t(['common', 'see-database-entry-for'], {
+            values: { label: institution.label },
+          })}
           className="text-xs underline hover:text-primary-700 focus-visible:text-primary-700"
           href={createEntityUrl(institution)}
           rel="noreferrer"
           target="_blank"
         >
-          See entry in database
+          {t(['common', 'see-database-entry'])}
         </a>
       </div>
       <dl className="grid gap-y-3">
         {institution.persons.size > 0 ? (
           <div className="grid gap-1 text-sm">
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-              Related persons
+              {t(['common', 'details', 'related-persons'])}
             </dt>
             <dd>
               {Array.from(institution.persons)
@@ -179,7 +186,7 @@ function Institution(props: InstitutionProps): JSX.Element | null {
         {institution.places.size > 0 ? (
           <div className="grid gap-1 text-sm">
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-              Related places
+              {t(['common', 'details', 'related-places'])}
             </dt>
             <dd>
               {Array.from(institution.places)
@@ -197,7 +204,7 @@ function Institution(props: InstitutionProps): JSX.Element | null {
         {institution.institutions.size > 0 ? (
           <div className="grid gap-1 text-sm">
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-              Related institutions
+              {t(['common', 'details', 'related-institutions'])}
             </dt>
             <dd>
               {Array.from(institution.institutions)
@@ -215,7 +222,7 @@ function Institution(props: InstitutionProps): JSX.Element | null {
         {institution.events.size > 0 ? (
           <div className="grid gap-1 text-sm">
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-              Professions
+              {t(['common', 'details', 'related-events'])}
             </dt>
             <dd>
               {Array.from(institution.events)
@@ -244,6 +251,8 @@ function Person(props: PersonProps): JSX.Element | null {
 
   const person = db.persons.get(id)
 
+  const { t } = useI18n<'common'>()
+
   if (person == null) return null
 
   const hasStartDate = isNonEmptyString(person.startDateWritten)
@@ -269,20 +278,20 @@ function Person(props: PersonProps): JSX.Element | null {
           ) : null}
         </div>
         <a
-          aria-label={`See entry for ${person.label} in database`}
+          aria-label={t(['common', 'see-database-entry-for'], { values: { label: person.label } })}
           className="text-xs underline hover:text-primary-700 focus-visible:text-primary-700"
           href={createEntityUrl(person)}
           rel="noreferrer"
           target="_blank"
         >
-          See entry in database
+          {t(['common', 'see-database-entry'])}
         </a>
       </div>
       <dl className="grid gap-y-3">
         {person.professions.size > 0 ? (
           <div className="grid gap-1 text-sm">
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-              Professions
+              {t(['common', 'details', 'professions'])}
             </dt>
             <dd>
               {Array.from(person.professions)
@@ -296,14 +305,16 @@ function Person(props: PersonProps): JSX.Element | null {
         ) : null}
         {isNonEmptyString(person.notes) ? (
           <div className="grid gap-1 text-sm">
-            <dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">Notes</dt>
+            <dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
+              {t(['common', 'details', 'notes'])}
+            </dt>
             <dd>{person.notes}</dd>
           </div>
         ) : null}
         {isNonEmptyString(person.references) ? (
           <div className="grid gap-1 text-sm">
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-              References
+              {t(['common', 'details', 'references'])}
             </dt>
             <dd>{person.references}</dd>
           </div>
@@ -311,7 +322,7 @@ function Person(props: PersonProps): JSX.Element | null {
         {person.persons.size > 0 ? (
           <div className="grid gap-1 text-sm">
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-              Related persons
+              {t(['common', 'details', 'related-places'])}
             </dt>
             <dd>
               {Array.from(person.persons)
@@ -329,7 +340,7 @@ function Person(props: PersonProps): JSX.Element | null {
         {person.places.size > 0 ? (
           <div className="grid gap-1 text-sm">
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-              Related places
+              {t(['common', 'details', 'related-places'])}
             </dt>
             <dd>
               {Array.from(person.places)
@@ -347,7 +358,7 @@ function Person(props: PersonProps): JSX.Element | null {
         {person.institutions.size > 0 ? (
           <div className="grid gap-1 text-sm">
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-              Related institutions
+              {t(['common', 'details', 'related-institutions'])}
             </dt>
             <dd>
               {Array.from(person.institutions)
@@ -365,7 +376,7 @@ function Person(props: PersonProps): JSX.Element | null {
         {person.events.size > 0 ? (
           <div className="grid gap-1 text-sm">
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-              Professions
+              {t(['common', 'details', 'related-events'])}
             </dt>
             <dd>
               {Array.from(person.events)
@@ -394,6 +405,8 @@ function Place(props: PlaceProps): JSX.Element | null {
 
   const place = db.places.get(id)
 
+  const { t } = useI18n<'common'>()
+
   if (place == null) return null
 
   return (
@@ -403,20 +416,20 @@ function Place(props: PlaceProps): JSX.Element | null {
           <h2 className="text-lg font-medium text-neutral-600">{place.label}</h2>
         </div>
         <a
-          aria-label={`See entry for ${place.label} in database`}
+          aria-label={t(['common', 'see-database-entry-for'], { values: { label: place.label } })}
           className="text-xs underline hover:text-primary-700 focus-visible:text-primary-700"
           href={createEntityUrl(place)}
           rel="noreferrer"
           target="_blank"
         >
-          See entry in database
+          {t(['common', 'see-database-entry'])}
         </a>
       </div>
       <dl className="grid gap-y-3">
         {place.persons.size > 0 ? (
           <div className="grid gap-1 text-sm">
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-              Related persons
+              {t(['common', 'details', 'related-persons'])}
             </dt>
             <dd>
               {Array.from(place.persons)
@@ -434,7 +447,7 @@ function Place(props: PlaceProps): JSX.Element | null {
         {place.places.size > 0 ? (
           <div className="grid gap-1 text-sm">
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-              Related places
+              {t(['common', 'details', 'related-places'])}
             </dt>
             <dd>
               {Array.from(place.places)
@@ -452,7 +465,7 @@ function Place(props: PlaceProps): JSX.Element | null {
         {place.institutions.size > 0 ? (
           <div className="grid gap-1 text-sm">
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-              Related institutions
+              {t(['common', 'details', 'related-institutions'])}
             </dt>
             <dd>
               {Array.from(place.institutions)
@@ -470,7 +483,7 @@ function Place(props: PlaceProps): JSX.Element | null {
         {place.events.size > 0 ? (
           <div className="grid gap-1 text-sm">
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-              Professions
+              {t(['common', 'details', 'related-events'])}
             </dt>
             <dd>
               {Array.from(place.events)

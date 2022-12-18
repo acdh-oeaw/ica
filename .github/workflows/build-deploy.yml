@@ -61,7 +61,7 @@ jobs:
           RANCHER_PROJECT_ID: c-zdbh8:p-hzftn
           RANCHER_DEPLOYMENT: ica:ica-website
         run: |
-          curl \
+          curl --fail --silent --show-error \
             -X POST \
             -H "Authorization: Bearer ${{ secrets.RANCHER_API_TOKEN }}" \
             'https://rancher.acdh-dev.oeaw.ac.at/v3/project/${{ env.RANCHER_PROJECT_ID }}/workloads/deployment:${{ env.RANCHER_DEPLOYMENT }}?action=redeploy'

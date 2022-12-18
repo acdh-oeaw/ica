@@ -1,6 +1,7 @@
 import type { Dispatch, SetStateAction } from 'react'
 import { useMemo, useState } from 'react'
 
+import { type Gender } from '@/db/genders'
 import type { Person, Place, ProfessionBase as Profession, RelationType } from '@/db/types'
 
 export interface NetworkGraphFilters {
@@ -8,6 +9,8 @@ export interface NetworkGraphFilters {
   setSelectedPersons: Dispatch<SetStateAction<Array<Person['id']>>>
   selectedProfessions: Array<Profession['id']>
   setSelectedProfessions: Dispatch<SetStateAction<Array<Profession['id']>>>
+  selectedGender: Gender
+  setSelectedGender: Dispatch<SetStateAction<Gender>>
   selectedRelationTypes: Array<RelationType['id']>
   setSelectedRelationTypes: Dispatch<SetStateAction<Array<RelationType['id']>>>
   selectedDateRange: [number, number]
@@ -17,6 +20,7 @@ export interface NetworkGraphFilters {
 export function useNetworkGraphFilters(): NetworkGraphFilters {
   const [selectedPersons, setSelectedPersons] = useState<Array<Person['id']>>([])
   const [selectedProfessions, setSelectedProfessions] = useState<Array<Place['id']>>([])
+  const [selectedGender, setSelectedGender] = useState<Gender>('all')
   const [selectedRelationTypes, setSelectedRelationTypes] = useState<Array<RelationType['id']>>([])
   const [selectedDateRange, setSelectedDateRange] = useState<[number, number]>([1900, 2000])
 
@@ -38,6 +42,8 @@ export function useNetworkGraphFilters(): NetworkGraphFilters {
       setSelectedPersons: _setSelectedPersons,
       selectedProfessions,
       setSelectedProfessions: _setSelectedProfessions,
+      selectedGender,
+      setSelectedGender,
       selectedRelationTypes,
       setSelectedRelationTypes,
       selectedDateRange,
@@ -48,6 +54,8 @@ export function useNetworkGraphFilters(): NetworkGraphFilters {
     setSelectedPersons,
     selectedProfessions,
     setSelectedProfessions,
+    selectedGender,
+    setSelectedGender,
     selectedRelationTypes,
     setSelectedRelationTypes,
     selectedDateRange,
