@@ -1,9 +1,9 @@
 import type { UrlSearchParamsInit } from '@stefanprobst/request'
 import { useMemo } from 'react'
 
-import { useLocale } from '@/app/route/use-locale'
-import { usePathname } from '@/app/route/use-pathname'
 import { createAppUrl } from '@/lib/create-app-url'
+import { useLocale } from '@/lib/route/use-locale'
+import { usePathname } from '@/lib/route/use-pathname'
 import type { Locale } from '~/config/i18n.config'
 
 export type UseAlternateLanguageUrlsResult = Array<{ hrefLang: Locale; href: string }>

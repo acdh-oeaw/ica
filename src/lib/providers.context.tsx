@@ -2,8 +2,8 @@ import { I18nProvider } from '@stefanprobst/next-i18n'
 import type { ReactNode } from 'react'
 import { I18nProvider as UiI18nProvider, SSRProvider } from 'react-aria'
 
-import type { DictionariesProps } from '@/app/i18n/dictionaries'
-import { useLocale } from '@/app/route/use-locale'
+import type { DictionariesProps } from '@/lib/i18n/dictionaries'
+import { useLocale } from '@/lib/route/use-locale'
 
 interface ProvidersProps extends DictionariesProps {
   children: ReactNode

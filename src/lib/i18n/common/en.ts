@@ -1,4 +1,4 @@
-import type { Dictionary } from '@/app/i18n/common'
+import type { Dictionary } from '@/lib/i18n/common'
 
 export const dictionary: Dictionary = {
   app: {

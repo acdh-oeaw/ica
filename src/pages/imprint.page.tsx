@@ -3,10 +3,10 @@ import { request } from '@stefanprobst/request'
 import type { GetStaticPropsContext, GetStaticPropsResult } from 'next'
 import { Fragment } from 'react'
 
-import { useI18n } from '@/app/i18n/use-i18n'
-import { withDictionaries } from '@/app/i18n/with-dictionaries'
-import { usePageTitleTemplate } from '@/app/metadata/use-page-title-template'
 import { MainContent } from '@/components/main-content'
+import { useI18n } from '@/lib/i18n/use-i18n'
+import { withDictionaries } from '@/lib/i18n/with-dictionaries'
+import { usePageTitleTemplate } from '@/lib/metadata/use-page-title-template'
 import type { Locale } from '~/config/i18n.config'
 import { createImprintUrl } from '~/config/imprint.config'
 

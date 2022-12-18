@@ -1,9 +1,9 @@
 import { isNonEmptyString } from '@stefanprobst/is-nonempty-string'
 
-import { useI18n } from '@/app/i18n/use-i18n'
 import { db } from '@/db'
 import { type EntityBase, Event, Institution, Person, Place } from '@/db/types'
 import { createEntityUrl } from '@/lib/create-entity-url'
+import { useI18n } from '@/lib/i18n/use-i18n'
 
 interface EntityDetailsProps {
   entity: EntityBase

@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 
-import { useRoute } from '@/app/route/use-route'
+import { useRoute } from '@/lib/route/use-route'
 
 export type UseSearchParamsResult =
   | {

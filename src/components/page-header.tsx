@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
-import { useI18n } from '@/app/i18n/use-i18n'
-import * as routes from '@/app/route/routes'
+import { useI18n } from '@/lib/i18n/use-i18n'
+import * as routes from '@/lib/route/routes'
 
 export function PageHeader(): JSX.Element {
   const { t } = useI18n<'common'>()

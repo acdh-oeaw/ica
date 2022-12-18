@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { useI18n } from '@/app/i18n/use-i18n'
+import { useI18n } from '@/lib/i18n/use-i18n'
 
 export const mainContentId = 'main-content'
 

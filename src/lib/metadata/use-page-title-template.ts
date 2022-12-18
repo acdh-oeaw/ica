@@ -1,5 +1,5 @@
-import { useAppMetadata } from '@/app/metadata/use-app-metadata'
 import { isNonNullable } from '@/lib/is-non-nullable'
+import { useAppMetadata } from '@/lib/metadata/use-app-metadata'
 
 export function usePageTitleTemplate(): (title?: string) => string {
   const metadata = useAppMetadata()

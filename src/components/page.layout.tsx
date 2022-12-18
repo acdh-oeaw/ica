@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
 import { Fragment } from 'react'
 
-import { PageFooter } from '@/app/page-footer'
-import { PageHeader } from '@/app/page-header'
-import { SkipNav } from '@/app/skip-nav'
+import { PageFooter } from '@/components/page-footer'
+import { PageHeader } from '@/components/page-header'
+import { SkipNav } from '@/components/skip-nav'
 
 interface PageLayoutProps {
   children: ReactNode
