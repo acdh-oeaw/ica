@@ -11,7 +11,7 @@ import { MainContent } from '@/components/main-content'
 import { MultiComboBox } from '@/components/multi-combobox'
 import { PopoverContent } from '@/components/popover-content'
 import { RangeSlider } from '@/components/range-slider'
-import { Select } from '@/components/select'
+import { SingleSelect } from '@/components/single-select'
 import { db } from '@/db'
 import { type Gender, genders } from '@/db/genders'
 import type { Place } from '@/db/types'
@@ -186,7 +186,7 @@ export default function GeoVisualisationPage(): JSX.Element {
                 onSelectionChange={filters.setSelectedProfessions}
                 selectedKeys={filters.selectedProfessions}
               />
-              <Select
+              <SingleSelect
                 items={labeledGenders}
                 label={t(['common', 'filter', 'gender'])}
                 messages={messages.gender}
