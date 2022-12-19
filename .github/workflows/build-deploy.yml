@@ -59,5 +59,6 @@ jobs:
       - name: Deploy to cluster
         uses: acdh-oeaw/deploy-action@v1
         with:
+          token: ${{ secrets.RANCHER_API_TOKEN }}
           project: c-zdbh8:p-hzftn
           deployment: ica:ica-website
