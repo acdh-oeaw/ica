@@ -24,7 +24,8 @@ jobs:
           - ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       # necessary because actions/setup-node does not yet support corepack yet
       # @see https://github.com/actions/setup-node/issues/531
