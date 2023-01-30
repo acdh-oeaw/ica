@@ -137,9 +137,6 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): JSX
             <Combobox.Input
               autoComplete="off"
               className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-neutral-900 focus-visible:outline-none"
-              displayValue={() => {
-                return searchTerm
-              }}
               onChange={onInputChange}
               placeholder={messages.placeholder}
               value={searchTerm}

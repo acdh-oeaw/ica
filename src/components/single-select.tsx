@@ -46,7 +46,7 @@ export function SingleSelect<T extends Item>(props: SingleSelectProps<T>): JSX.E
     >
       <div className="grid gap-y-1">
         <Listbox.Label className="text-xs font-medium text-neutral-600">{label}</Listbox.Label>
-        <Listbox.Button className="focus-visible:border-accent-500 relative w-full cursor-default overflow-hidden rounded-lg bg-neutral-0 py-2 pl-3 pr-10 text-left text-sm shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-0/75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300">
+        <Listbox.Button className="relative w-full cursor-default overflow-hidden rounded-lg bg-neutral-0 py-2 pl-3 pr-10 text-left text-sm shadow-md focus:outline-none focus-visible:border-primary-500 focus-visible:ring-2 focus-visible:ring-neutral-0/75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300">
           <span className="block truncate">{getDisplayLabel(selectedKey)}</span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
             <SelectorIcon className="h-5 w-5 text-neutral-400" aria-hidden="true" />

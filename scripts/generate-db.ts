@@ -424,11 +424,11 @@ async function addRelationById(value: RelationBase, db: Database, context: Conte
 
   const order = ['person', 'institution', 'place', 'event', 'work'] as const
 
-  function sort(source: typeof order[number], target: typeof order[number]) {
+  function sort(source: (typeof order)[number], target: (typeof order)[number]) {
     return order.indexOf(source) > order.indexOf(target) ? 1 : -1
   }
 
-  function getEndpoint(source: typeof order[number], target: typeof order[number]) {
+  function getEndpoint(source: (typeof order)[number], target: (typeof order)[number]) {
     return [source, target].sort(sort).join('')
   }
 

@@ -11,8 +11,8 @@ export function HomeHeroSection(): JSX.Element {
 
   return (
     <Fragment>
-      <section className="border-b border-t border-primary-200 bg-primary-50">
-        <div className="mx-auto max-w-7xl px-8 py-8">
+      <section className="border-y border-primary-200 bg-primary-50">
+        <div className="mx-auto max-w-7xl p-8">
           <div className="grid justify-items-center gap-4 py-32">
             <h1 className="text-center text-5xl font-extrabold tracking-tighter md:text-6xl lg:text-7xl">
               {metadata.title}
@@ -38,7 +38,7 @@ export function HomeHeroSection(): JSX.Element {
         </div>
       </section>
       <section>
-        <div className="mx-auto max-w-7xl px-8 py-8">
+        <div className="mx-auto max-w-7xl p-8">
           <div
             className="mx-auto grid max-w-xl items-start gap-4 font-medium leading-relaxed"
             dangerouslySetInnerHTML={{ __html: t(['common', 'home', 'intro']) }}
