@@ -10,6 +10,7 @@ import type { RequestOptions } from '@stefanprobst/request'
 import { createUrl, HttpError, request as _request } from '@stefanprobst/request'
 // @ts-expect-error ts does not yet fully understand package exports.
 import { timeout, TimeoutError } from '@stefanprobst/request/timeout'
+import { type HierarchyNode, stratify } from 'd3-hierarchy'
 import { format } from 'prettier'
 import serialize from 'serialize-javascript'
 
@@ -28,6 +29,9 @@ import type {
 } from '@/db/types'
 import { isNonNullable } from '@/lib/is-non-nullable'
 import { baseUrl } from '~/config/api.config'
+
+type RelationType = RelationTypeBase & { parent_class?: { id: number } | null }
+type Context = { getRelationType: (id: string) => RelationType }
 
 /**
  * The ica api will time out when being hit with many requests,
@@ -294,6 +298,7 @@ async function addPersonById(
   value: EntityBase,
   db: Database,
   collection: Set<Person['id']>,
+  context: Context,
 ): Promise<void> {
   if (db.persons.has(value.id)) return
 
@@ -318,30 +323,34 @@ async function addPersonById(
       /** we are only interested in persons in the `webclient` collection. */
       if (!collection.has(String(value.related_entity.id))) continue
 
-      const relation = await getRelation(person, value, db)
-      await addPersonById(relation.target, db, collection)
+      const relation = await getRelation(person, value, db, context)
+      await addPersonById(relation.target, db, collection, context)
       person.persons.add(relation.id)
       db.persons.get(relation.target.id)?.persons.add(relation.id)
     } else if (kind === 'place') {
-      const relation = await getRelation(person, value, db)
+      const relation = await getRelation(person, value, db, context)
       person.places.add(relation.id)
-      await addPlaceById(relation.target, db)
+      await addPlaceById(relation.target, db, context)
       db.places.get(relation.target.id)?.persons.add(relation.id)
     } else if (kind === 'institution') {
-      const relation = await getRelation(person, value, db)
+      const relation = await getRelation(person, value, db, context)
       person.institutions.add(relation.id)
-      await addInstitutionById(relation.target, db)
+      await addInstitutionById(relation.target, db, context)
       db.institutions.get(relation.target.id)?.persons.add(relation.id)
     } else if (kind === 'event') {
-      const relation = await getRelation(person, value, db)
+      const relation = await getRelation(person, value, db, context)
       person.events.add(relation.id)
-      await addEventById(relation.target, db)
+      await addEventById(relation.target, db, context)
       db.events.get(relation.target.id)?.persons.add(relation.id)
     }
   }
 }
 
-async function addInstitutionById(value: EntityBase, db: Database): Promise<void> {
+async function addInstitutionById(
+  value: EntityBase,
+  db: Database,
+  context: Context,
+): Promise<void> {
   if (db.institutions.has(value.id)) return
 
   const url = createUrl({ pathname: `entities/institution/${value.id}/`, baseUrl })
@@ -356,15 +365,15 @@ async function addInstitutionById(value: EntityBase, db: Database): Promise<void
     const kind = value.related_entity.type.toLowerCase()
 
     if (kind === 'place') {
-      const relation = await getRelation(institution, value, db)
+      const relation = await getRelation(institution, value, db, context)
       institution.places.add(relation.id)
-      await addPlaceById(relation.target, db)
+      await addPlaceById(relation.target, db, context)
       db.places.get(relation.target.id)?.institutions.add(relation.id)
     }
   }
 }
 
-async function addPlaceById(value: EntityBase, db: Database): Promise<void> {
+async function addPlaceById(value: EntityBase, db: Database, context: Context): Promise<void> {
   if (db.places.has(value.id)) return
 
   const url = createUrl({ pathname: `entities/place/${value.id}/`, baseUrl })
@@ -379,15 +388,15 @@ async function addPlaceById(value: EntityBase, db: Database): Promise<void> {
     const kind = value.related_entity.type.toLowerCase()
 
     if (kind === 'place') {
-      const relation = await getRelation(place, value, db)
+      const relation = await getRelation(place, value, db, context)
       place.places.add(relation.id)
-      await addPlaceById(relation.target, db)
+      await addPlaceById(relation.target, db, context)
       db.places.get(relation.target.id)?.places.add(relation.id)
     }
   }
 }
 
-async function addEventById(value: EntityBase, db: Database): Promise<void> {
+async function addEventById(value: EntityBase, db: Database, context: Context): Promise<void> {
   if (db.events.has(value.id)) return
 
   const url = createUrl({ pathname: `entities/event/${value.id}/`, baseUrl })
@@ -402,15 +411,15 @@ async function addEventById(value: EntityBase, db: Database): Promise<void> {
     const kind = value.related_entity.type.toLowerCase()
 
     if (kind === 'place') {
-      const relation = await getRelation(event, value, db)
+      const relation = await getRelation(event, value, db, context)
       event.places.add(relation.id)
-      await addPlaceById(relation.target, db)
+      await addPlaceById(relation.target, db, context)
       db.places.get(relation.target.id)?.events.add(relation.id)
     }
   }
 }
 
-async function addRelationById(value: RelationBase, db: Database): Promise<void> {
+async function addRelationById(value: RelationBase, db: Database, context: Context): Promise<void> {
   if (db.relations.has(value.id)) return
 
   const order = ['person', 'institution', 'place', 'event', 'work'] as const
@@ -433,7 +442,7 @@ async function addRelationById(value: RelationBase, db: Database): Promise<void>
   const relation = createRelation(response, value)
   db.relations.set(relation.id, relation)
 
-  const type = relation.type
+  const type = context.getRelationType(relation.type.id)
   const [source, target] = [relation.source.kind, relation.target.kind].sort(sort) as [
     EntityKind,
     EntityKind,
@@ -447,9 +456,10 @@ async function getRelation(
   source: EntityBase,
   base: ApisRelationBase,
   db: Database,
+  context: Context,
 ): Promise<Relation> {
   const relationBase = createRelationBase(source, base)
-  await addRelationById(relationBase, db)
+  await addRelationById(relationBase, db, context)
   const relation = db.relations.get(relationBase.id)
   assert(relation != null, 'Missing relation.')
   return relation
@@ -484,6 +494,86 @@ async function getPersons(): Promise<Array<Person>> {
 
 //
 
+async function buildRelationTypeHierarchy() {
+  log.info('Building relation type hierarchy.')
+
+  const vocabularies = [
+    'eventeventrelation',
+    'eventworkrelation',
+    'institutioneventrelation',
+    'institutioninstitutionrelation',
+    'institutionplacerelation',
+    'institutionworkrelation',
+    'personeventrelation',
+    'personinstitutionrelation',
+    'personpersonrelation',
+    'personplacerelation',
+    'personworkrelation',
+    'placeeventrelation',
+    'placeplacerelation',
+    'placeworkrelation',
+    'workworkrelation',
+  ]
+
+  const results: Array<RelationType> = []
+
+  for (const vocabulary of vocabularies) {
+    const url = createUrl({
+      pathname: `vocabularies/${vocabulary}/`,
+      baseUrl,
+      /** Assume that no relation type vocabulary has more than 1000 entries. */
+      searchParams: { limit: 1000 },
+    })
+
+    const response = await request(url, options)
+    const _results = response.results as Array<{
+      id: number
+      name: string
+      parent_class: { id: number } | null
+    }>
+
+    results.push(
+      ..._results.map((result) => {
+        return { id: String(result.id), label: result.name, parent_class: result.parent_class }
+      }),
+    )
+  }
+
+  /**
+   * Currently, the person-instition relation types have two roots.
+   * https://ica.acdh-dev.oeaw.ac.at/apis/api/vocabularies/personinstitutionrelation/11397/
+   * should probably be a child of "related".
+   */
+  const tree = stratify<RelationType>().parentId((d) => {
+    if (d.parent_class === undefined) return undefined
+    if (d.parent_class === null) return 'root'
+    return String(d.parent_class.id)
+  })([{ id: 'root', label: 'Root' }, ...results])
+
+  return tree
+}
+
+//
+
+function getTopLevelRelationType(tree: HierarchyNode<RelationType>, id: string) {
+  const node = tree.find((d) => {
+    return d.id === id
+  })
+
+  assert(node != null, 'Unknown relation type.')
+
+  const ancestors = node.ancestors()
+  /** Ignore top-level "root" node, and generic "related" ancestor. */
+  const type = ancestors.at(-3)
+
+  /** Some relation actually have a generic "related" type. */
+  if (type == null) return node.data
+
+  return type.data
+}
+
+//
+
 async function generate() {
   const db: Database = {
     events: new Map(),
@@ -495,6 +585,17 @@ async function generate() {
     relationTypes: new Map(),
   }
 
+  /**
+   * We want less granular relation types in the UI, so we fetch the hierarchy,
+   * and map relation types to a top-level bucket.
+   */
+  const tree = await buildRelationTypeHierarchy()
+  const context: Context = {
+    getRelationType(id: string) {
+      return getTopLevelRelationType(tree, id)
+    },
+  }
+
   /** Persons in the `webclient` collection. */
   const persons = await getPersons()
   const ids = new Set(
@@ -504,7 +605,7 @@ async function generate() {
   )
 
   for (const person of persons) {
-    await addPersonById(person, db, ids)
+    await addPersonById(person, db, ids, context)
   }
 
   //

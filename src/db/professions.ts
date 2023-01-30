@@ -165,6 +165,7 @@ export const professions = new Map([
   ['10572', { kind: 'profession', id: '10572', label: 'Dirigent' }],
   ['11117', { kind: 'profession', id: '11117', label: 'Bandleader' }],
   ['7845', { kind: 'profession', id: '7845', label: 'literary critic (Q4263842)' }],
+  ['6524', { kind: 'profession', id: '6524', label: 'comedian (Q245068)' }],
   [
     '8894',
     {
@@ -196,6 +197,17 @@ export const professions = new Map([
     { kind: 'profession', id: '11127', label: 'scientist (Q901) \u003E\u003E natural scientist' },
   ],
   ['8790', { kind: 'profession', id: '8790', label: 'internist (Q15924224)' }],
+  ['7264', { kind: 'profession', id: '7264', label: 'pediatrician (Q1919436)' }],
+  ['10567', { kind: 'profession', id: '10567', label: 'actress' }],
+  ['10817', { kind: 'profession', id: '10817', label: 'otologist' }],
+  ['6480', { kind: 'profession', id: '6480', label: 'diplomat (Q193391)' }],
+  ['6890', { kind: 'profession', id: '6890', label: 'painter (Q1028181)' }],
+  ['7917', { kind: 'profession', id: '7917', label: "children's writer (Q4853732)" }],
+  ['8485', { kind: 'profession', id: '8485', label: 'textile artist (Q10694573)' }],
+  ['8546', { kind: 'profession', id: '8546', label: 'printmaker (Q11569986)' }],
+  ['10308', { kind: 'profession', id: '10308', label: "children's illustrator (Q64170610)" }],
+  ['6466', { kind: 'profession', id: '6466', label: 'librarian (Q182436)' }],
+  ['7838', { kind: 'profession', id: '7838', label: 'publicist (Q4178004)' }],
   [
     '8431',
     {
@@ -204,8 +216,5 @@ export const professions = new Map([
       label: 'academic (Q3400985) \u003E\u003E lecturer (Q9379869)',
     },
   ],
-  ['7264', { kind: 'profession', id: '7264', label: 'pediatrician (Q1919436)' }],
-  ['10567', { kind: 'profession', id: '10567', label: 'actress' }],
-  ['10817', { kind: 'profession', id: '10817', label: 'otologist' }],
-  ['6480', { kind: 'profession', id: '6480', label: 'diplomat (Q193391)' }],
+  ['11143', { kind: 'profession', id: '11143', label: 'Schriftsteller' }],
 ])

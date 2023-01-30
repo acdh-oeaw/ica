@@ -218,30 +218,6 @@ export const events = new Map([
     },
   ],
   [
-    '5172',
-    {
-      kind: 'event',
-      id: '5172',
-      label: 'psychoanalytic treatment by Sigmund Freud',
-      persons: new Set(['5173']),
-      places: new Set([]),
-      institutions: new Set([]),
-      events: new Set([]),
-    },
-  ],
-  [
-    '5220',
-    {
-      kind: 'event',
-      id: '5220',
-      label: 'regular meetings with journalists at Café Louvre',
-      persons: new Set(['5221', '6562']),
-      places: new Set([]),
-      institutions: new Set([]),
-      events: new Set([]),
-    },
-  ],
-  [
     '5222',
     {
       kind: 'event',
@@ -314,6 +290,18 @@ export const events = new Map([
     },
   ],
   [
+    '9864',
+    {
+      kind: 'event',
+      id: '9864',
+      label: "Sudays at Salka's: Musik, Literatur und Film im amerikanischen Exil",
+      persons: new Set(['9865']),
+      places: new Set([]),
+      institutions: new Set([]),
+      events: new Set([]),
+    },
+  ],
+  [
     '2429',
     {
       kind: 'event',
@@ -345,6 +333,31 @@ export const events = new Map([
       label: 'Die schöne Helena',
       persons: new Set(['8078']),
       places: new Set([]),
+      institutions: new Set([]),
+      events: new Set([]),
+    },
+  ],
+  [
+    '7764',
+    {
+      kind: 'event',
+      id: '7764',
+      label: 'highly successful performance of "Vienna at Night"',
+      persons: new Set(['7765']),
+      places: new Set([]),
+      institutions: new Set([]),
+      events: new Set([]),
+    },
+  ],
+  [
+    '7790',
+    {
+      kind: 'event',
+      id: '7790',
+      label:
+        'open air concert to celebrate the end of the war in Grant Park, Chicago, attended by 60,000 people',
+      persons: new Set(['7791']),
+      places: new Set(['7792']),
       institutions: new Set([]),
       events: new Set([]),
     },
@@ -392,6 +405,31 @@ export const events = new Map([
       label: 'Centenary Celebrations of Charles Darwin’s birthday',
       persons: new Set(['4047']),
       places: new Set([]),
+      institutions: new Set([]),
+      events: new Set([]),
+    },
+  ],
+  [
+    '8990',
+    {
+      kind: 'event',
+      id: '8990',
+      label:
+        'Über die Elemente einer religiösen Erneuerung in der Gegenwart (“On the Elements of a Religious Renewal in the Present Age”)',
+      persons: new Set(['9043']),
+      places: new Set(['8991']),
+      institutions: new Set([]),
+      events: new Set([]),
+    },
+  ],
+  [
+    '8607',
+    {
+      kind: 'event',
+      id: '8607',
+      label: 'Schubert Centennial (10. Deutsches Sängerbundfest)',
+      persons: new Set(['8615']),
+      places: new Set(['8616']),
       institutions: new Set([]),
       events: new Set([]),
     },

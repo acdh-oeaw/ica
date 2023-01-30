@@ -27,6 +27,14 @@
         "uriFormat": "%s",
         "action": "debugWithChrome"
       }
+    },
+    {
+      "name": "DB script",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["run", "create:db"]
     }
   ]
 }
