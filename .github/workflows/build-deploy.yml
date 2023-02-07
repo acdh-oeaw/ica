@@ -61,4 +61,4 @@ jobs:
         with:
           token: ${{ secrets.RANCHER_API_TOKEN }}
           project: c-m-6hwgqq2g:p-g45g4
-          deployment: ica:ica-website
+          deployment: ica-website:ica-website
