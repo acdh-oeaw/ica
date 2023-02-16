@@ -1,9 +1,11 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { Fragment } from 'react'
 
 import { useI18n } from '@/lib/i18n/use-i18n'
 import { useAppMetadata } from '@/lib/metadata/use-app-metadata'
 import * as routes from '@/lib/route/routes'
+import hero from '~/public/assets/images/hero.jpg'
 
 export function HomeHeroSection(): JSX.Element {
   const { t } = useI18n<'common'>()
@@ -11,8 +13,14 @@ export function HomeHeroSection(): JSX.Element {
 
   return (
     <Fragment>
-      <section className="border-y border-primary-200 bg-primary-50">
-        <div className="mx-auto max-w-7xl p-8">
+      <section className="relative border-y border-primary-200 bg-primary-50">
+        <Image
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover opacity-40"
+          loading="lazy"
+          src={hero}
+        />
+        <div className="relative mx-auto max-w-7xl p-8">
           <div className="grid justify-items-center gap-4 py-32">
             <h1 className="text-center text-5xl font-extrabold tracking-tighter md:text-6xl lg:text-7xl">
               {metadata.title}
@@ -38,9 +46,9 @@ export function HomeHeroSection(): JSX.Element {
         </div>
       </section>
       <section>
-        <div className="mx-auto max-w-7xl p-8">
+        <div className="mx-auto w-full max-w-7xl p-8">
           <div
-            className="mx-auto grid max-w-xl items-start gap-4 font-medium leading-relaxed"
+            className="mx-auto grid w-full max-w-2xl items-start gap-4 font-medium leading-relaxed"
             dangerouslySetInnerHTML={{ __html: t(['common', 'home', 'intro']) }}
           />
         </div>

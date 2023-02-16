@@ -47,7 +47,7 @@ export const metadata: Record<Locale, AppMetadata> = {
     locale: 'en',
     title: 'Ideas crossing the Atlantic',
     shortTitle: 'ICA',
-    description: 'A Visualisation of Transatlantic Networks and Emigration (from Central Europe)',
+    description: 'A Visualisation of Transatlantic Networks and Emigration from Central Europe',
     logo: {
       path: './public/assets/images/logo.svg',
       maskable: false,

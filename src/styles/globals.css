@@ -103,52 +103,6 @@ h6 {
   color: var(--color-heading-text);
 }
 
-iframe {
-  border: none;
-}
-
-img {
-  object-fit: cover;
-}
-
-img[width][height] {
-  height: auto;
-}
-
-img[src$='.svg'] {
-  width: 100%;
-  max-width: none;
-  height: auto;
-}
-
-input[type='search']::-webkit-search-cancel-button,
-input[type='search']::-webkit-search-decoration {
-  appearance: none;
-}
-
-ol[role='list'],
-ul[role='list'] {
-  list-style: none;
-}
-
-pre {
-  overflow: auto;
-}
-
-summary {
-  cursor: pointer;
-}
-
-table {
-  border-collapse: collapse;
-  border-color: currentColor;
-  text-indent: 0;
-}
-
-textarea {
-  resize: vertical;
-}
-
 [hidden] {
   display: none !important;
 }

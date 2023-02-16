@@ -77,6 +77,7 @@
     "@stefanprobst/prettier-config": "^2.0.3",
     "@stefanprobst/stylelint-config": "^2.5.1",
     "@stefanprobst/tsconfig": "^2.2.2",
+    "@tailwindcss/typography": "^0.5.9",
     "@types/d3": "^7.4.0",
     "@types/d3-hierarchy": "^3.1.2",
     "@types/geojson": "^7946.0.10",

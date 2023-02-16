@@ -48,40 +48,47 @@ export const dictionary: Dictionary = {
     'explore-map': 'Explore Map',
     intro: `
     <p>
-      During the last ten years the members of the interdisciplinary commission <em>The North Atlantic
-      Triangle</em> have explored the close transatlantic links between Europeans and North Americans
-      and the exchange of people and ideas in the 19th, 20th and 21st centuries. They have in
-      particular documented the networks established especially in the years between the two World
-      Wars in a number of volumes, and have underlined the importance of these relationships for
-      the refugees from Nazi Germany, including Austria after the Anschluss, who sought a safe
-      haven in the USA. In the initial phase of establishing the database the ties of friendship
-      between several of the many American foreign correspondents simultaneously stationed in
-      Vienna (!) and a number of visiting writers (as well as numerous physicians attending
-      courses arranged by the American Medical Association in Vienna) on the one hand, and members
-      of the Austrian social and cultural elite, on the other, are highlighted, and the fact that
-      the proximity of their residences in Vienna facilitated contacts and interaction is
-      demonstrated. These networks later – through affidavits supplied by American friends –
-      facilitated the search for safety in North America, where the refugees found support and
-      employment, especially close to the Atlantic and the Pacific coasts – particularly in
-      academic fields, and in the realms of music and the theater. This fact is visualized with
-      the help of the Geographic Information System. The database will also illustrate the
-      fortunes and activities of the (relatively few) returnees among the emigrants, and show the
-      effect and significance of the exchange of ideas across the North Atlantic, all so far
-      documented in the ten volumes published by the commission since 2012.
+      During the last ten years the members of the interdisciplinary North Atlantic
+      Triangle commission have explored the close transatlantic links between
+      Europeans and North Americans and the exchange of people and ideas in the
+      19th, 20th and 21st centuries. They have in particular documented the networks
+      established especially in the years between the two World Wars, and have
+      underlined the importance of these relationships for the refugees from Nazi
+      Germany, including Austria after the Anschluss, who sought a safe haven in the
+      USA.
     </p>
     <p>
-      Search in the database will eventually permit interested users to identify key agents in the
-      transatlantic cultural exchange, especially between the 1920s and 1960s. It will allow them
-      to recognize the role of encounters in the biographies of scores of individuals in Central
-      Europe and in the USA and Canada whose autobiographies and correspondence reflect these
-      ties, and permit the users to note the stimulation of professional careers in the media, the
-      arts and in academe by such contacts. It will also encourage the users to trace the impact
-      of transatlantic interaction on the genesis of non-fictional and fictional texts, on plays
-      and musical compositions, and on the evolution of (shared) philosophical and political
-      ideas. It will also help to assess the consequences of such exchanges for the perception of
-      the different societies and the development of their various institutions. The database will
-      aid the users in their attempts to comprehend the historical shifts in the relationship
-      between the countries of Europe and North America.
+      The database established by the commission shows the ties of friendship
+      between many American foreign correspondents simultaneously stationed in
+      Vienna and visiting writers as well as numerous physicians attending courses
+      arranged by the American Medical Association in Vienna, on the one hand, and
+      members of the Austrian social and cultural elite, on the other. The database
+      demonstrates the fact that the proximity of their residences in Vienna
+      facilitated contacts and interaction, as is visualized with the help of the
+      Geographic Information System. Later these networks facilitated the search for
+      safety in North America, where the refugees needed affidavits supplied by
+      their American friends to find support and employment. This happened
+      especially close to the Atlantic and the Pacific coasts and particularly in
+      some academic fields, and in the realms of music and the theater.
+    </p>
+    <p>
+      Search in the database will permit interested users to identify key agents in
+      the transatlantic cultural exchange, especially between the 1920s and 1960s,
+      and to trace their careers. It will allow users to recognize the role of
+      encounters for scores of individuals in Central Europe and in the USA and
+      Canada, whose autobiographies and correspondence reflect these ties. It will
+      also enable users to assess the impact of transatlantic interaction on the
+      genesis of non-fictional and fictional texts, on plays and musical
+      compositions, and on the evolution of (shared) philosophical and political
+      ideas. It will also help to identify the consequences of these exchanges for
+      the perception of the societies on the other side of the Atlantic, and for the
+      development of various institutions. The database will also illustrate the
+      fortunes and activities of the (relatively few) returnees among the emigrants,
+      and show the effect and significance of the exchanges across the North
+      Atlantic, all so far documented in the ten volumes published by the commission
+      since 2012.The database will aid the users in their attempts to comprehend the
+      historical shifts in the relationship between the countries of Europe and
+      North America.
     </p>`,
   },
   form: {
