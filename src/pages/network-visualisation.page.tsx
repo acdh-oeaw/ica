@@ -147,8 +147,10 @@ export default function GeoVisualisationPage(): JSX.Element {
           {selectedEntity != null ? (
             <>
               <hr />
-              <section className="grid gap-4">
-                <EntityDetails entity={selectedEntity} />
+              <section className="relative grid flex-1 gap-4">
+                <div className="absolute inset-0 overflow-auto">
+                  <EntityDetails entity={selectedEntity} />
+                </div>
               </section>
             </>
           ) : null}

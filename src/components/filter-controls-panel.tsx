@@ -14,7 +14,7 @@ export function FilterControlsPanel(props: FilterControlsPanelProps): JSX.Elemen
 
   return (
     <form
-      className="grid content-start gap-6 border-l border-neutral-200 p-6"
+      className="flex flex-col gap-6 border-l border-neutral-200 p-6"
       id={name}
       name={name}
       noValidate
