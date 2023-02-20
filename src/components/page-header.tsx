@@ -16,6 +16,7 @@ export function PageHeader(): JSX.Element {
           >
             {t(['common', 'pages', 'home', 'metadata', 'title'])}
           </Link>
+          <strong className="ml-4">(work in progress)</strong>
         </div>
         <nav>
           <ul className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2" role="list">
