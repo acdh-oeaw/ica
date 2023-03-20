@@ -1,28 +1,28 @@
-import { MoonIcon, SunIcon } from '@heroicons/react/24/outline'
-import { useTheme } from '@stefanprobst/next-theme'
+import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
+import { useTheme } from "@stefanprobst/next-theme";
 
-import { useI18n } from '@/lib/i18n/use-i18n'
+import { useI18n } from "@/lib/i18n/use-i18n";
 
 export function ColorSchemeToggle(): JSX.Element | null {
-  const { t } = useI18n<'common'>()
-  const { theme, toggleTheme } = useTheme()
+	const { t } = useI18n<"common">();
+	const { theme, toggleTheme } = useTheme();
 
-  if (theme == null) return null
+	if (theme == null) return null;
 
-  function onToggleColorScheme() {
-    toggleTheme()
-  }
+	function onToggleColorScheme() {
+		toggleTheme();
+	}
 
-  const icons = {
-    light: SunIcon,
-    dark: MoonIcon,
-  }
+	const icons = {
+		light: SunIcon,
+		dark: MoonIcon,
+	};
 
-  const Icon = icons[theme]
+	const Icon = icons[theme];
 
-  return (
-    <button aria-label={t(['common', 'app', 'toggle-color-scheme'])} onClick={onToggleColorScheme}>
-      <Icon width="1em" />
-    </button>
-  )
+	return (
+		<button aria-label={t(["common", "app", "toggle-color-scheme"])} onClick={onToggleColorScheme}>
+			<Icon width="1em" />
+		</button>
+	);
 }

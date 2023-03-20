@@ -1,164 +1,161 @@
 {
-  "name": "@acdh-oeaw/ica",
-  "private": true,
-  "version": "0.1.0",
-  "type": "module",
-  "license": "MIT",
-  "scripts": {
-    "analyze-bundle": "BUNDLE_ANALYZER='enabled' next build --no-lint",
-    "build": "next build",
-    "create:db": "tsx ./scripts/generate-db.ts",
-    "dev": "next dev",
-    "format:check": "prettier . --cache --check --ignore-path .gitignore",
-    "format:fix": "pnpm run format:check --write",
-    "generate": "run-p 'generate:*'",
-    "generate:favicons": "tsx ./scripts/generate-favicons.ts",
-    "lint:check": "run-p 'lint:*:check'",
-    "lint:fix": "run-p 'lint:*:fix'",
-    "lint:code:check": "eslint . --cache --cache-location .next/cache/eslint/ --ignore-path .gitignore",
-    "lint:code:fix": "pnpm run lint:code:check --fix",
-    "lint:styles:check": "stylelint \"**/*.css\" --allow-empty-input --cache --cache-location .next/cache/stylelint/ --ignore-path .gitignore",
-    "lint:styles:fix": "pnpm run lint:styles:check --fix",
-    "prepare": "run-s setup generate",
-    "setup": "simple-git-hooks || exit 0",
-    "start": "next start",
-    "test": "exit 0",
-    "types:check": "tsc --noEmit",
-    "validate": "run-p format:check lint:check types:check test"
-  },
-  "engines": {
-    "node": ">=18",
-    "pnpm": ">=7"
-  },
-  "packageManager": "pnpm@7.18.2",
-  "dependencies": {
-    "@fontsource/inter": "^4.5.15",
-    "@headlessui/react": "^1.7.8",
-    "@heroicons/react": "^2.0.14",
-    "@next/bundle-analyzer": "^13.1.6",
-    "@stefanprobst/assert": "^1.0.3",
-    "@stefanprobst/group-by": "^1.1.0",
-    "@stefanprobst/is-nonempty-string": "^1.0.1",
-    "@stefanprobst/key-by": "^1.0.1",
-    "@stefanprobst/log": "^1.0.3",
-    "@stefanprobst/next-error-boundary": "^3.0.2",
-    "@stefanprobst/next-i18n": "^1.2.0",
-    "@stefanprobst/next-page-metadata": "^2.0.5",
-    "@stefanprobst/next-theme": "^2.0.6",
-    "@stefanprobst/object": "^1.2.0",
-    "@stefanprobst/pick": "^1.0.3",
-    "@stefanprobst/request": "^0.2.1",
-    "@tanstack/react-virtual": "^3.0.0-beta.41",
-    "clsx": "^1.2.1",
-    "d3": "^7.8.2",
-    "force-graph": "^1.42.18",
-    "mapbox-gl": "npm:empty-npm-package@^1.0.0",
-    "maplibre-gl": "^2.4.0",
-    "next": "^13.1.6",
-    "nprogress": "^0.2.0",
-    "react": "^18.2.0",
-    "react-aria": "^3.22.0",
-    "react-dom": "^18.2.0",
-    "react-map-gl": "^7.0.21",
-    "react-stately": "^3.20.0",
-    "sharp": "^0.31.3",
-    "swr": "^2.0.3",
-    "tailwindcss": "^3.2.4"
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^17.4.2",
-    "@headlessui/tailwindcss": "^0.1.2",
-    "@next/eslint-plugin-next": "^13.1.6",
-    "@stefanprobst/commitlint-config": "^1.0.3",
-    "@stefanprobst/eslint-config": "^1.0.10",
-    "@stefanprobst/eslint-config-next": "^7.0.6",
-    "@stefanprobst/eslint-config-react": "^1.0.4",
-    "@stefanprobst/favicons": "^2.1.1",
-    "@stefanprobst/prettier-config": "^2.0.3",
-    "@stefanprobst/stylelint-config": "^2.5.1",
-    "@stefanprobst/tsconfig": "^2.2.2",
-    "@tailwindcss/typography": "^0.5.9",
-    "@types/d3": "^7.4.0",
-    "@types/d3-hierarchy": "^3.1.2",
-    "@types/geojson": "^7946.0.10",
-    "@types/node": "^18.11.18",
-    "@types/nprogress": "^0.2.0",
-    "@types/prettier": "^2.7.2",
-    "@types/react": "^18.0.27",
-    "@types/react-dom": "^18.0.10",
-    "@types/serialize-javascript": "^5.0.2",
-    "@types/sharp": "^0.31.1",
-    "autoprefixer": "^10.4.13",
-    "d3-hierarchy": "^3.1.2",
-    "eslint": "^8.33.0",
-    "eslint-plugin-tailwindcss": "^3.8.2",
-    "lint-staged": "^13.1.0",
-    "npm-run-all": "^4.1.5",
-    "postcss": "^8.4.21",
-    "postcss-custom-media": "^9.1.1",
-    "postcss-nesting": "^11.0.1",
-    "prettier": "^2.8.3",
-    "serialize-javascript": "^6.0.1",
-    "simple-git-hooks": "^2.8.1",
-    "stylelint": "^14.16.1",
-    "ts-node": "^10.9.1",
-    "tsx": "^3.12.2",
-    "typescript": "^4.9.4"
-  },
-  "browserslist": {
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ],
-    "production": [
-      ">=0.75%",
-      "not dead",
-      "not op_mini all"
-    ]
-  },
-  "commitlint": {
-    "extends": "@stefanprobst/commitlint-config"
-  },
-  "eslintConfig": {
-    "extends": [
-      "@stefanprobst/eslint-config",
-      "@stefanprobst/eslint-config-react",
-      "@stefanprobst/eslint-config-next",
-      "plugin:eslint-plugin-tailwindcss/recommended"
-    ],
-    "settings": {
-      "tailwindcss": {
-        "config": "./tailwind.config.cjs"
-      }
-    }
-  },
-  "lint-staged": {
-    "*.@(cjs|js|mjs|ts|tsx)": [
-      "eslint --cache --cache-location .next/cache/eslint/ --fix",
-      "prettier --cache --write"
-    ],
-    "*.css": [
-      "stylelint --cache --cache-location .next/cache/stylelint/ --fix",
-      "prettier --cache --write"
-    ],
-    "*.!(cjs|css|js|mjs|ts|tsx)": "prettier --cache --ignore-unknown --write"
-  },
-  "postcss": {
-    "plugins": {
-      "postcss-custom-media": {},
-      "tailwindcss/nesting": "postcss-nesting",
-      "tailwindcss": {},
-      "autoprefixer": {}
-    }
-  },
-  "prettier": "@stefanprobst/prettier-config",
-  "simple-git-hooks": {
-    "commit-msg": "pnpm exec commitlint --edit",
-    "pre-commit": "pnpm exec lint-staged",
-    "pre-push": "pnpm run validate"
-  },
-  "stylelint": {
-    "extends": "@stefanprobst/stylelint-config"
-  }
+	"name": "@acdh-oeaw/ica",
+	"private": true,
+	"license": "MIT",
+	"type": "module",
+	"engines": {
+		"node": ">=18",
+		"pnpm": ">=7"
+	},
+	"packageManager": "pnpm@7.30.0",
+	"scripts": {
+		"analyze-bundle": "BUNDLE_ANALYZER='enabled' next build --no-lint",
+		"build": "next build",
+		"create:db": "tsx ./scripts/generate-db.ts",
+		"dev": "next dev",
+		"format:check": "prettier . --cache --check --ignore-path .gitignore",
+		"format:fix": "pnpm run format:check --write",
+		"generate": "run-p 'generate:*'",
+		"generate:favicons": "tsx ./scripts/generate-favicons.ts",
+		"lint:check": "run-p 'lint:*:check'",
+		"lint:fix": "run-p 'lint:*:fix'",
+		"lint:code:check": "eslint . --cache --cache-location .next/cache/eslint/ --ignore-path .gitignore",
+		"lint:code:fix": "pnpm run lint:code:check --fix",
+		"lint:styles:check": "stylelint \"**/*.css\" --allow-empty-input --cache --cache-location .next/cache/stylelint/ --ignore-path .gitignore",
+		"lint:styles:fix": "pnpm run lint:styles:check --fix",
+		"prepare": "run-s setup generate",
+		"setup": "simple-git-hooks || exit 0",
+		"start": "next start",
+		"test": "exit 0",
+		"types:check": "tsc --noEmit",
+		"validate": "run-p format:check lint:check types:check test"
+	},
+	"dependencies": {
+		"@fontsource/inter": "^4.5.15",
+		"@headlessui/react": "^1.7.8",
+		"@heroicons/react": "^2.0.16",
+		"@next/bundle-analyzer": "^13.2.4",
+		"@stefanprobst/assert": "^1.0.3",
+		"@stefanprobst/group-by": "^1.1.0",
+		"@stefanprobst/is-nonempty-string": "^1.0.1",
+		"@stefanprobst/key-by": "^1.0.1",
+		"@stefanprobst/log": "^1.0.3",
+		"@stefanprobst/next-error-boundary": "^3.0.2",
+		"@stefanprobst/next-i18n": "^1.2.0",
+		"@stefanprobst/next-page-metadata": "^2.0.5",
+		"@stefanprobst/next-theme": "^2.0.6",
+		"@stefanprobst/object": "^1.2.0",
+		"@stefanprobst/pick": "^1.0.3",
+		"@stefanprobst/request": "^0.2.1",
+		"@tanstack/react-virtual": "^3.0.0-beta.41",
+		"clsx": "^1.2.1",
+		"d3": "^7.8.2",
+		"force-graph": "^1.43.0",
+		"mapbox-gl": "npm:empty-npm-package@^1.0.0",
+		"maplibre-gl": "^2.4.0",
+		"next": "^13.2.4",
+		"nprogress": "^0.2.0",
+		"react": "^18.2.0",
+		"react-aria": "^3.23.1",
+		"react-dom": "^18.2.0",
+		"react-map-gl": "^7.0.21",
+		"react-stately": "^3.21.0",
+		"sharp": "^0.31.3",
+		"swr": "^2.1.0",
+		"tailwindcss": "^3.2.7"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^17.4.4",
+		"@headlessui/tailwindcss": "^0.1.2",
+		"@next/eslint-plugin-next": "^13.2.4",
+		"@stefanprobst/commitlint-config": "^1.0.3",
+		"@stefanprobst/eslint-config": "^1.0.10",
+		"@stefanprobst/eslint-config-next": "^7.0.6",
+		"@stefanprobst/eslint-config-react": "^1.0.4",
+		"@stefanprobst/favicons": "^2.2.2",
+		"@stefanprobst/prettier-config": "^3.0.0",
+		"@stefanprobst/stylelint-config": "^3.0.2",
+		"@stefanprobst/tsconfig": "^3.0.1",
+		"@tailwindcss/typography": "^0.5.9",
+		"@types/d3": "^7.4.0",
+		"@types/geojson": "^7946.0.10",
+		"@types/node": "^18.15.3",
+		"@types/nprogress": "^0.2.0",
+		"@types/prettier": "^2.7.2",
+		"@types/react": "^18.0.28",
+		"@types/react-dom": "^18.0.11",
+		"@types/serialize-javascript": "^5.0.2",
+		"@types/sharp": "^0.31.1",
+		"autoprefixer": "^10.4.14",
+		"eslint": "^8.36.0",
+		"eslint-plugin-tailwindcss": "^3.10.1",
+		"lint-staged": "^13.2.0",
+		"npm-run-all": "^4.1.5",
+		"postcss": "^8.4.21",
+		"postcss-custom-media": "^9.1.2",
+		"postcss-nesting": "^11.2.1",
+		"prettier": "^2.8.5",
+		"serialize-javascript": "^6.0.1",
+		"simple-git-hooks": "^2.8.1",
+		"stylelint": "^15.3.0",
+		"ts-node": "^10.9.1",
+		"tsx": "^3.12.5",
+		"typescript": "^5.0.2"
+	},
+	"browserslist": {
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		],
+		"production": [
+			">=0.75%",
+			"not dead",
+			"not op_mini all"
+		]
+	},
+	"commitlint": {
+		"extends": "@stefanprobst/commitlint-config"
+	},
+	"eslintConfig": {
+		"extends": [
+			"@stefanprobst/eslint-config",
+			"@stefanprobst/eslint-config-react",
+			"@stefanprobst/eslint-config-next",
+			"plugin:eslint-plugin-tailwindcss/recommended"
+		],
+		"settings": {
+			"tailwindcss": {
+				"config": "./tailwind.config.cjs"
+			}
+		}
+	},
+	"lint-staged": {
+		"*.@(cjs|js|mjs|ts|tsx)": [
+			"eslint --cache --cache-location .next/cache/eslint/ --fix",
+			"prettier --cache --write"
+		],
+		"*.css": [
+			"stylelint --cache --cache-location .next/cache/stylelint/ --fix",
+			"prettier --cache --write"
+		],
+		"*.!(cjs|css|js|mjs|ts|tsx)": "prettier --cache --ignore-unknown --write"
+	},
+	"postcss": {
+		"plugins": {
+			"postcss-custom-media": {},
+			"tailwindcss/nesting": "postcss-nesting",
+			"tailwindcss": {},
+			"autoprefixer": {}
+		}
+	},
+	"prettier": "@stefanprobst/prettier-config",
+	"simple-git-hooks": {
+		"commit-msg": "pnpm exec commitlint --edit",
+		"pre-commit": "pnpm exec lint-staged",
+		"pre-push": "pnpm run validate"
+	},
+	"stylelint": {
+		"extends": "@stefanprobst/stylelint-config"
+	}
 }

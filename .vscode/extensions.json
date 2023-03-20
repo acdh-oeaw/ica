@@ -1,10 +1,10 @@
 {
-  "recommendations": [
-    "bradlc.vscode-tailwindcss",
-    "dbaeumer.vscode-eslint",
-    "editorconfig.editorconfig",
-    "esbenp.prettier-vscode",
-    "mikestead.dotenv",
-    "stylelint.vscode-stylelint"
-  ]
+	"recommendations": [
+		"bradlc.vscode-tailwindcss",
+		"dbaeumer.vscode-eslint",
+		"editorconfig.editorconfig",
+		"esbenp.prettier-vscode",
+		"mikestead.dotenv",
+		"stylelint.vscode-stylelint"
+	]
 }

@@ -1,11 +1,11 @@
-import { useRoute } from '@/lib/route/use-route'
+import { useRoute } from "@/lib/route/use-route";
 
 export interface UsePathnameResult {
-  pathname: string
+	pathname: string;
 }
 
 export function usePathname(): UsePathnameResult {
-  const route = useRoute()
+	const route = useRoute();
 
-  return { pathname: route.pathname }
+	return { pathname: route.pathname };
 }

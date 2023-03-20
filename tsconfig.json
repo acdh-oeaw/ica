@@ -1,26 +1,26 @@
 {
-  "extends": "@stefanprobst/tsconfig",
-  "compilerOptions": {
-    "baseUrl": ".",
-    "exactOptionalPropertyTypes": false,
-    "paths": {
-      "@/*": ["./src/*"],
-      "~/*": ["./*"]
-    }
-  },
-  "include": [
-    "next-env.d.ts",
-    "env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.config.cjs",
-    "**/*.config.mjs"
-  ],
-  "ts-node": {
-    "esm": true,
-    "experimentalSpecifierResolution": "node",
-    "swc": false,
-    "transpileOnly": true
-  },
-  "exclude": ["node_modules"]
+	"extends": "@stefanprobst/tsconfig",
+	"compilerOptions": {
+		"baseUrl": ".",
+		"exactOptionalPropertyTypes": false,
+		"paths": {
+			"@/*": ["./src/*"],
+			"~/*": ["./*"]
+		}
+	},
+	"include": [
+		"next-env.d.ts",
+		"env.d.ts",
+		"**/*.ts",
+		"**/*.tsx",
+		"**/*.config.cjs",
+		"**/*.config.mjs"
+	],
+	"ts-node": {
+		"esm": true,
+		"experimentalSpecifierResolution": "node",
+		"swc": false,
+		"transpileOnly": true
+	},
+	"exclude": ["node_modules"]
 }

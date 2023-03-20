@@ -1,34 +1,34 @@
 {
-  "css.validate": false,
-  "editor.codeActionsOnSave": {
-    "source.fixAll": true
-  },
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
-  "editor.inlayHints.enabled": "offUnlessPressed",
-  "editor.quickSuggestions": {
-    "strings": true
-  },
-  "editor.rulers": [100],
-  "eslint.enable": true,
-  "eslint.validate": ["javascript", "typescript", "typescriptreact"],
-  "explorer.excludeGitIgnore": true,
-  "files.associations": {
-    "*.css": "tailwindcss"
-  },
-  "files.eol": "\n",
-  "less.validate": false,
-  "scss.validate": false,
-  "stylelint.enable": true,
-  "stylelint.snippet": ["css", "postcss"],
-  "stylelint.validate": ["css", "postcss"],
-  "tailwindCSS.validate": true,
-  "terminal.integrated.enablePersistentSessions": false,
-  "typescript.enablePromptUseWorkspaceTsdk": true,
-  "typescript.inlayHints.parameterNames.enabled": "all",
-  "typescript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "[markdown][mdx]": {
-    "editor.wordWrap": "on"
-  }
+	"css.validate": false,
+	"editor.codeActionsOnSave": {
+		"source.fixAll": true
+	},
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.formatOnSave": true,
+	"editor.inlayHints.enabled": "offUnlessPressed",
+	"editor.quickSuggestions": {
+		"strings": true
+	},
+	"editor.rulers": [100],
+	"eslint.enable": true,
+	"eslint.validate": ["javascript", "typescript", "typescriptreact"],
+	"explorer.excludeGitIgnore": true,
+	"files.associations": {
+		"*.css": "tailwindcss"
+	},
+	"files.eol": "\n",
+	"less.validate": false,
+	"scss.validate": false,
+	"stylelint.enable": true,
+	"stylelint.snippet": ["css", "postcss"],
+	"stylelint.validate": ["css", "postcss"],
+	"tailwindCSS.validate": true,
+	"terminal.integrated.enablePersistentSessions": false,
+	"typescript.enablePromptUseWorkspaceTsdk": true,
+	"typescript.inlayHints.parameterNames.enabled": "all",
+	"typescript.preferences.importModuleSpecifier": "non-relative",
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"[markdown][mdx]": {
+		"editor.wordWrap": "on"
+	}
 }

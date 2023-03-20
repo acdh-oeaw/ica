@@ -1,52 +1,52 @@
-import type { Dictionary } from '@/lib/i18n/common'
+import type { Dictionary } from "@/lib/i18n/common";
 
 export const dictionary: Dictionary = {
-  app: {
-    'change-language-to': 'Change language to {{language}}',
-    'toggle-color-scheme': 'Toggle color scheme',
-  },
-  language: {
-    en: 'English',
-  },
-  page: {
-    'skip-to-main-content': 'Skip to main content',
-  },
-  pages: {
-    '404': {
-      metadata: {
-        title: 'Page not found',
-      },
-    },
-    '500': {
-      metadata: {
-        title: 'Unexpected error',
-      },
-    },
-    home: {
-      metadata: {
-        title: 'Home',
-      },
-    },
-    imprint: {
-      metadata: {
-        title: 'Imprint',
-      },
-    },
-    'geo-visualisation': {
-      metadata: {
-        title: 'Geo-Visualisation',
-      },
-    },
-    'network-visualisation': {
-      metadata: {
-        title: 'Network-Visualisation',
-      },
-    },
-  },
-  home: {
-    'explore-graph': 'Explore Graph',
-    'explore-map': 'Explore Map',
-    intro: `
+	app: {
+		"change-language-to": "Change language to {{language}}",
+		"toggle-color-scheme": "Toggle color scheme",
+	},
+	language: {
+		en: "English",
+	},
+	page: {
+		"skip-to-main-content": "Skip to main content",
+	},
+	pages: {
+		"404": {
+			metadata: {
+				title: "Page not found",
+			},
+		},
+		"500": {
+			metadata: {
+				title: "Unexpected error",
+			},
+		},
+		home: {
+			metadata: {
+				title: "Home",
+			},
+		},
+		imprint: {
+			metadata: {
+				title: "Imprint",
+			},
+		},
+		"geo-visualisation": {
+			metadata: {
+				title: "Geo-Visualisation",
+			},
+		},
+		"network-visualisation": {
+			metadata: {
+				title: "Network-Visualisation",
+			},
+		},
+	},
+	home: {
+		"explore-graph": "Explore Graph",
+		"explore-map": "Explore Map",
+		intro: `
     <p>
       During the last ten years the members of the interdisciplinary North Atlantic
       Triangle commission have explored the close transatlantic links between
@@ -90,41 +90,41 @@ export const dictionary: Dictionary = {
       historical shifts in the relationship between the countries of Europe and
       North America.
     </p>`,
-  },
-  form: {
-    'nothing-found': 'Nothing found',
-    'remove-item': 'Remove {{item}}',
-    search: 'Search...',
-    'select-option': 'Please select an option',
-  },
-  filter: {
-    person: 'Persons',
-    profession: 'Professions',
-    gender: 'Gender',
-    'relation-type': 'Relation types',
-    'date-range': 'Date range',
-  },
-  entity: {
-    event: { one: 'Event', other: 'Events ' },
-    institution: { one: 'Institution', other: 'Institutions ' },
-    person: { one: 'Person', other: 'Persons ' },
-    place: { one: 'Place', other: 'Places ' },
-    work: { one: 'Work', other: 'Works ' },
-  },
-  gender: {
-    all: 'All genders',
-    female: 'Female',
-    male: 'Male',
-  },
-  'see-database-entry': 'See database entry',
-  'see-database-entry-for': 'See database entry for {{label}}',
-  details: {
-    professions: 'Professions',
-    notes: 'Notes',
-    references: 'References',
-    'related-persons': 'Related persons',
-    'related-places': 'Related places',
-    'related-institutions': 'Related institutions',
-    'related-events': 'Related events',
-  },
-}
+	},
+	form: {
+		"nothing-found": "Nothing found",
+		"remove-item": "Remove {{item}}",
+		search: "Search...",
+		"select-option": "Please select an option",
+	},
+	filter: {
+		person: "Persons",
+		profession: "Professions",
+		gender: "Gender",
+		"relation-type": "Relation types",
+		"date-range": "Date range",
+	},
+	entity: {
+		event: { one: "Event", other: "Events " },
+		institution: { one: "Institution", other: "Institutions " },
+		person: { one: "Person", other: "Persons " },
+		place: { one: "Place", other: "Places " },
+		work: { one: "Work", other: "Works " },
+	},
+	gender: {
+		all: "All genders",
+		female: "Female",
+		male: "Male",
+	},
+	"see-database-entry": "See database entry",
+	"see-database-entry-for": "See database entry for {{label}}",
+	details: {
+		professions: "Professions",
+		notes: "Notes",
+		references: "References",
+		"related-persons": "Related persons",
+		"related-places": "Related places",
+		"related-institutions": "Related institutions",
+		"related-events": "Related events",
+	},
+};

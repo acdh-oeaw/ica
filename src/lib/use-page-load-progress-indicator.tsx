@@ -1,36 +1,36 @@
-import { useRouter } from 'next/router'
-import nprogress from 'nprogress'
-import { useEffect } from 'react'
+import { useRouter } from "next/router";
+import nprogress from "nprogress";
+import { useEffect } from "react";
 
-nprogress.configure({ showSpinner: false })
+nprogress.configure({ showSpinner: false });
 
-const delay = 150
+const delay = 150;
 
 export function usePageLoadProgressIndicator(): void {
-  const router = useRouter()
+	const router = useRouter();
 
-  useEffect(() => {
-    let timeout: number
+	useEffect(() => {
+		let timeout: number;
 
-    function start() {
-      timeout = window.setTimeout(() => {
-        nprogress.start()
-      }, delay)
-    }
+		function start() {
+			timeout = window.setTimeout(() => {
+				nprogress.start();
+			}, delay);
+		}
 
-    function done() {
-      window.clearTimeout(timeout)
-      nprogress.done()
-    }
+		function done() {
+			window.clearTimeout(timeout);
+			nprogress.done();
+		}
 
-    router.events.on('routeChangeStart', start)
-    router.events.on('routeChangeComplete', done)
-    router.events.on('routeChangeError', done)
+		router.events.on("routeChangeStart", start);
+		router.events.on("routeChangeComplete", done);
+		router.events.on("routeChangeError", done);
 
-    return () => {
-      router.events.off('routeChangeStart', start)
-      router.events.off('routeChangeComplete', done)
-      router.events.off('routeChangeError', done)
-    }
-  }, [router.events])
+		return () => {
+			router.events.off("routeChangeStart", start);
+			router.events.off("routeChangeComplete", done);
+			router.events.off("routeChangeError", done);
+		};
+	}, [router.events]);
 }
