@@ -7,7 +7,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6358,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6358\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6358\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -22,7 +22,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6357,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -37,7 +37,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6361,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6361\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6361\u002F",
 				parent_id: null,
 			},
 			source: "institution",
@@ -52,7 +52,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6364,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6364\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6364\u002F",
 				parent_id: null,
 			},
 			source: "place",
@@ -67,7 +67,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6364,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6364\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6364\u002F",
 				parent_id: null,
 			},
 			source: "place",
@@ -86,7 +86,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6357,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -101,7 +101,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6357,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -116,7 +116,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6355,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -131,7 +131,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6357,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -146,7 +146,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6357,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -161,7 +161,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 11397,
 				label: "established",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F11397\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F11397\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -176,7 +176,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6357,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -191,7 +191,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6355,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -206,7 +206,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6365,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6365\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6365\u002F",
 				parent_id: null,
 			},
 			source: "place",
@@ -221,7 +221,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6358,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6358\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6358\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -236,7 +236,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6357,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -251,7 +251,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6355,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -266,7 +266,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6355,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -281,7 +281,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6358,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6358\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6358\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -296,7 +296,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6365,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6365\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6365\u002F",
 				parent_id: null,
 			},
 			source: "place",
@@ -311,7 +311,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6357,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -326,7 +326,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6361,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6361\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6361\u002F",
 				parent_id: null,
 			},
 			source: "institution",
@@ -341,7 +341,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6356,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -356,7 +356,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6355,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -371,7 +371,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6357,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -386,7 +386,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6357,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -401,7 +401,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6355,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -416,7 +416,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6355,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -431,7 +431,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6357,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -446,7 +446,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6357,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -461,7 +461,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6356,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -476,7 +476,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6356,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -491,7 +491,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6356,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -506,7 +506,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6356,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -521,7 +521,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6356,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -536,7 +536,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6357,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -551,7 +551,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6357,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -566,7 +566,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 11397,
 				label: "established",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F11397\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F11397\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -581,7 +581,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6357,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -596,7 +596,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 11397,
 				label: "established",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F11397\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F11397\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -615,7 +615,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6356,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -630,7 +630,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6356,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -646,7 +646,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6356,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -661,7 +661,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6355,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -676,7 +676,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6355,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -691,7 +691,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6355,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -706,7 +706,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6356,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -721,7 +721,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6357,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -736,7 +736,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6358,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6358\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6358\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -751,7 +751,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6355,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -766,7 +766,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6361,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6361\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6361\u002F",
 				parent_id: null,
 			},
 			source: "institution",
@@ -781,7 +781,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6355,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -796,7 +796,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6356,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -811,7 +811,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6356,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -826,7 +826,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6356,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -842,7 +842,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6355,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -857,7 +857,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6356,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -876,7 +876,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6355,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -891,7 +891,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6355,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -906,7 +906,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6355,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -921,7 +921,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6357,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -936,7 +936,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6357,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -951,7 +951,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6357,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -966,7 +966,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6356,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6356\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -981,7 +981,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6355,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -996,7 +996,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6355,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6355\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -1011,7 +1011,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6365,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6365\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6365\u002F",
 				parent_id: null,
 			},
 			source: "place",
@@ -1030,7 +1030,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6357,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
 				parent_id: null,
 			},
 			source: "person",
@@ -1045,7 +1045,7 @@ export const relationTypes = new Map([
 			parent_class: {
 				id: 6358,
 				label: "related",
-				url: "https:\u002F\u002Fica.acdh-dev.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6358\u002F",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6358\u002F",
 				parent_id: null,
 			},
 			source: "person",

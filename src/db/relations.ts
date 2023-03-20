@@ -164,7 +164,7 @@ export const relations = new Map([
 		{
 			id: "921",
 			source: { id: "842", kind: "place", label: "1st district, Vienna" },
-			target: { id: "920", kind: "place", label: "Franziskanerplatz 5" },
+			target: { id: "920", kind: "place", label: "Franziskanerplatz 5, 1010 Vienna" },
 			type: { id: "10444", label: "located in" },
 			startDate: null,
 			endDate: null,
@@ -176,7 +176,7 @@ export const relations = new Map([
 		"922",
 		{
 			id: "922",
-			source: { id: "920", kind: "place", label: "Franziskanerplatz 5" },
+			source: { id: "920", kind: "place", label: "Franziskanerplatz 5, 1010 Vienna" },
 			target: { id: "177", kind: "place", label: "Vienna" },
 			type: { id: "10444", label: "located in" },
 			startDate: null,
@@ -567,7 +567,7 @@ export const relations = new Map([
 		{
 			id: "5527",
 			source: { id: "177", kind: "place", label: "Vienna" },
-			target: { id: "5526", kind: "place", label: "Alserstraße 21, 1080 Vienna" },
+			target: { id: "5526", kind: "place", label: "Alser Straße 21, 1080 Vienna" },
 			type: { id: "10444", label: "located in" },
 			startDate: null,
 			endDate: null,
@@ -4519,19 +4519,6 @@ export const relations = new Map([
 		},
 	],
 	[
-		"9572",
-		{
-			id: "9572",
-			source: { id: "1159", kind: "place", label: "United Kingdom" },
-			target: { id: "9571", kind: "place", label: "Cambridge" },
-			type: { id: "10444", label: "located in" },
-			startDate: null,
-			endDate: null,
-			startDateWritten: null,
-			endDateWritten: null,
-		},
-	],
-	[
 		"9594",
 		{
 			id: "9594",
@@ -6231,7 +6218,7 @@ export const relations = new Map([
 		{
 			id: "928",
 			source: { id: "926", kind: "institution", label: "Mädchenlyzeum" },
-			target: { id: "920", kind: "place", label: "Franziskanerplatz 5" },
+			target: { id: "920", kind: "place", label: "Franziskanerplatz 5, 1010 Vienna" },
 			type: { id: "10440", label: "located in\u002Fat" },
 			startDate: null,
 			endDate: "1913-07-02",
@@ -8493,7 +8480,7 @@ export const relations = new Map([
 		{
 			id: "6159",
 			source: { id: "11", kind: "person", label: "John Peale Bishop" },
-			target: { id: "4625", kind: "place", label: "Venedig" },
+			target: { id: "4625", kind: "place", label: "Venice, Italy" },
 			type: { id: "10464", label: "stayed in" },
 			startDate: "1922-09-15",
 			endDate: null,
@@ -13074,7 +13061,7 @@ export const relations = new Map([
 		{
 			id: "542",
 			source: { id: "540", kind: "person", label: "Karl Kraus" },
-			target: { id: "541", kind: "place", label: "Jitschin" },
+			target: { id: "6804", kind: "place", label: "Jičín" },
 			type: { id: "6356", label: "related" },
 			startDate: null,
 			endDate: null,
@@ -17354,7 +17341,7 @@ export const relations = new Map([
 		{
 			id: "5528",
 			source: { id: "2841", kind: "person", label: "Miriam Beer-Hofmann Lens" },
-			target: { id: "5526", kind: "place", label: "Alserstraße 21, 1080 Vienna" },
+			target: { id: "5526", kind: "place", label: "Alser Straße 21, 1080 Vienna" },
 			type: { id: "10474", label: "Place of Birth" },
 			startDate: "1897-09-04",
 			endDate: "1901-07-02",
@@ -19613,7 +19600,7 @@ export const relations = new Map([
 		{
 			id: "618",
 			source: { id: "616", kind: "person", label: "Ernst Lothar" },
-			target: { id: "617", kind: "place", label: "Brünn" },
+			target: { id: "1255", kind: "place", label: "Brno" },
 			type: { id: "10474", label: "Place of Birth" },
 			startDate: "1890-10-25",
 			endDate: null,
@@ -20307,7 +20294,7 @@ export const relations = new Map([
 		{
 			id: "9449",
 			source: { id: "9448", kind: "institution", label: "Brünner Stadttheater" },
-			target: { id: "617", kind: "place", label: "Brünn" },
+			target: { id: "1255", kind: "place", label: "Brno" },
 			type: { id: "11213", label: "located in" },
 			startDate: null,
 			endDate: null,
@@ -24066,7 +24053,7 @@ export const relations = new Map([
 		{
 			id: "6971",
 			source: { id: "447", kind: "person", label: "Wright Morris" },
-			target: { id: "4625", kind: "place", label: "Venedig" },
+			target: { id: "4625", kind: "place", label: "Venice, Italy" },
 			type: { id: "10464", label: "stayed in" },
 			startDate: "1959-07-02",
 			endDate: null,
@@ -24079,7 +24066,7 @@ export const relations = new Map([
 		{
 			id: "6972",
 			source: { id: "447", kind: "person", label: "Wright Morris" },
-			target: { id: "4625", kind: "place", label: "Venedig" },
+			target: { id: "4625", kind: "place", label: "Venice, Italy" },
 			type: { id: "10464", label: "stayed in" },
 			startDate: "1962-07-02",
 			endDate: null,
@@ -24871,7 +24858,7 @@ export const relations = new Map([
 		{
 			id: "8836",
 			source: { id: "3192", kind: "place", label: "Canada" },
-			target: { id: "8838", kind: "place", label: "Little Germany, CA" },
+			target: { id: "8838", kind: "place", label: "Little Germany, CAN" },
 			type: { id: "10444", label: "located in" },
 			startDate: null,
 			endDate: null,
@@ -24883,7 +24870,7 @@ export const relations = new Map([
 		"8839",
 		{
 			id: "8839",
-			source: { id: "8838", kind: "place", label: "Little Germany, CA" },
+			source: { id: "8838", kind: "place", label: "Little Germany, CAN" },
 			target: { id: "3192", kind: "place", label: "Canada" },
 			type: { id: "10444", label: "located in" },
 			startDate: null,
@@ -25333,7 +25320,7 @@ export const relations = new Map([
 		{
 			id: "7362",
 			source: { id: "7361", kind: "person", label: "Maria Jeritza" },
-			target: { id: "617", kind: "place", label: "Brünn" },
+			target: { id: "1255", kind: "place", label: "Brno" },
 			type: { id: "10474", label: "Place of Birth" },
 			startDate: null,
 			endDate: null,
@@ -25523,7 +25510,7 @@ export const relations = new Map([
 		{
 			id: "1267",
 			source: { id: "1265", kind: "institution", label: "University of California Berkeley" },
-			target: { id: "1266", kind: "place", label: "Berkeley, Calif." },
+			target: { id: "1266", kind: "place", label: "Berkeley, CA" },
 			type: { id: "10440", label: "located in\u002Fat" },
 			startDate: null,
 			endDate: null,
@@ -25687,7 +25674,7 @@ export const relations = new Map([
 		{
 			id: "7909",
 			source: { id: "7907", kind: "institution", label: "Mills College" },
-			target: { id: "7908", kind: "place", label: "Oakland, Calif." },
+			target: { id: "7908", kind: "place", label: "Oakland, CA" },
 			type: { id: "11213", label: "located in" },
 			startDate: null,
 			endDate: null,
