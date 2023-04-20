@@ -1,7 +1,9 @@
 import { db } from "@/db";
 import type { Place, Relation } from "@/db/types";
 import type { SerializablePlaceRelationsMap } from "@/features/map/persons-layer";
+import { createEntityUrl } from "@/lib/create-entity-url";
 import { isNonNullable } from "@/lib/is-non-nullable";
+import { Fragment } from "react";
 
 interface PopoverContentProps {
 	onClose: () => void;
@@ -14,8 +16,12 @@ export function PopoverContent(props: PopoverContentProps): JSX.Element {
 
 	return (
 		// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-		<div className="grid gap-0.5 font-sans" onClick={onClose}>
-			<h3 className="text-xs font-medium">{place.label}</h3>
+		<div className="grid gap-1 font-sans" onClick={onClose}>
+			<h3 className="text-xs font-medium">
+				<a className="underline decoration-dotted" href={createEntityUrl(place)} target="_blank">
+					{place.label}
+				</a>
+			</h3>
 			<ul className="grid gap-0.5 text-xs" role="list">
 				{relations.map(([key, ids]) => {
 					return (
@@ -43,28 +49,35 @@ function RelationsLabel(props: RelationsListItemProps): JSX.Element {
 		})
 		.filter(isNonNullable);
 
-	function deduplicateDates(startDate: string | null, endDate: string | null) {
-		if (startDate === endDate) return [startDate];
-		return [startDate, endDate];
+	function getDateRange(startDate: string | null, endDate: string | null) {
+		const value = [];
+
+		if (startDate != null) value.push(startDate);
+		if (endDate != null && endDate !== startDate) value.push(endDate);
+
+		return value.join(" - ");
 	}
 
-	function createRelationLabel(relation: Relation) {
-		const dateRange = deduplicateDates(relation.startDateWritten, relation.endDateWritten)
-			.filter(isNonNullable)
-			.join(" – ");
+	return (
+		<Fragment>
+			{relations.map((relation, index) => {
+				const dateRange = getDateRange(relation.startDateWritten, relation.endDateWritten);
 
-		const label = [
-			relation.source.label,
-			relation.type.label,
-			dateRange.length > 0 ? `(${dateRange})` : null,
-		]
-			.filter(isNonNullable)
-			.join(" ");
-
-		return label;
-	}
-
-	const label = relations.map(createRelationLabel).join(" ");
-
-	return <li>{label}</li>;
+				return (
+					<span>
+						{index !== 0 ? ", " : null}
+						<a
+							className="underline decoration-dotted underline-offset-0"
+							href={createEntityUrl(relation.source)}
+							target="_blank"
+						>
+							{relation.source.label}
+						</a>
+						<span> {relation.type.label} </span>
+						<span>{dateRange.length > 0 ? `(${dateRange})` : null}</span>
+					</span>
+				);
+			})}
+		</Fragment>
+	);
 }
