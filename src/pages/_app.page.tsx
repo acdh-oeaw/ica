@@ -5,7 +5,7 @@ import "@/styles/nprogress.css";
 
 import { ErrorBoundary } from "@stefanprobst/next-error-boundary";
 import { PageMetadata } from "@stefanprobst/next-page-metadata";
-import type { NextWebVitalsMetric } from "next/app";
+import { type NextWebVitalsMetric } from "next/app";
 import Head from "next/head";
 import { Fragment } from "react";
 
@@ -13,7 +13,7 @@ import { PageLayout } from "@/components/page.layout";
 import { RootErrorBoundaryFallback } from "@/components/root-error-boundary-fallback";
 import { AnalyticsScript } from "@/lib/analytics/analytics-script";
 import { reportPageView } from "@/lib/analytics/analytics-service";
-import type { AppProps, GetLayout } from "@/lib/app.types";
+import { type AppProps, type GetLayout } from "@/lib/app.types";
 import { createAppUrl } from "@/lib/create-app-url";
 import { createAssetLink } from "@/lib/create-asset-link";
 import { useAppMetadata } from "@/lib/metadata/use-app-metadata";

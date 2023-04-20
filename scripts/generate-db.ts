@@ -6,25 +6,26 @@ import path from "node:path";
 import { assert } from "@stefanprobst/assert";
 import { log } from "@stefanprobst/log";
 import config from "@stefanprobst/prettier-config";
-import type { RequestOptions } from "@stefanprobst/request";
+import { type RequestOptions } from "@stefanprobst/request";
 import { createUrl, HttpError, request as _request } from "@stefanprobst/request";
+// @ts-expect-error Invalid exports map?
 import { timeout, TimeoutError } from "@stefanprobst/request/timeout";
 import { type HierarchyNode, stratify } from "d3";
 import { format } from "prettier";
 import serialize from "serialize-javascript";
 
-import type {
-	Database,
-	EntityBase,
-	EntityKind,
-	Event,
-	Institution,
-	Person,
-	Place,
-	ProfessionBase,
-	Relation,
-	RelationBase,
-	RelationTypeBase,
+import {
+	type Database,
+	type EntityBase,
+	type EntityKind,
+	type Event,
+	type Institution,
+	type Person,
+	type Place,
+	type ProfessionBase,
+	type Relation,
+	type RelationBase,
+	type RelationTypeBase,
 } from "@/db/types";
 import { isNonNullable } from "@/lib/is-non-nullable";
 import { baseUrl } from "~/config/api.config";

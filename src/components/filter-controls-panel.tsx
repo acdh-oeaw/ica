@@ -1,4 +1,4 @@
-import type { FormEvent, ReactNode } from "react";
+import { type FormEvent, type ReactNode } from "react";
 
 interface FilterControlsPanelProps {
 	children: ReactNode;

@@ -17,7 +17,7 @@ type PageParams<T extends PageParamsInput> = {
 };
 
 declare module "*.svg" {
-	import type { StaticImageData } from "next/image";
+	import { type StaticImageData } from "next/image";
 
 	const content: StaticImageData;
 

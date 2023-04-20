@@ -1,4 +1,4 @@
-import type { CreateAppUrlArgs } from "@/lib/create-app-url";
+import { type CreateAppUrlArgs } from "@/lib/create-app-url";
 import { createAppUrl } from "@/lib/create-app-url";
 
 export function createAssetLink(args: CreateAppUrlArgs): string {

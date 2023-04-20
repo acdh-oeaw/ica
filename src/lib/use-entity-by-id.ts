@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
-import { type RequestOptions, createUrl, request } from "@stefanprobst/request";
+import { createUrl, request, type RequestOptions } from "@stefanprobst/request";
 import useQuery from "swr";
 
 import { type Event, type Institution, type Person, type Place } from "@/db/types";

@@ -1,10 +1,10 @@
 import { assert } from "@stefanprobst/assert";
-import type { ForceGraphInstance } from "force-graph";
+import { type ForceGraphInstance } from "force-graph";
 import { useEffect, useMemo, useState } from "react";
 
 import { db } from "@/db";
-import type { EntityBase, EntityKind, Relation, RelationBase } from "@/db/types";
-import type { NetworkGraphFilters } from "@/features/network-visualisation/use-network-graph-filters";
+import { type EntityBase, type EntityKind, type Relation, type RelationBase } from "@/db/types";
+import { type NetworkGraphFilters } from "@/features/network-visualisation/use-network-graph-filters";
 import { useElementDimensions } from "@/lib/use-element-dimensions";
 import { useElementRef } from "@/lib/use-element-ref";
 import { useEvent } from "@/lib/use-event";

@@ -1,7 +1,7 @@
 import { assert } from "@stefanprobst/assert";
 import { createUrl } from "@stefanprobst/request";
 
-import type { Locale } from "~/config/i18n.config";
+import { type Locale } from "~/config/i18n.config";
 
 const redmineId = process.env["NEXT_PUBLIC_REDMINE_ID"];
 

@@ -1,9 +1,9 @@
-import type { GetServerSideProps, GetStaticProps, PreviewData } from "next";
-import type { ParsedUrlQuery } from "querystring";
+import { type GetServerSideProps, type GetStaticProps, type PreviewData } from "next";
+import { type ParsedUrlQuery } from "querystring";
 
-import type { Dictionaries } from "@/lib/i18n/dictionaries";
+import { type Dictionaries } from "@/lib/i18n/dictionaries";
 import { load } from "@/lib/i18n/load";
-import type { Locale } from "~/config/i18n.config";
+import { type Locale } from "~/config/i18n.config";
 
 export function withDictionaries<
 	P extends Record<string, unknown>,

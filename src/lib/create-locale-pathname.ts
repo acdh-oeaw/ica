@@ -1,4 +1,4 @@
-import type { Locale } from "~/config/i18n.config";
+import { type Locale } from "~/config/i18n.config";
 import { defaultLocale } from "~/config/i18n.config";
 
 export function createLocalePathname(

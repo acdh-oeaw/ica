@@ -1,6 +1,6 @@
-import type { AppProps as NextAppProps } from "next/app";
+import { type AppProps as NextAppProps } from "next/app";
 
-import type { DictionariesProps } from "@/lib/i18n/dictionaries";
+import { type DictionariesProps } from "@/lib/i18n/dictionaries";
 
 export type SharedPageProps = DictionariesProps<"common">;
 

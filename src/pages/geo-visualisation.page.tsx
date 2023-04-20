@@ -1,6 +1,6 @@
 import { PageMetadata } from "@stefanprobst/next-page-metadata";
 import { Fragment, useEffect, useMemo, useState } from "react";
-import type { LngLat, MapLayerMouseEvent } from "react-map-gl";
+import { type LngLat, type MapLayerMouseEvent } from "react-map-gl";
 import { Popup } from "react-map-gl";
 
 import { FilterControlsPanel } from "@/components/filter-controls-panel";
@@ -11,10 +11,13 @@ import { RangeSlider } from "@/components/range-slider";
 import { SingleSelect } from "@/components/single-select";
 import { db } from "@/db";
 import { type Gender, genders } from "@/db/genders";
-import type { Place } from "@/db/types";
+import { type Place } from "@/db/types";
 import { GeoMap } from "@/features/map/geo-map";
 import { initialViewState, mapStyle } from "@/features/map/geo-map.config";
-import type { PlaceFeature, SerializablePlaceRelationsMap } from "@/features/map/persons-layer";
+import {
+	type PlaceFeature,
+	type SerializablePlaceRelationsMap,
+} from "@/features/map/persons-layer";
 import { PersonsLayer, personsLayerStyle } from "@/features/map/persons-layer";
 import { useGeoMapFilters } from "@/features/map/use-geo-map-filters";
 import { useI18n } from "@/lib/i18n/use-i18n";

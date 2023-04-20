@@ -1,13 +1,13 @@
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import maplibregl from "maplibre-gl";
-import type { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { forwardRef } from "react";
-import type { MapProps, MapRef } from "react-map-gl";
+import { type MapProps, type MapRef } from "react-map-gl";
 import { Map, NavigationControl, ScaleControl, useMap } from "react-map-gl";
 
 import { useElementDimensions } from "@/lib/use-element-dimensions";
-import type { ElementRef } from "@/lib/use-element-ref";
+import { type ElementRef } from "@/lib/use-element-ref";
 import { useElementRef } from "@/lib/use-element-ref";
 
 interface GeoMapProps extends Omit<MapProps, "mapLib"> {
@@ -21,7 +21,6 @@ export const GeoMap = forwardRef<MapRef, GeoMapProps>(function GeoMap(props, ref
 
 	return (
 		<div ref={setElement} className="isolate grid h-full w-full">
-			{/* @ts-expect-error Type mismatch between `maplibre-gl` and `mapbox-gl`. */}
 			<Map ref={ref} {...props} mapLib={maplibregl}>
 				<AutoResize element={element} />
 				<NavigationControl position="top-left" />

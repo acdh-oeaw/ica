@@ -1,5 +1,5 @@
 import cx from "clsx";
-import type { ReactNode, RefObject } from "react";
+import { type ReactNode, type RefObject } from "react";
 import { useRef } from "react";
 import {
 	mergeProps,
@@ -9,7 +9,7 @@ import {
 	useSliderThumb,
 	VisuallyHidden,
 } from "react-aria";
-import type { SliderState } from "react-stately";
+import { type SliderState } from "react-stately";
 import { useSliderState } from "react-stately";
 
 function getYearRange(values: [number, number]): string {

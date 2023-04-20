@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { Fragment } from "react";
 
 import { PageFooter } from "@/components/page-footer";

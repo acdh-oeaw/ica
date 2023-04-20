@@ -5,7 +5,7 @@ import {
 	XMarkIcon as RemoveIcon,
 } from "@heroicons/react/20/solid";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import type { ChangeEvent, ReactNode } from "react";
+import { type ChangeEvent, type ReactNode } from "react";
 import { Fragment, useMemo, useState } from "react";
 
 import { isNonNullable } from "@/lib/is-non-nullable";
@@ -158,7 +158,7 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): JSX
 			>
 				<Combobox.Options className="absolute z-overlay mt-1 w-full rounded-md bg-neutral-0 py-1 text-sm shadow-lg ring-1 ring-neutral-1000/5 focus:outline-none">
 					{searchTerm !== "" && visibleItems.length === 0 ? (
-						<div className="relative cursor-default select-none py-2 px-4 text-neutral-700">
+						<div className="relative cursor-default select-none px-4 py-2 text-neutral-700">
 							{messages.nothingFound}
 						</div>
 					) : null}
@@ -172,7 +172,7 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): JSX
 								return (
 									<Combobox.Option
 										key={item.id}
-										className="absolute top-0 left-0 w-full cursor-default select-none py-2 pl-10 pr-4 ui-active:bg-neutral-100 ui-active:text-neutral-900"
+										className="absolute left-0 top-0 w-full cursor-default select-none py-2 pl-10 pr-4 ui-active:bg-neutral-100 ui-active:text-neutral-900"
 										style={{
 											height: virtualItem.size,
 											transform: `translateY(${virtualItem.start}px)`,

@@ -1,9 +1,10 @@
+import { Fragment } from "react";
+
 import { db } from "@/db";
-import type { Place, Relation } from "@/db/types";
-import type { SerializablePlaceRelationsMap } from "@/features/map/persons-layer";
+import { type Place, type Relation } from "@/db/types";
+import { type SerializablePlaceRelationsMap } from "@/features/map/persons-layer";
 import { createEntityUrl } from "@/lib/create-entity-url";
 import { isNonNullable } from "@/lib/is-non-nullable";
-import { Fragment } from "react";
 
 interface PopoverContentProps {
 	place: Place;
@@ -16,7 +17,12 @@ export function PopoverContent(props: PopoverContentProps): JSX.Element {
 	return (
 		<div className="grid gap-1 font-sans">
 			<h3 className="text-xs font-medium">
-				<a className="underline decoration-dotted" href={createEntityUrl(place)} target="_blank">
+				<a
+					className="underline decoration-dotted"
+					href={createEntityUrl(place)}
+					target="_blank"
+					rel="noreferrer"
+				>
 					{place.label}
 				</a>
 			</h3>
@@ -62,12 +68,13 @@ function RelationsLabel(props: RelationsListItemProps): JSX.Element {
 				const dateRange = getDateRange(relation.startDateWritten, relation.endDateWritten);
 
 				return (
-					<span>
+					<span key={relation.id}>
 						{index !== 0 ? ", " : null}
 						<a
 							className="underline decoration-dotted underline-offset-0"
 							href={createEntityUrl(relation.source)}
 							target="_blank"
+							rel="noreferrer"
 						>
 							{relation.source.label}
 						</a>

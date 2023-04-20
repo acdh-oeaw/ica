@@ -1,12 +1,12 @@
 import { assert } from "@stefanprobst/assert";
-import type { Feature, FeatureCollection, Point } from "geojson";
+import { type Feature, type FeatureCollection, type Point } from "geojson";
 import { Fragment, useMemo } from "react";
-import type { CircleLayer } from "react-map-gl";
+import { type CircleLayer } from "react-map-gl";
 import { Layer, Source } from "react-map-gl";
 
 import { db } from "@/db";
-import type { Place, Relation } from "@/db/types";
-import type { GeoMapFilters } from "@/features/map/use-geo-map-filters";
+import { type Place, type Relation } from "@/db/types";
+import { type GeoMapFilters } from "@/features/map/use-geo-map-filters";
 import { createKey } from "@/lib/create-key";
 
 const colors: Record<Status, string> = {

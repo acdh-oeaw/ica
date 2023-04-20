@@ -1,4 +1,4 @@
-import type { UrlSearchParamsInit } from "@stefanprobst/request";
+import { type UrlSearchParamsInit } from "@stefanprobst/request";
 import { useMemo } from "react";
 
 import { createAppUrl } from "@/lib/create-app-url";
