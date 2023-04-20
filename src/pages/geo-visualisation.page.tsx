@@ -79,24 +79,15 @@ export default function GeoVisualisationPage(): JSX.Element {
 	}, [t]);
 
 	const [cursor, setCursor] = useState<"auto" | "pointer">("auto");
-	const [popovers, setPopovers] = useState<Record<Place["id"], Popover>>({});
-
-	function togglePopover(popover: Popover) {
-		const id = popover.place.id;
-
-		if (id in popovers) {
-			const p = { ...popovers };
-			delete p[id];
-			setPopovers(p);
-		} else {
-			setPopovers({ ...popovers, [id]: popover });
-		}
-	}
+	const [popover, setPopover] = useState<Popover | null>(null);
 
 	function onTogglePopover(event: MapLayerMouseEvent) {
 		const { features, lngLat } = event;
 		const _feature = features?.[0];
-		if (_feature == null) return;
+		if (_feature == null) {
+			setPopover(null);
+			return;
+		}
 
 		const feature = _feature as unknown as PlaceFeature;
 		const { id, relations: stringifiedContent } = feature.properties;
@@ -113,7 +104,7 @@ export default function GeoVisualisationPage(): JSX.Element {
 			stringifiedContent as unknown as string,
 		) as SerializablePlaceRelationsMap;
 
-		togglePopover({ place, relations, coordinates: lngLat });
+		setPopover({ place, relations, coordinates: lngLat });
 	}
 
 	function onMouseEnter() {
@@ -126,7 +117,7 @@ export default function GeoVisualisationPage(): JSX.Element {
 
 	/** Avoid popover staying open for a point which is no longer in the selection set. */
 	useEffect(() => {
-		setPopovers({});
+		setPopover(null);
 	}, [filters]);
 
 	return (
@@ -143,28 +134,19 @@ export default function GeoVisualisationPage(): JSX.Element {
 					onMouseLeave={onMouseLeave}
 				>
 					<PersonsLayer filters={filters} />
-					{Object.entries(popovers).map(([id, popover]) => {
-						return (
-							<Popup
-								key={id}
-								closeButton={false}
-								closeOnClick={false}
-								latitude={popover.coordinates.lat}
-								longitude={popover.coordinates.lng}
-								onClose={() => {
-									togglePopover(popover);
-								}}
-							>
-								<PopoverContent
-									onClose={() => {
-										togglePopover(popover);
-									}}
-									place={popover.place}
-									relations={popover.relations}
-								/>
-							</Popup>
-						);
-					})}
+					{popover != null ? (
+						<Popup
+							closeButton={false}
+							closeOnClick
+							latitude={popover.coordinates.lat}
+							longitude={popover.coordinates.lng}
+							onClose={() => {
+								setPopover(null);
+							}}
+						>
+							<PopoverContent place={popover.place} relations={popover.relations} />
+						</Popup>
+					) : null}
 				</GeoMap>
 				<FilterControlsPanel name={formId}>
 					<section className="grid gap-4">

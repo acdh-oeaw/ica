@@ -6,17 +6,15 @@ import { isNonNullable } from "@/lib/is-non-nullable";
 import { Fragment } from "react";
 
 interface PopoverContentProps {
-	onClose: () => void;
 	place: Place;
 	relations: SerializablePlaceRelationsMap;
 }
 
 export function PopoverContent(props: PopoverContentProps): JSX.Element {
-	const { relations, onClose, place } = props;
+	const { relations, place } = props;
 
 	return (
-		// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-		<div className="grid gap-1 font-sans" onClick={onClose}>
+		<div className="grid gap-1 font-sans">
 			<h3 className="text-xs font-medium">
 				<a className="underline decoration-dotted" href={createEntityUrl(place)} target="_blank">
 					{place.label}
