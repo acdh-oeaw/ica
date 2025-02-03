@@ -1,5 +1,5 @@
 import { PageMetadata } from "@stefanprobst/next-page-metadata";
-import { Fragment } from "react";
+import { Fragment, type ReactNode } from "react";
 
 import { HomeHeroSection } from "@/components/home-hero-section";
 import { MainContent } from "@/components/main-content";
@@ -9,7 +9,7 @@ import { usePageTitleTemplate } from "@/lib/metadata/use-page-title-template";
 
 export const getStaticProps = withDictionaries(["common"]);
 
-export default function HomePage(): JSX.Element {
+export default function HomePage(): ReactNode {
 	const { t } = useI18n<"common">();
 	const titleTemplate = usePageTitleTemplate();
 

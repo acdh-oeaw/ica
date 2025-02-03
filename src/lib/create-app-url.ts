@@ -2,7 +2,7 @@ import { createUrl, type CreateUrlParams } from "@acdh-oeaw/lib";
 
 import { createLocalePathname } from "@/lib/create-locale-pathname";
 import { baseUrl } from "~/config/app.config";
-import { type Locale } from "~/config/i18n.config";
+import type { Locale } from "~/config/i18n.config";
 
 export interface CreateAppUrlArgs extends Omit<CreateUrlParams, "baseUrl"> {
 	locale?: Locale;

@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import { mainContentId } from "@/components/skip-nav";
 
@@ -7,7 +7,7 @@ interface MainContentProps {
 	className?: string;
 }
 
-export function MainContent(props: MainContentProps): JSX.Element {
+export function MainContent(props: MainContentProps): ReactNode {
 	const { children, className } = props;
 
 	return (

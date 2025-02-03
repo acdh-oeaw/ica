@@ -1,6 +1,5 @@
 import cx from "clsx";
-import { type ReactNode, type RefObject } from "react";
-import { useRef } from "react";
+import { type ReactNode, type RefObject, useRef } from "react";
 import {
 	mergeProps,
 	useFocusRing,
@@ -9,8 +8,7 @@ import {
 	useSliderThumb,
 	VisuallyHidden,
 } from "react-aria";
-import { type SliderState } from "react-stately";
-import { useSliderState } from "react-stately";
+import { type SliderState, useSliderState } from "react-stately";
 
 function getYearRange(values: [number, number]): string {
 	return values.join(" – ");
@@ -27,7 +25,7 @@ interface RangeSliderProps {
 	value: [number, number];
 }
 
-export function RangeSlider(props: RangeSliderProps): JSX.Element {
+export function RangeSlider(props: RangeSliderProps): ReactNode {
 	const { getValueLabel = getYearRange, label, name } = props;
 
 	const trackRef = useRef<HTMLDivElement>(null);
@@ -68,7 +66,7 @@ interface ThumbProps {
 	state: SliderState;
 }
 
-function Thumb(props: ThumbProps): JSX.Element {
+function Thumb(props: ThumbProps): ReactNode {
 	const { index, name, state } = props;
 
 	const inputRef = useRef<HTMLInputElement>(null);

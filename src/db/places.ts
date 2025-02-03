@@ -4596,6 +4596,19 @@ export const places = new Map([
 		},
 	],
 	[
+		"9473",
+		{
+			kind: "place",
+			id: "9473",
+			label: "Theresienstadt",
+			coordinates: [14.15055, 50.511],
+			persons: new Set([]),
+			places: new Set([]),
+			institutions: new Set(["9474"]),
+			events: new Set([]),
+		},
+	],
+	[
 		"5652",
 		{
 			kind: "place",

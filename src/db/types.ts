@@ -1,3 +1,7 @@
+type DistributivePick<T, K extends keyof T> = T extends unknown ? Pick<T, K> : never;
+
+type IsoDateString = string;
+
 export interface RelationTypeBase {
 	id: string;
 	label: string;

@@ -1,12 +1,11 @@
-import { type AppProps as NextAppProps } from "next/app";
+import type { AppProps as NextAppProps } from "next/app";
+import type { ReactNode } from "react";
 
-import { type DictionariesProps } from "@/lib/i18n/dictionaries";
+import type { DictionariesProps } from "@/lib/i18n/dictionaries";
 
 export type SharedPageProps = DictionariesProps<"common">;
 
-export interface GetLayout {
-	(page: JSX.Element, pageProps: SharedPageProps): JSX.Element;
-}
+export type GetLayout = (page: ReactNode, pageProps: SharedPageProps) => ReactNode;
 
 export type PageComponent = NextAppProps<SharedPageProps>["Component"] & {
 	getLayout?: GetLayout;

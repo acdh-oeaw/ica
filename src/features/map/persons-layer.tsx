@@ -1,12 +1,11 @@
 import { assert } from "@acdh-oeaw/lib";
-import { type Feature, type FeatureCollection, type Point } from "geojson";
-import { Fragment, useMemo } from "react";
-import { type CircleLayer } from "react-map-gl";
-import { Layer, Source } from "react-map-gl";
+import type { Feature, FeatureCollection, Point } from "geojson";
+import { type ReactNode, useMemo } from "react";
+import { type CircleLayer, Layer, Source } from "react-map-gl";
 
 import { db } from "@/db";
-import { type Place, type Relation } from "@/db/types";
-import { type GeoMapFilters } from "@/features/map/use-geo-map-filters";
+import type { Place, Relation } from "@/db/types";
+import type { GeoMapFilters } from "@/features/map/use-geo-map-filters";
 import { createKey } from "@/lib/create-key";
 
 const colors: Record<Status, string> = {
@@ -63,7 +62,7 @@ interface PersonsLayerProps {
 	filters: GeoMapFilters;
 }
 
-export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
+export function PersonsLayer(props: PersonsLayerProps): ReactNode {
 	const { filters } = props;
 
 	const [places, relatedPlaces] = useMemo(() => {
@@ -85,9 +84,8 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
 			filters.selectedPersons.length === 0
 				? Array.from(db.persons.values())
 				: filters.selectedPersons.map((personId) => {
-						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 						return db.persons.get(personId)!;
-				  });
+					});
 
 		if (filters.selectedProfessions.length > 0) {
 			selectedPersons = selectedPersons.filter((person) => {
@@ -107,7 +105,7 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
 			if (!places.has(id)) {
 				places.set(id, new Map());
 			}
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
 			return places.get(id)!;
 		}
 
@@ -288,10 +286,8 @@ export function PersonsLayer(props: PersonsLayerProps): JSX.Element {
 	}, [places, relatedPlaces]);
 
 	return (
-		<Fragment>
-			<Source type="geojson" data={geoJson}>
-				<Layer {...personsLayerStyle} />
-			</Source>
-		</Fragment>
+		<Source type="geojson" data={geoJson}>
+			<Layer {...personsLayerStyle} />
+		</Source>
 	);
 }

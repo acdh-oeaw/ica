@@ -5,8 +5,7 @@ import {
 	XMarkIcon as RemoveIcon,
 } from "@heroicons/react/20/solid";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { type ChangeEvent, type ReactNode } from "react";
-import { Fragment, useMemo, useState } from "react";
+import { type ChangeEvent, Fragment, type ReactNode, useMemo, useState } from "react";
 
 import { isNonNullable } from "@/lib/is-non-nullable";
 import { useElementRef } from "@/lib/use-element-ref";
@@ -37,7 +36,7 @@ interface MultiComboBoxProps<T extends Item> {
 	selectedKeys: Array<T["id"]>;
 }
 
-export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): JSX.Element {
+export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): ReactNode {
 	const { getColor, items, label, messages, name, onSelectionChange, selectedKeys } = props;
 
 	const [searchTerm, setSearchTerm] = useState("");
@@ -78,7 +77,6 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): JSX
 			return 36;
 		},
 		getItemKey(index) {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			return visibleItems[index]!.id;
 		},
 		getScrollElement() {
@@ -94,7 +92,7 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): JSX
 		<Combobox
 			as="div"
 			className="relative"
-			multiple
+			multiple={true}
 			name={name}
 			onChange={onSelectionChange}
 			value={selectedKeys}
@@ -122,11 +120,11 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): JSX
 										style={{ backgroundColor, color }}
 									>
 										<span className="block truncate">{getDisplayLabel(key)}</span>
-										<button onClick={onRemoveSelectedKey}>
+										<button type="button" onClick={onRemoveSelectedKey}>
 											<span className="sr-only">
 												{messages.removeSelectedKey(getDisplayLabel(key))}
 											</span>
-											<RemoveIcon aria-hidden className="h-3 w-3" />
+											<RemoveIcon aria-hidden={true} className="size-3" />
 										</button>
 									</li>
 								);
@@ -142,7 +140,7 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): JSX
 							value={searchTerm}
 						/>
 						<Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2 text-neutral-400">
-							<SelectorIcon aria-hidden className="h-5 w-5" />
+							<SelectorIcon aria-hidden={true} className="size-5" />
 						</Combobox.Button>
 					</div>
 				</div>
@@ -165,24 +163,23 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): JSX
 					<div ref={setElement} className="max-h-96 overflow-auto">
 						<div className="relative w-full" style={{ height }}>
 							{virtualItems.map((virtualItem) => {
-								// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 								const item = visibleItems[virtualItem.index]!;
 								const { backgroundColor } = getColor?.(item.id) ?? defaultSelectionColor;
 
 								return (
 									<Combobox.Option
 										key={item.id}
-										className="absolute left-0 top-0 w-full cursor-default select-none py-2 pl-10 pr-4 ui-active:bg-neutral-100 ui-active:text-neutral-900"
+										className="ui-active:bg-neutral-100 ui-active:text-neutral-900 absolute left-0 top-0 w-full cursor-default select-none py-2 pl-10 pr-4"
 										style={{
 											height: virtualItem.size,
-											transform: `translateY(${virtualItem.start}px)`,
+											transform: `translateY(${String(virtualItem.start)}px)`,
 										}}
 										value={item.id}
 									>
 										{({ selected }) => {
 											return (
 												<Fragment>
-													<span className="block truncate ui-selected:font-medium">
+													<span className="ui-selected:font-medium block truncate">
 														{item.label}
 													</span>
 													{selected ? (
@@ -190,7 +187,7 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): JSX
 															className="absolute inset-y-0 left-0 grid place-items-center pl-3"
 															style={{ color: backgroundColor }}
 														>
-															<CheckMarkIcon aria-hidden className="h-5 w-5" />
+															<CheckMarkIcon aria-hidden={true} className="size-5" />
 														</span>
 													) : null}
 												</Fragment>

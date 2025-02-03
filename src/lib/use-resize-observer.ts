@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { noop } from "@/lib/noop";
-import { type ElementRef } from "@/lib/use-element-ref";
+import type { ElementRef } from "@/lib/use-element-ref";
 import { useEvent } from "@/lib/use-event";
 
 // TODO: avoid destroying and recreating observer when element changes

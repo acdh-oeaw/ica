@@ -8,31 +8,33 @@ import {
 	HttpError,
 	log,
 	request as _request,
+	type RequestConfig,
 } from "@acdh-oeaw/lib";
-import { type RequestConfig } from "@acdh-oeaw/lib";
-import config from "@stefanprobst/prettier-config";
+import config from "@acdh-oeaw/prettier-config";
 import { type HierarchyNode, stratify } from "d3";
 import { format } from "prettier";
 import serialize from "serialize-javascript";
 
-import {
-	type Database,
-	type EntityBase,
-	type EntityKind,
-	type Event,
-	type Institution,
-	type Person,
-	type Place,
-	type ProfessionBase,
-	type Relation,
-	type RelationBase,
-	type RelationTypeBase,
+import type {
+	Database,
+	EntityBase,
+	EntityKind,
+	Event,
+	Institution,
+	Person,
+	Place,
+	ProfessionBase,
+	Relation,
+	RelationBase,
+	RelationTypeBase,
 } from "@/db/types";
 import { isNonNullable } from "@/lib/is-non-nullable";
 import { baseUrl } from "~/config/api.config";
 
 type RelationType = RelationTypeBase & { parent_class?: { id: number } | null };
-type Context = { getRelationType: (id: string) => RelationType };
+interface Context {
+	getRelationType: (id: string) => RelationType;
+}
 
 /**
  * The ica api will time out when being hit with many requests,
@@ -482,7 +484,7 @@ async function getPersons(): Promise<Array<Person>> {
 
 	while (response.next != null) {
 		const page = response.offset / response.limit + 1;
-		log.info(`Fetching persons in collection, page ${page + 1} / ${pages}.`);
+		log.info(`Fetching persons in collection, page ${String(page + 1)} / ${String(pages)}.`);
 		response = (await request(
 			new URL(response.next),
 			options,
@@ -617,10 +619,13 @@ async function generate() {
 	await fs.mkdir(outputFolder, { recursive: true });
 
 	for (const [key, entities] of Object.entries(db)) {
-		const filePath = path.join(outputFolder, key + ".ts");
+		const filePath = path.join(outputFolder, `${key}.ts`);
 		await fs.writeFile(
 			filePath,
-			format(`export const ${key} = ${serialize(entities)}`, { ...config, parser: "typescript" }),
+			await format(`export const ${key} = ${serialize(entities)}`, {
+				...config,
+				parser: "typescript",
+			}),
 			{ encoding: "utf-8" },
 		);
 	}
@@ -645,7 +650,7 @@ generate()
 	.then(() => {
 		log.success("Successfully generated database.");
 	})
-	.catch((error) => {
+	.catch((error: unknown) => {
 		const message = error instanceof HttpError ? error.response.statusText : String(error);
 		log.error("Failed to generate database.\n", message);
 	});

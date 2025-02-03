@@ -29,7 +29,7 @@ interface SingleSelectProps<T extends Item> {
 	selectedKey: T["id"];
 }
 
-export function SingleSelect<T extends Item>(props: SingleSelectProps<T>): JSX.Element {
+export function SingleSelect<T extends Item>(props: SingleSelectProps<T>): ReactNode {
 	const { getColor, items, label, messages, name, onSelectionChange, selectedKey } = props;
 
 	function getDisplayLabel(selectedKey: Item["id"]) {
@@ -49,7 +49,7 @@ export function SingleSelect<T extends Item>(props: SingleSelectProps<T>): JSX.E
 				<Listbox.Button className="relative w-full cursor-default overflow-hidden rounded-lg bg-neutral-0 py-2 pl-3 pr-10 text-left text-sm shadow-md focus:outline-none focus-visible:border-primary-500 focus-visible:ring-2 focus-visible:ring-neutral-0/75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300">
 					<span className="block truncate">{getDisplayLabel(selectedKey)}</span>
 					<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-						<SelectorIcon className="h-5 w-5 text-neutral-400" aria-hidden="true" />
+						<SelectorIcon className="size-5 text-neutral-400" aria-hidden="true" />
 					</span>
 				</Listbox.Button>
 			</div>
@@ -69,19 +69,19 @@ export function SingleSelect<T extends Item>(props: SingleSelectProps<T>): JSX.E
 						return (
 							<Listbox.Option
 								key={item.id}
-								className="relative cursor-default select-none py-2 pl-10 pr-4 ui-active:bg-neutral-100 ui-active:text-neutral-900"
+								className="ui-active:bg-neutral-100 ui-active:text-neutral-900 relative cursor-default select-none py-2 pl-10 pr-4"
 								value={item.id}
 							>
 								{({ selected }) => {
 									return (
 										<Fragment>
-											<span className="block truncate ui-selected:font-medium">{item.label}</span>
+											<span className="ui-selected:font-medium block truncate">{item.label}</span>
 											{selected ? (
 												<span
 													className="absolute inset-y-0 left-0 grid place-items-center pl-3"
 													style={{ color: backgroundColor }}
 												>
-													<CheckMarkIcon aria-hidden className="h-5 w-5" />
+													<CheckMarkIcon aria-hidden={true} className="size-5" />
 												</span>
 											) : null}
 										</Fragment>

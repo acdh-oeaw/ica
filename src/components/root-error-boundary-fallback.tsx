@@ -1,8 +1,8 @@
 import { useError } from "@stefanprobst/next-error-boundary";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { type ReactNode, useEffect } from "react";
 
-export function RootErrorBoundaryFallback(): JSX.Element {
+export function RootErrorBoundaryFallback(): ReactNode {
 	const router = useRouter();
 	const { onReset } = useError();
 

@@ -1,6 +1,5 @@
-import { type Dictionaries } from "@/lib/i18n/dictionaries";
-import { type Locale } from "~/config/i18n.config";
-import { defaultLocale } from "~/config/i18n.config";
+import type { Dictionaries } from "@/lib/i18n/dictionaries";
+import { defaultLocale, type Locale } from "~/config/i18n.config";
 
 export async function load<K extends keyof Dictionaries>(
 	locale: Locale = defaultLocale,
@@ -9,7 +8,9 @@ export async function load<K extends keyof Dictionaries>(
 	const translations = await Promise.all(
 		namespaces.map(async (namespace) => {
 			switch (namespace) {
+				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 				case "common":
+					// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 					switch (locale) {
 						default:
 							return [

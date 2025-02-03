@@ -1,4 +1,4 @@
-import { type ElementRef } from "@/lib/use-element-ref";
+import type { ElementRef } from "@/lib/use-element-ref";
 import { useEvent } from "@/lib/use-event";
 import { useResizeObserver } from "@/lib/use-resize-observer";
 

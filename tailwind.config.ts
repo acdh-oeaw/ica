@@ -1,7 +1,9 @@
-const colors = require("tailwindcss/colors");
+import typographyPlugin from "@tailwindcss/typography";
+import type { Config } from "tailwindcss";
+import colors from "tailwindcss/colors";
+import animatePlugin from "tailwindcss-animate";
 
-/** @type {import('tailwindcss').Config} */
-const config = {
+const config: Config = {
 	content: ["./src/**/*.@(css|ts|tsx)"],
 	corePlugins: {
 		backgroundOpacity: false,
@@ -29,7 +31,7 @@ const config = {
 			},
 		},
 	},
-	plugins: [require("@tailwindcss/typography"), require("@headlessui/tailwindcss")],
+	plugins: [animatePlugin, typographyPlugin],
 };
 
-module.exports = config;
+export default config;

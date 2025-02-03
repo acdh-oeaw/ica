@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-
 import { createUrl, request, type RequestConfig } from "@acdh-oeaw/lib";
 import useQuery from "swr";
 
-import { type Event, type Institution, type Person, type Place } from "@/db/types";
+import type { Event, Institution, Person, Place } from "@/db/types";
 import { baseUrl } from "~/config/api.config";
 
 function getPersonById(id: Person["id"]) {

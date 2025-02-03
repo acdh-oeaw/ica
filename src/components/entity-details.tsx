@@ -1,7 +1,8 @@
 import { isNonEmptyString } from "@acdh-oeaw/lib";
+import type { ReactNode } from "react";
 
 import { db } from "@/db";
-import { type EntityBase, Event, Institution, Person, Place } from "@/db/types";
+import type { EntityBase, Event, Institution, Person, Place } from "@/db/types";
 import { createEntityUrl } from "@/lib/create-entity-url";
 import { useI18n } from "@/lib/i18n/use-i18n";
 
@@ -9,7 +10,7 @@ interface EntityDetailsProps {
 	entity: EntityBase;
 }
 
-export function EntityDetails(props: EntityDetailsProps): JSX.Element | null {
+export function EntityDetails(props: EntityDetailsProps): ReactNode {
 	const { entity } = props;
 
 	switch (entity.kind) {
@@ -30,7 +31,7 @@ interface EventProps {
 	id: Event["id"];
 }
 
-function Event(props: EventProps): JSX.Element | null {
+function Event(props: EventProps): ReactNode {
 	const { id } = props;
 
 	const { t } = useI18n<"common">();
@@ -141,7 +142,7 @@ interface InstitutionProps {
 	id: Institution["id"];
 }
 
-function Institution(props: InstitutionProps): JSX.Element | null {
+function Institution(props: InstitutionProps): ReactNode {
 	const { id } = props;
 
 	const { t } = useI18n<"common">();
@@ -254,7 +255,7 @@ interface PersonProps {
 	id: Person["id"];
 }
 
-function Person(props: PersonProps): JSX.Element | null {
+function Person(props: PersonProps): ReactNode {
 	const { id } = props;
 
 	const person = db.persons.get(id);
@@ -274,13 +275,11 @@ function Person(props: PersonProps): JSX.Element | null {
 					{hasStartDate || hasEndDate ? (
 						<div className="text-xs text-neutral-600">
 							{hasStartDate ? (
-								// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-								<time dateTime={person.startDate!}>{person.startDateWritten}</time>
+								<time dateTime={person.startDate ?? undefined}>{person.startDateWritten}</time>
 							) : null}
 							{hasStartDate && hasEndDate ? <span> &ndash; </span> : null}
 							{hasStartDate ? (
-								// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-								<time dateTime={person.endDate!}>{person.endDateWritten}</time>
+								<time dateTime={person.endDate ?? undefined}>{person.endDateWritten}</time>
 							) : null}
 						</div>
 					) : null}
@@ -412,7 +411,7 @@ interface PlaceProps {
 	id: Place["id"];
 }
 
-function Place(props: PlaceProps): JSX.Element | null {
+function Place(props: PlaceProps): ReactNode {
 	const { id } = props;
 
 	const place = db.places.get(id);

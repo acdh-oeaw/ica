@@ -1,16 +1,18 @@
 import { request } from "@acdh-oeaw/lib";
 import { PageMetadata } from "@stefanprobst/next-page-metadata";
-import { type GetStaticPropsContext, type GetStaticPropsResult } from "next";
-import { Fragment } from "react";
+import type { GetStaticPropsContext, GetStaticPropsResult } from "next";
+import { Fragment, type ReactNode } from "react";
 
 import { MainContent } from "@/components/main-content";
 import { useI18n } from "@/lib/i18n/use-i18n";
 import { withDictionaries } from "@/lib/i18n/with-dictionaries";
 import { usePageTitleTemplate } from "@/lib/metadata/use-page-title-template";
-import { type Locale } from "~/config/i18n.config";
+import type { Locale } from "~/config/i18n.config";
 import { createImprintUrl } from "~/config/imprint.config";
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace ImprintPage {
+	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 	export type Props = {
 		html: string;
 	};
@@ -22,13 +24,13 @@ export const getStaticProps = withDictionaries(
 		context: GetStaticPropsContext,
 	): Promise<GetStaticPropsResult<ImprintPage.Props>> {
 		const locale = context.locale as Locale;
-		const html = (await request(createImprintUrl(locale), { responseType: "text" })) as string;
+		const html = await request(createImprintUrl(locale), { responseType: "text" });
 
 		return { props: { html } };
 	},
 );
 
-export default function ImprintPage(props: ImprintPage.Props): JSX.Element {
+export default function ImprintPage(props: ImprintPage.Props): ReactNode {
 	const { html } = props;
 
 	const { t } = useI18n<"common">();
@@ -38,7 +40,12 @@ export default function ImprintPage(props: ImprintPage.Props): JSX.Element {
 
 	return (
 		<Fragment>
-			<PageMetadata nofollow noindex title={metadata.title} titleTemplate={titleTemplate} />
+			<PageMetadata
+				nofollow={true}
+				noindex={true}
+				title={metadata.title}
+				titleTemplate={titleTemplate}
+			/>
 			<MainContent className="prose-sm mx-auto w-full max-w-2xl py-12">
 				<h1 className="text-3xl font-bold">{metadata.title}</h1>
 				<div dangerouslySetInnerHTML={{ __html: html }} />

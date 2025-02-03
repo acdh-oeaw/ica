@@ -15981,6 +15981,32 @@ export const relations = new Map([
 		},
 	],
 	[
+		"9943",
+		{
+			id: "9943",
+			source: { id: "462", kind: "person", label: "Elise Richter" },
+			target: { id: "9472", kind: "institution", label: "Konzentrationslager Theresienstadt" },
+			type: { id: "11323", label: "was held in" },
+			startDate: "1942-10-16",
+			endDate: "1943-06-21",
+			startDateWritten: "1942-10",
+			endDateWritten: "1943-06-21",
+		},
+	],
+	[
+		"9474",
+		{
+			id: "9474",
+			source: { id: "9472", kind: "institution", label: "Konzentrationslager Theresienstadt" },
+			target: { id: "9473", kind: "place", label: "Theresienstadt" },
+			type: { id: "11213", label: "located in" },
+			startDate: null,
+			endDate: null,
+			startDateWritten: null,
+			endDateWritten: null,
+		},
+	],
+	[
 		"771",
 		{
 			id: "771",
@@ -16020,6 +16046,19 @@ export const relations = new Map([
 		},
 	],
 	[
+		"9944",
+		{
+			id: "9944",
+			source: { id: "463", kind: "person", label: "Helene Richter" },
+			target: { id: "9472", kind: "institution", label: "Konzentrationslager Theresienstadt" },
+			type: { id: "11323", label: "was held in" },
+			startDate: "1942-10-16",
+			endDate: "1942-11-08",
+			startDateWritten: "1942-10",
+			endDateWritten: "1942-11-08",
+		},
+	],
+	[
 		"772",
 		{
 			id: "772",
@@ -16053,9 +16092,9 @@ export const relations = new Map([
 			target: { id: "182", kind: "place", label: "Weimarer Straße 83, 1190 Vienna" },
 			type: { id: "10529", label: "lived at" },
 			startDate: null,
-			endDate: null,
+			endDate: "1939-07-02",
 			startDateWritten: null,
-			endDateWritten: null,
+			endDateWritten: "1939",
 		},
 	],
 	[
@@ -16079,9 +16118,9 @@ export const relations = new Map([
 			target: { id: "182", kind: "place", label: "Weimarer Straße 83, 1190 Vienna" },
 			type: { id: "10529", label: "lived at" },
 			startDate: null,
-			endDate: "1942-07-02",
+			endDate: "1939-07-02",
 			startDateWritten: null,
-			endDateWritten: "1942",
+			endDateWritten: "1939",
 		},
 	],
 	[

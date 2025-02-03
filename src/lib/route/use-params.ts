@@ -29,6 +29,5 @@ export function useParams(): UseParamsResult {
 		return { params: null, isParamsReady: router.isReady };
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	return { params: params!, isParamsReady: router.isReady };
 }

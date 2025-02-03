@@ -1,5 +1,5 @@
 import { PageMetadata } from "@stefanprobst/next-page-metadata";
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, type ReactNode, useMemo, useState } from "react";
 
 import { EntityDetails } from "@/components/entity-details";
 import { FilterControlsPanel } from "@/components/filter-controls-panel";
@@ -9,7 +9,7 @@ import { RangeSlider } from "@/components/range-slider";
 import { SingleSelect } from "@/components/single-select";
 import { db } from "@/db";
 import { type Gender, genders } from "@/db/genders";
-import { type EntityBase } from "@/db/types";
+import type { EntityBase } from "@/db/types";
 import { NetworkGraph } from "@/features/network-visualisation/network-graph";
 import { useNetworkGraphFilters } from "@/features/network-visualisation/use-network-graph-filters";
 import { useI18n } from "@/lib/i18n/use-i18n";
@@ -18,7 +18,7 @@ import { usePageTitleTemplate } from "@/lib/metadata/use-page-title-template";
 
 export const getStaticProps = withDictionaries(["common"]);
 
-export default function GeoVisualisationPage(): JSX.Element {
+export default function GeoVisualisationPage(): ReactNode {
 	const { t } = useI18n<"common">();
 	const titleTemplate = usePageTitleTemplate();
 	const filters = useNetworkGraphFilters();

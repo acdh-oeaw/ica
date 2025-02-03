@@ -1,8 +1,10 @@
+/* eslint-disable no-undef */
+
 /** @typedef {import('next').NextConfig} NextConfig */
 /** @typedef {import('~/config/i18n.config').Locale} Locale */
 
+import { log } from "@acdh-oeaw/lib";
 import createBundleAnalyzerPlugin from "@next/bundle-analyzer";
-import { log } from "@stefanprobst/log";
 
 const locales = /** @type {Array<Locale>} */ (["en"]);
 const defaultLocale = /** @type {Locale} */ ("en");
@@ -38,7 +40,7 @@ const config = {
 			},
 		];
 
-		if (process.env["NEXT_PUBLIC_BOTS"] !== "enabled") {
+		if (process.env.NEXT_PUBLIC_BOTS !== "enabled") {
 			headers.push({
 				source: "/:path*",
 				headers: [
@@ -68,7 +70,7 @@ const config = {
 
 /** @type {Array<(config: NextConfig) => NextConfig>} */
 const plugins = [
-	createBundleAnalyzerPlugin({ enabled: process.env["BUNDLE_ANALYZER"] === "enabled" }),
+	createBundleAnalyzerPlugin({ enabled: process.env.BUNDLE_ANALYZER === "enabled" }),
 ];
 
 export default plugins.reduce((config, plugin) => {

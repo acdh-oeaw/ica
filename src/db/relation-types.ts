@@ -929,6 +929,21 @@ export const relationTypes = new Map([
 		},
 	],
 	[
+		"11323",
+		{
+			id: "11323",
+			label: "was held in",
+			parent_class: {
+				id: 6357,
+				label: "related",
+				url: "https:\u002F\u002Fica-db.acdh.oeaw.ac.at\u002Fapis\u002Fapi\u002Fvocabularies\u002Fvocabsbaseclass\u002F6357\u002F",
+				parent_id: null,
+			},
+			source: "person",
+			target: "institution",
+		},
+	],
+	[
 		"10941",
 		{
 			id: "10941",

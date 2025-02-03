@@ -1,5 +1,4 @@
-import { type ReactNode } from "react";
-import { Fragment } from "react";
+import { Fragment, type ReactNode } from "react";
 
 import { PageFooter } from "@/components/page-footer";
 import { PageHeader } from "@/components/page-header";
@@ -9,7 +8,7 @@ interface PageLayoutProps {
 	children: ReactNode;
 }
 
-export function PageLayout(props: PageLayoutProps): JSX.Element {
+export function PageLayout(props: PageLayoutProps): ReactNode {
 	const { children } = props;
 
 	return (

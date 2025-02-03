@@ -1,8 +1,8 @@
-import { Fragment } from "react";
+import { Fragment, type ReactNode } from "react";
 
 import { db } from "@/db";
-import { type Place, type Relation } from "@/db/types";
-import { type SerializablePlaceRelationsMap } from "@/features/map/persons-layer";
+import type { Place, Relation } from "@/db/types";
+import type { SerializablePlaceRelationsMap } from "@/features/map/persons-layer";
 import { createEntityUrl } from "@/lib/create-entity-url";
 import { isNonNullable } from "@/lib/is-non-nullable";
 
@@ -11,7 +11,7 @@ interface PopoverContentProps {
 	relations: SerializablePlaceRelationsMap;
 }
 
-export function PopoverContent(props: PopoverContentProps): JSX.Element {
+export function PopoverContent(props: PopoverContentProps): ReactNode {
 	const { relations, place } = props;
 
 	return (
@@ -44,7 +44,7 @@ interface RelationsListItemProps {
 	place: Place;
 }
 
-function RelationsLabel(props: RelationsListItemProps): JSX.Element {
+function RelationsLabel(props: RelationsListItemProps): ReactNode {
 	const { ids } = props;
 
 	const relations = ids

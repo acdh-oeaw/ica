@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 
 import { useI18n } from "@/lib/i18n/use-i18n";
 import { useLocale } from "@/lib/route/use-locale";
@@ -6,7 +7,7 @@ import { usePathname } from "@/lib/route/use-pathname";
 import { useSearchParams } from "@/lib/route/use-search-params";
 import { useUrlFragment } from "@/lib/route/use-url-fragment";
 
-export function LanguageToggle(): JSX.Element {
+export function LanguageToggle(): ReactNode {
 	const { locale } = useLocale();
 	const { pathname } = usePathname();
 	const { searchParams } = useSearchParams();

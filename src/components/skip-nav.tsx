@@ -1,10 +1,11 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 
 import { useI18n } from "@/lib/i18n/use-i18n";
 
 export const mainContentId = "main-content";
 
-export function SkipNav(): JSX.Element {
+export function SkipNav(): ReactNode {
 	const { t } = useI18n<"common">();
 
 	function onMoveFocus() {

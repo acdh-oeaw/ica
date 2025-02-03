@@ -1,10 +1,10 @@
 import { assert } from "@acdh-oeaw/lib";
-import { type ForceGraphInstance } from "force-graph";
-import { useEffect, useMemo, useState } from "react";
+import type ForceGraph from "force-graph";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 
 import { db } from "@/db";
-import { type EntityBase, type EntityKind, type Relation, type RelationBase } from "@/db/types";
-import { type NetworkGraphFilters } from "@/features/network-visualisation/use-network-graph-filters";
+import type { EntityBase, EntityKind, Relation, RelationBase } from "@/db/types";
+import type { NetworkGraphFilters } from "@/features/network-visualisation/use-network-graph-filters";
 import { useElementDimensions } from "@/lib/use-element-dimensions";
 import { useElementRef } from "@/lib/use-element-ref";
 import { useEvent } from "@/lib/use-event";
@@ -18,27 +18,29 @@ type GraphNodeKey = `${EntityKind}__${EntityBase["id"]}`;
 
 type GraphNode = EntityBase & { key: GraphNodeKey };
 
-export function NetworkGraph(props: NetworkGraphProps): JSX.Element {
+export function NetworkGraph(props: NetworkGraphProps): ReactNode {
 	const { filters, onNodeClick } = props;
 
 	const [element, setElement] = useElementRef<HTMLElement>();
-	const [forceGraph, setForceGraph] = useState<{ instance: ForceGraphInstance } | null>(null);
+	const [forceGraph, setForceGraph] = useState<{ instance: ForceGraph } | null>(null);
 	const dimensions = useElementDimensions({ element });
 
 	useEffect(() => {
+		if (element == null) return;
+
 		let isCanceled = false;
-		let instance: ForceGraphInstance | null = null;
+		let instance: ForceGraph | null = null;
 
 		async function init() {
 			/**
 			 * Using dynamic import for `force-graph` only because of issues with d3 esm-only packaging.
 			 */
-			const forceGraph = await import("force-graph").then((mod) => {
+			const ForceGraph = await import("force-graph").then((mod) => {
 				return mod.default;
 			});
 
 			if (!isCanceled) {
-				instance = forceGraph();
+				instance = new ForceGraph(element!);
 
 				instance.nodeId("key");
 				instance.nodeLabel((node) => {
@@ -73,7 +75,7 @@ export function NetworkGraph(props: NetworkGraphProps): JSX.Element {
 			isCanceled = true;
 			instance?._destructor();
 		};
-	}, []);
+	}, [element]);
 
 	const _onNodeClick = useEvent(onNodeClick);
 	useEffect(() => {
@@ -84,12 +86,6 @@ export function NetworkGraph(props: NetworkGraphProps): JSX.Element {
 			_onNodeClick(null);
 		});
 	}, [forceGraph, _onNodeClick]);
-
-	useEffect(() => {
-		if (element == null) return;
-
-		forceGraph?.instance(element);
-	}, [element, forceGraph]);
 
 	useEffect(() => {
 		if (dimensions == null) return;
@@ -113,9 +109,8 @@ export function NetworkGraph(props: NetworkGraphProps): JSX.Element {
 			filters.selectedPersons.length === 0
 				? Array.from(db.persons.values())
 				: filters.selectedPersons.map((personId) => {
-						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 						return db.persons.get(personId)!;
-				  });
+					});
 
 		if (filters.selectedProfessions.length > 0) {
 			selectedPersons = selectedPersons.filter((person) => {

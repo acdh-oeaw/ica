@@ -2296,6 +2296,18 @@ export const institutions = new Map([
 		},
 	],
 	[
+		"9472",
+		{
+			kind: "institution",
+			id: "9472",
+			label: "Konzentrationslager Theresienstadt",
+			persons: new Set(["9943", "9944"]),
+			places: new Set(["9474"]),
+			institutions: new Set([]),
+			events: new Set([]),
+		},
+	],
+	[
 		"5192",
 		{
 			kind: "institution",

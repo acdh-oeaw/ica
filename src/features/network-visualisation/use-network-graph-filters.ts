@@ -1,13 +1,7 @@
-import { type Dispatch, type SetStateAction } from "react";
-import { useMemo, useState } from "react";
+import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 
-import { type Gender } from "@/db/genders";
-import {
-	type Person,
-	type Place,
-	type ProfessionBase as Profession,
-	type RelationType,
-} from "@/db/types";
+import type { Gender } from "@/db/genders";
+import type { Person, Place, ProfessionBase as Profession, RelationType } from "@/db/types";
 
 export interface NetworkGraphFilters {
 	selectedPersons: Array<Person["id"]>;

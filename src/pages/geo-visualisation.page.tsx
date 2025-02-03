@@ -1,7 +1,6 @@
 import { PageMetadata } from "@stefanprobst/next-page-metadata";
-import { Fragment, useEffect, useMemo, useState } from "react";
-import { type LngLat, type MapLayerMouseEvent } from "react-map-gl";
-import { Popup } from "react-map-gl";
+import { Fragment, type ReactNode, useEffect, useMemo, useState } from "react";
+import { type LngLat, type MapLayerMouseEvent, Popup } from "react-map-gl";
 
 import { FilterControlsPanel } from "@/components/filter-controls-panel";
 import { MainContent } from "@/components/main-content";
@@ -11,14 +10,15 @@ import { RangeSlider } from "@/components/range-slider";
 import { SingleSelect } from "@/components/single-select";
 import { db } from "@/db";
 import { type Gender, genders } from "@/db/genders";
-import { type Place } from "@/db/types";
+import type { Place } from "@/db/types";
 import { GeoMap } from "@/features/map/geo-map";
 import { initialViewState, mapStyle } from "@/features/map/geo-map.config";
 import {
+	PersonsLayer,
+	personsLayerStyle,
 	type PlaceFeature,
 	type SerializablePlaceRelationsMap,
 } from "@/features/map/persons-layer";
-import { PersonsLayer, personsLayerStyle } from "@/features/map/persons-layer";
 import { useGeoMapFilters } from "@/features/map/use-geo-map-filters";
 import { useI18n } from "@/lib/i18n/use-i18n";
 import { withDictionaries } from "@/lib/i18n/with-dictionaries";
@@ -34,7 +34,7 @@ interface Popover {
 
 const layerIds = [personsLayerStyle.id];
 
-export default function GeoVisualisationPage(): JSX.Element {
+export default function GeoVisualisationPage(): ReactNode {
 	const { t } = useI18n<"common">();
 	const titleTemplate = usePageTitleTemplate();
 	const filters = useGeoMapFilters();
@@ -95,7 +95,6 @@ export default function GeoVisualisationPage(): JSX.Element {
 		const feature = _feature as unknown as PlaceFeature;
 		const { id, relations: stringifiedContent } = feature.properties;
 
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const place = db.places.get(id)!;
 
 		/**
@@ -140,7 +139,7 @@ export default function GeoVisualisationPage(): JSX.Element {
 					{popover != null ? (
 						<Popup
 							closeButton={false}
-							closeOnClick
+							closeOnClick={true}
 							latitude={popover.coordinates.lat}
 							longitude={popover.coordinates.lng}
 							onClose={() => {

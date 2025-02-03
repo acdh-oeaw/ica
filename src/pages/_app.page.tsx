@@ -1,3 +1,5 @@
+/* eslint-disable check-file/filename-naming-convention */
+
 import "@fontsource/inter/variable-full.css";
 import "tailwindcss/tailwind.css";
 import "@/styles/index.css";
@@ -5,15 +7,15 @@ import "@/styles/nprogress.css";
 
 import { ErrorBoundary } from "@stefanprobst/next-error-boundary";
 import { PageMetadata } from "@stefanprobst/next-page-metadata";
-import { type NextWebVitalsMetric } from "next/app";
+import type { NextWebVitalsMetric } from "next/app";
 import Head from "next/head";
-import { Fragment } from "react";
+import { Fragment, type ReactNode } from "react";
 
 import { PageLayout } from "@/components/page.layout";
 import { RootErrorBoundaryFallback } from "@/components/root-error-boundary-fallback";
 import { AnalyticsScript } from "@/lib/analytics/analytics-script";
 import { reportPageView } from "@/lib/analytics/analytics-service";
-import { type AppProps, type GetLayout } from "@/lib/app.types";
+import type { AppProps, GetLayout } from "@/lib/app.types";
 import { createAppUrl } from "@/lib/create-app-url";
 import { createAssetLink } from "@/lib/create-asset-link";
 import { useAppMetadata } from "@/lib/metadata/use-app-metadata";
@@ -24,7 +26,7 @@ import { useLocale } from "@/lib/route/use-locale";
 import { usePageLoadProgressIndicator } from "@/lib/use-page-load-progress-indicator";
 import { manifestFileName, openGraphImageName } from "~/config/metadata.config";
 
-export default function App(props: AppProps): JSX.Element {
+export default function App(props: AppProps): ReactNode {
 	const { Component, pageProps } = props;
 
 	const { locale } = useLocale();
@@ -83,14 +85,17 @@ const getDefaultLayout: GetLayout = function getDefaultLayout(page, pageProps) {
 };
 
 export function reportWebVitals(metric: NextWebVitalsMetric): void {
+	// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 	switch (metric.name) {
 		case "Next.js-hydration":
 			/** Register right after hydration. */
 			break;
+
 		case "Next.js-route-change-to-render":
 			/** Register page views after client-side transitions. */
 			reportPageView();
 			break;
+
 		default:
 			break;
 	}

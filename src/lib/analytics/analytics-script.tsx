@@ -1,8 +1,9 @@
 import Script from "next/script";
+import type { ReactNode } from "react";
 
 import { matomoBaseUrl, matomoId } from "~/config/analytics.config";
 
-export function AnalyticsScript(): JSX.Element | null {
+export function AnalyticsScript(): ReactNode {
 	if (matomoId == null) {
 		return null;
 	}
@@ -17,7 +18,7 @@ _paq.push(['trackPageView']);
 (function() {
   var u="${String(matomoBaseUrl)}";
   _paq.push(['setTrackerUrl', u+'matomo.php']);
-  _paq.push(['setSiteId', '${matomoId}']);
+  _paq.push(['setSiteId', '${String(matomoId)}']);
   var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
   g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
 })();`;

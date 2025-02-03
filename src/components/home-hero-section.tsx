@@ -1,13 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Fragment } from "react";
+import { Fragment, type ReactNode } from "react";
 
 import { useI18n } from "@/lib/i18n/use-i18n";
 import { useAppMetadata } from "@/lib/metadata/use-app-metadata";
 import * as routes from "@/lib/route/routes";
 import hero from "~/public/assets/images/hero.jpg";
 
-export function HomeHeroSection(): JSX.Element {
+export function HomeHeroSection(): ReactNode {
 	const { t } = useI18n<"common">();
 	const metadata = useAppMetadata();
 
@@ -16,7 +16,7 @@ export function HomeHeroSection(): JSX.Element {
 			<section className="relative border-y border-primary-200 bg-primary-50">
 				<Image
 					alt=""
-					className="absolute inset-0 h-full w-full object-cover opacity-40"
+					className="absolute inset-0 size-full object-cover opacity-40"
 					loading="lazy"
 					src={hero}
 				/>

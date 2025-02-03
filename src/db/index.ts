@@ -3,17 +3,17 @@ import { institutions as _institutions } from "@/db/institutions";
 import { persons as _persons } from "@/db/persons";
 import { places as _places } from "@/db/places";
 import { professions as _professions } from "@/db/professions";
+import { relationTypes as _relationTypes } from "@/db/relation-types";
 import { relations as _relations } from "@/db/relations";
-import { relationTypes as _relationTypes } from "@/db/relationTypes";
-import {
-	type Database,
-	type Event,
-	type Institution,
-	type Person,
-	type Place,
-	type ProfessionBase,
-	type Relation,
-	type RelationType,
+import type {
+	Database,
+	Event,
+	Institution,
+	Person,
+	Place,
+	ProfessionBase,
+	Relation,
+	RelationType,
 } from "@/db/types";
 
 const events = _events as Map<Event["id"], Event>;

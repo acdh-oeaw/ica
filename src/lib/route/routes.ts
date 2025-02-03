@@ -1,21 +1,15 @@
-type Href<T extends PageParamsInput = never> = {
-	pathname: string;
-	searchParams?: T;
-	hash?: string;
-};
-
-export function home(hash?: string): Href {
+export function home(hash?: string) {
 	return { pathname: "/", hash };
 }
 
-export function imprint(hash?: string): Href {
+export function imprint(hash?: string) {
 	return { pathname: "/imprint", hash };
 }
 
-export function geoVisualisation(hash?: string): Href {
+export function geoVisualisation(hash?: string) {
 	return { pathname: "/geo-visualisation", hash };
 }
 
-export function networkVisualisation(hash?: string): Href {
+export function networkVisualisation(hash?: string) {
 	return { pathname: "/network-visualisation", hash };
 }
