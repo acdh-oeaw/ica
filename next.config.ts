@@ -1,22 +1,13 @@
-/* eslint-disable no-undef */
-
-/** @typedef {import('next').NextConfig} NextConfig */
-/** @typedef {import('~/config/i18n.config').Locale} Locale */
-
 import { log } from "@acdh-oeaw/lib";
 import createBundleAnalyzerPlugin from "@next/bundle-analyzer";
+import type { NextConfig } from "next";
 
-const locales = /** @type {Array<Locale>} */ (["en"]);
-const defaultLocale = /** @type {Locale} */ ("en");
+import { defaultLocale, locales } from "~/config/i18n.config";
 
-/** @type {NextConfig} */
-const config = {
+const config: NextConfig = {
 	eslint: {
 		dirs: [process.cwd()],
 		ignoreDuringBuilds: true,
-	},
-	experimental: {
-		appDir: false,
 	},
 	headers() {
 		const headers = [
@@ -58,7 +49,7 @@ const config = {
 	},
 	i18n: {
 		defaultLocale,
-		locales,
+		locales: locales as ["en"],
 	},
 	output: "standalone",
 	pageExtensions: ["page.tsx", "api.ts"],
@@ -68,8 +59,7 @@ const config = {
 	},
 };
 
-/** @type {Array<(config: NextConfig) => NextConfig>} */
-const plugins = [
+const plugins: Array<(config: NextConfig) => NextConfig> = [
 	createBundleAnalyzerPlugin({ enabled: process.env.BUNDLE_ANALYZER === "enabled" }),
 ];
 

@@ -1,6 +1,5 @@
 /* eslint-disable check-file/filename-naming-convention */
 
-import "@fontsource/inter/variable-full.css";
 import "tailwindcss/tailwind.css";
 import "@/styles/index.css";
 import "@/styles/nprogress.css";

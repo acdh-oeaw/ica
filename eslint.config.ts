@@ -1,5 +1,5 @@
 import baseConfig from "@acdh-oeaw/eslint-config";
-// import nextConfig from "@acdh-oeaw/eslint-config-next";
+import nextConfig from "@acdh-oeaw/eslint-config-next";
 import playwrightConfig from "@acdh-oeaw/eslint-config-playwright";
 import reactConfig from "@acdh-oeaw/eslint-config-react";
 import tailwindcssConfig from "@acdh-oeaw/eslint-config-tailwindcss";
@@ -12,7 +12,7 @@ const config: Config = [
 	gitignore({ strict: false }),
 	...baseConfig,
 	...reactConfig,
-	// ...nextConfig,
+	...nextConfig,
 	...tailwindcssConfig,
 	...playwrightConfig,
 	{
@@ -34,6 +34,12 @@ const config: Config = [
 					"**/": "NEXT_JS_APP_ROUTER_CASE",
 				},
 			],
+		},
+	},
+	/** Pges. router. */
+	{
+		rules: {
+			"import-x/no-default-export": "off",
 		},
 	},
 ];
