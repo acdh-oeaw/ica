@@ -4,7 +4,7 @@ import colors from "tailwindcss/colors";
 import animatePlugin from "tailwindcss-animate";
 
 const config: Config = {
-	content: ["./src/**/*.@(css|ts|tsx)"],
+	content: ["./**/*.@(css|ts|tsx)"],
 	corePlugins: {
 		backgroundOpacity: false,
 		borderOpacity: false,

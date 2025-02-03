@@ -1,5 +1,5 @@
+import { type AppMetadata, metadata } from "@/config/metadata.config";
 import { useLocale } from "@/lib/route/use-locale";
-import { type AppMetadata, metadata } from "~/config/metadata.config";
 
 export function useAppMetadata(): AppMetadata {
 	const { locale } = useLocale();

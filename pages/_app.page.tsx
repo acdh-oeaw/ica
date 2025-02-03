@@ -12,6 +12,7 @@ import { Fragment, type ReactNode } from "react";
 
 import { PageLayout } from "@/components/page.layout";
 import { RootErrorBoundaryFallback } from "@/components/root-error-boundary-fallback";
+import { manifestFileName, openGraphImageName } from "@/config/metadata.config";
 import { AnalyticsScript } from "@/lib/analytics/analytics-script";
 import { reportPageView } from "@/lib/analytics/analytics-service";
 import type { AppProps, GetLayout } from "@/lib/app.types";
@@ -23,7 +24,6 @@ import { useAlternateLanguageUrls } from "@/lib/route/use-alternate-language-url
 import { useCanonicalUrl } from "@/lib/route/use-canonical-url";
 import { useLocale } from "@/lib/route/use-locale";
 import { usePageLoadProgressIndicator } from "@/lib/use-page-load-progress-indicator";
-import { manifestFileName, openGraphImageName } from "~/config/metadata.config";
 
 export default function App(props: AppProps): ReactNode {
 	const { Component, pageProps } = props;

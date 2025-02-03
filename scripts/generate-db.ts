@@ -15,6 +15,7 @@ import { type HierarchyNode, stratify } from "d3";
 import { format } from "prettier";
 import serialize from "serialize-javascript";
 
+import { baseUrl } from "@/config/api.config";
 import type {
 	Database,
 	EntityBase,
@@ -29,7 +30,6 @@ import type {
 	RelationTypeBase,
 } from "@/db/types";
 import { isNonNullable } from "@/lib/is-non-nullable";
-import { baseUrl } from "~/config/api.config";
 
 type RelationType = RelationTypeBase & { parent_class?: { id: number } | null };
 interface Context {
@@ -615,7 +615,7 @@ async function generate() {
 
 	//
 
-	const outputFolder = path.join(process.cwd(), "src", "db");
+	const outputFolder = path.join(process.cwd(), "db");
 	await fs.mkdir(outputFolder, { recursive: true });
 
 	for (const [key, entities] of Object.entries(db)) {

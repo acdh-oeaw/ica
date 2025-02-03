@@ -1,10 +1,10 @@
 import { createUrlSearchParams, type CreateUrlSearchParamsParams } from "@acdh-oeaw/lib";
 import { useMemo } from "react";
 
+import type { Locale } from "@/config/i18n.config";
 import { createAppUrl } from "@/lib/create-app-url";
 import { useLocale } from "@/lib/route/use-locale";
 import { usePathname } from "@/lib/route/use-pathname";
-import type { Locale } from "~/config/i18n.config";
 
 export type UseAlternateLanguageUrlsResult = Array<{ hrefLang: Locale; href: string }>;
 

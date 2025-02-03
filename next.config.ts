@@ -2,7 +2,7 @@ import { log } from "@acdh-oeaw/lib";
 import createBundleAnalyzerPlugin from "@next/bundle-analyzer";
 import type { NextConfig } from "next";
 
-import { defaultLocale, locales } from "~/config/i18n.config";
+import { defaultLocale, locales } from "@/config/i18n.config";
 
 const config: NextConfig = {
 	eslint: {

@@ -4,11 +4,11 @@ import type { GetStaticPropsContext, GetStaticPropsResult } from "next";
 import { Fragment, type ReactNode } from "react";
 
 import { MainContent } from "@/components/main-content";
+import type { Locale } from "@/config/i18n.config";
+import { createImprintUrl } from "@/config/imprint.config";
 import { useI18n } from "@/lib/i18n/use-i18n";
 import { withDictionaries } from "@/lib/i18n/with-dictionaries";
 import { usePageTitleTemplate } from "@/lib/metadata/use-page-title-template";
-import type { Locale } from "~/config/i18n.config";
-import { createImprintUrl } from "~/config/imprint.config";
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace ImprintPage {

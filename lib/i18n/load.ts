@@ -1,5 +1,5 @@
+import { defaultLocale, type Locale } from "@/config/i18n.config";
 import type { Dictionaries } from "@/lib/i18n/dictionaries";
-import { defaultLocale, type Locale } from "~/config/i18n.config";
 
 export async function load<K extends keyof Dictionaries>(
 	locale: Locale = defaultLocale,

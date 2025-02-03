@@ -5,7 +5,7 @@ import { Fragment, type ReactNode } from "react";
 import { useI18n } from "@/lib/i18n/use-i18n";
 import { useAppMetadata } from "@/lib/metadata/use-app-metadata";
 import * as routes from "@/lib/route/routes";
-import hero from "~/public/assets/images/hero.jpg";
+import hero from "@/public/assets/images/hero.jpg";
 
 export function HomeHeroSection(): ReactNode {
 	const { t } = useI18n<"common">();

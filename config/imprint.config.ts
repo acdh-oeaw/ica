@@ -1,6 +1,6 @@
 import { assert, createUrl, createUrlSearchParams } from "@acdh-oeaw/lib";
 
-import type { Locale } from "~/config/i18n.config";
+import type { Locale } from "@/config/i18n.config";
 
 const redmineId = process.env.NEXT_PUBLIC_REDMINE_ID;
 

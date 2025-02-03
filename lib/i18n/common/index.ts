@@ -1,7 +1,7 @@
+import type { Locale } from "@/config/i18n.config";
 import type { Gender } from "@/db/genders";
 import type { EntityKind } from "@/db/types";
 import type { Plurals as _Plurals, Plurals } from "@/lib/i18n/dictionaries";
-import type { Locale } from "~/config/i18n.config";
 
 type HtmlString = string;
 

@@ -1,7 +1,7 @@
 import Script from "next/script";
 import type { ReactNode } from "react";
 
-import { matomoBaseUrl, matomoId } from "~/config/analytics.config";
+import { matomoBaseUrl, matomoId } from "@/config/analytics.config";
 
 export function AnalyticsScript(): ReactNode {
 	if (matomoId == null) {
