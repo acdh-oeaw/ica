@@ -1,6 +1,6 @@
 import { PageMetadata } from "@stefanprobst/next-page-metadata";
 import { Fragment, type ReactNode, useEffect, useMemo, useState } from "react";
-import { type LngLat, type MapLayerMouseEvent, Popup } from "react-map-gl";
+import { type LngLat, type MapLayerMouseEvent, Popup } from "react-map-gl/maplibre";
 
 import { FilterControlsPanel } from "@/components/filter-controls-panel";
 import { MainContent } from "@/components/main-content";

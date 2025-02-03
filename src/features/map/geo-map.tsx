@@ -1,6 +1,5 @@
 import "maplibre-gl/dist/maplibre-gl.css";
 
-import maplibregl from "maplibre-gl";
 import { forwardRef, type ReactNode } from "react";
 import {
 	Map,
@@ -9,7 +8,7 @@ import {
 	NavigationControl,
 	ScaleControl,
 	useMap,
-} from "react-map-gl";
+} from "react-map-gl/maplibre";
 
 import { useElementDimensions } from "@/lib/use-element-dimensions";
 import { type ElementRef, useElementRef } from "@/lib/use-element-ref";
@@ -25,7 +24,7 @@ export const GeoMap = forwardRef<MapRef, GeoMapProps>(function GeoMap(props, ref
 
 	return (
 		<div ref={setElement} className="isolate grid size-full">
-			<Map ref={ref} {...props} mapLib={maplibregl}>
+			<Map ref={ref} {...props}>
 				<AutoResize element={element} />
 				<NavigationControl position="top-left" />
 				<ScaleControl />

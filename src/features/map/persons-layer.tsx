@@ -1,7 +1,7 @@
 import { assert } from "@acdh-oeaw/lib";
 import type { Feature, FeatureCollection, Point } from "geojson";
 import { type ReactNode, useMemo } from "react";
-import { type CircleLayer, Layer, Source } from "react-map-gl";
+import { type CircleLayerSpecification, Layer, Source } from "react-map-gl/maplibre";
 
 import { db } from "@/db";
 import type { Place, Relation } from "@/db/types";
@@ -13,7 +13,7 @@ const colors: Record<Status, string> = {
 	related: "#69c0ef",
 };
 
-export const personsLayerStyle: CircleLayer = {
+export const personsLayerStyle: Omit<CircleLayerSpecification, "source"> = {
 	id: "persons",
 	type: "circle",
 	paint: {
