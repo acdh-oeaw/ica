@@ -1,4 +1,4 @@
-import { assert } from "@stefanprobst/assert";
+import { assert } from "@acdh-oeaw/lib";
 import { type ForceGraphInstance } from "force-graph";
 import { useEffect, useMemo, useState } from "react";
 

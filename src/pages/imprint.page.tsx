@@ -1,5 +1,5 @@
+import { request } from "@acdh-oeaw/lib";
 import { PageMetadata } from "@stefanprobst/next-page-metadata";
-import { request } from "@stefanprobst/request";
 import { type GetStaticPropsContext, type GetStaticPropsResult } from "next";
 import { Fragment } from "react";
 

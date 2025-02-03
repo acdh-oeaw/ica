@@ -1,4 +1,4 @@
-import { type UrlSearchParamsInit } from "@stefanprobst/request";
+import { createUrlSearchParams, type CreateUrlSearchParamsParams } from "@acdh-oeaw/lib";
 import { useMemo } from "react";
 
 import { createAppUrl } from "@/lib/create-app-url";
@@ -9,7 +9,7 @@ import { type Locale } from "~/config/i18n.config";
 export type UseAlternateLanguageUrlsResult = Array<{ hrefLang: Locale; href: string }>;
 
 export function useAlternateLanguageUrls(
-	searchParams?: UrlSearchParamsInit,
+	searchParams?: CreateUrlSearchParamsParams,
 ): UseAlternateLanguageUrlsResult {
 	const { locales } = useLocale();
 	const { pathname } = usePathname();
@@ -19,7 +19,7 @@ export function useAlternateLanguageUrls(
 			const url = createAppUrl({
 				locale,
 				pathname,
-				searchParams,
+				searchParams: searchParams != null ? createUrlSearchParams(searchParams) : undefined,
 				hash: undefined,
 			});
 

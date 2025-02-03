@@ -1,4 +1,4 @@
-import { isNonEmptyString } from "@stefanprobst/is-nonempty-string";
+import { isNonEmptyString } from "@acdh-oeaw/lib";
 
 import { db } from "@/db";
 import { type EntityBase, Event, Institution, Person, Place } from "@/db/types";

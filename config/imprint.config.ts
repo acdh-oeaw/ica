@@ -1,5 +1,4 @@
-import { assert } from "@stefanprobst/assert";
-import { createUrl } from "@stefanprobst/request";
+import { assert, createUrl, createUrlSearchParams } from "@acdh-oeaw/lib";
 
 import { type Locale } from "~/config/i18n.config";
 
@@ -17,6 +16,6 @@ export function createImprintUrl(locale: Locale): URL {
 	return createUrl({
 		baseUrl: "https://imprint.acdh.oeaw.ac.at",
 		pathname: `/${redmineId}`,
-		searchParams: { locale },
+		searchParams: createUrlSearchParams({ locale }),
 	});
 }

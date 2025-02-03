@@ -1,4 +1,4 @@
-import { assert } from "@stefanprobst/assert";
+import { assert } from "@acdh-oeaw/lib";
 import { type Feature, type FeatureCollection, type Point } from "geojson";
 import { Fragment, useMemo } from "react";
 import { type CircleLayer } from "react-map-gl";

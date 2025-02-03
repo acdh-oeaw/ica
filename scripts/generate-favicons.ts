@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import { log } from "@acdh-oeaw/lib";
 import generateFavicons, { generateSocialImage } from "@stefanprobst/favicons";
-import { log } from "@stefanprobst/log";
 
 import { createAssetLink } from "@/lib/create-asset-link";
 import { manifestFileName, metadata, openGraphImageName } from "~/config/metadata.config";

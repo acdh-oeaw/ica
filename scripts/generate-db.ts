@@ -1,15 +1,16 @@
-import "@stefanprobst/request/fetch";
-
 import fs from "node:fs/promises";
 import path from "node:path";
 
-import { assert } from "@stefanprobst/assert";
-import { log } from "@stefanprobst/log";
+import {
+	assert,
+	createUrl,
+	createUrlSearchParams,
+	HttpError,
+	log,
+	request as _request,
+} from "@acdh-oeaw/lib";
+import { type RequestConfig } from "@acdh-oeaw/lib";
 import config from "@stefanprobst/prettier-config";
-import { type RequestOptions } from "@stefanprobst/request";
-import { createUrl, HttpError, request as _request } from "@stefanprobst/request";
-// @ts-expect-error Invalid exports map?
-import { timeout, TimeoutError } from "@stefanprobst/request/timeout";
 import { type HierarchyNode, stratify } from "d3";
 import { format } from "prettier";
 import serialize from "serialize-javascript";
@@ -43,7 +44,7 @@ async function request(...args: Parameters<typeof _request>) {
 
 		return response;
 	} catch (error) {
-		if (error instanceof TimeoutError) {
+		if (error instanceof Error && error.name === "TimeoutError") {
 			log.warn("Connection timed out. Retrying after 20s...");
 			await new Promise((resolve) => {
 				setTimeout(resolve, 20000);
@@ -57,9 +58,9 @@ async function request(...args: Parameters<typeof _request>) {
 
 //
 
-const options: RequestOptions = {
+const options: RequestConfig = {
 	responseType: "json",
-	fetch: (timeout as (ms: number) => typeof global.fetch)(60000),
+	timeout: 60_000,
 };
 const collectionId = 13; /** `webclient` collection */
 const limit = 1000;
@@ -471,7 +472,7 @@ async function getPersons(): Promise<Array<Person>> {
 	const url = createUrl({
 		pathname: "entities/person/",
 		baseUrl,
-		searchParams: { collection: collectionId, limit },
+		searchParams: createUrlSearchParams({ collection: collectionId, limit }),
 	});
 
 	log.info("Fetching persons in collection.");
@@ -522,15 +523,17 @@ async function buildRelationTypeHierarchy() {
 			pathname: `vocabularies/${vocabulary}/`,
 			baseUrl,
 			/** Assume that no relation type vocabulary has more than 1000 entries. */
-			searchParams: { limit: 1000 },
+			searchParams: createUrlSearchParams({ limit: 1000 }),
 		});
 
-		const response = await request(url, options);
-		const _results = response.results as Array<{
-			id: number;
-			name: string;
-			parent_class: { id: number } | null;
-		}>;
+		const response = (await request(url, options)) as {
+			results: Array<{
+				id: number;
+				name: string;
+				parent_class: { id: number } | null;
+			}>;
+		};
+		const _results = response.results;
 
 		results.push(
 			..._results.map((result) => {

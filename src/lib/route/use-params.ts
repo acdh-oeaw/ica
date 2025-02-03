@@ -1,4 +1,4 @@
-import { createUrlSearchParams } from "@stefanprobst/request";
+import { createUrlSearchParams } from "@acdh-oeaw/lib";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 

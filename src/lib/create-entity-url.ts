@@ -1,4 +1,4 @@
-import { createUrl } from "@stefanprobst/request";
+import { createUrl } from "@acdh-oeaw/lib";
 
 import { type EntityBase } from "@/db/types";
 import { entityBaseUrl as baseUrl } from "~/config/api.config";
