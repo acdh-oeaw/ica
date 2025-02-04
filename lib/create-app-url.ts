@@ -1,6 +1,6 @@
 import { createUrl, type CreateUrlParams } from "@acdh-oeaw/lib";
 
-import { baseUrl } from "@/config/app.config";
+import { env } from "@/config/env.config";
 import type { Locale } from "@/config/i18n.config";
 import { createLocalePathname } from "@/lib/create-locale-pathname";
 
@@ -12,7 +12,7 @@ export function createAppUrl(args: CreateAppUrlArgs): URL {
 	const pathname = createLocalePathname(args.pathname, args.locale);
 	return createUrl({
 		...args,
-		baseUrl,
+		baseUrl: env.NEXT_PUBLIC_APP_BASE_URL,
 		pathname,
 	});
 }

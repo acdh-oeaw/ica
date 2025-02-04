@@ -1,0 +1,107 @@
+{
+	"AppFooter": {
+		"links": {
+			"imprint": "Imprint"
+		}
+	},
+	"AppHeader": {
+		"links": {
+			"geo-visualisation": "Geo-Visualisation",
+			"home": "Home",
+			"network-visualisation": "Network-Visualisation"
+		}
+	},
+	"EntityDetails": {
+		"see-database-entry": "See database entry",
+		"see-database-entry-for": "See database entry for {label}",
+		"details": {
+			"professions": "Professions",
+			"notes": "Notes",
+			"references": "References",
+			"related-persons": "Related persons",
+			"related-places": "Related places",
+			"related-institutions": "Related institutions",
+			"related-events": "Related events"
+		}
+	},
+	"Error": {
+		"something-went-wrong": "Something went wrong!",
+		"try-again": "Try again"
+	},
+	"GeoVisualisation": {
+		"filter": {
+			"person": "Persons",
+			"profession": "Professions",
+			"gender": "Gender",
+			"relation-type": "Relation types",
+			"date-range": "Date range"
+		},
+		"form": {
+			"nothing-found": "Nothing found",
+			"remove-item": "Remove {item}",
+			"search": "Search...",
+			"select-option": "Please select an option"
+		},
+		"gender": {
+			"all": "All genders",
+			"female": "Female",
+			"male": "Male"
+		}
+	},
+	"GeoVisualisationPage": {
+		"meta": {
+			"title": "Geo-Visualisation"
+		},
+		"title": "Geo-Visualisation"
+	},
+	"ImprintPage": {
+		"meta": {
+			"title": "Imprint"
+		},
+		"title": "Imprint"
+	},
+	"IndexPage": {
+		"lead-in": "A Visualisation of Transatlantic Networks and Emigration from Central Europe",
+		"title": "Ideas crossing the Atlantic",
+		"explore-graph": "Explore Graph",
+		"explore-map": "Explore Map"
+	},
+	"Loading": {
+		"loading": "Loading"
+	},
+	"LocaleLayout": {
+		"skip-to-main-content": "Skip to main content"
+	},
+	"NetworkVisualisation": {
+		"filter": {
+			"person": "Persons",
+			"profession": "Professions",
+			"gender": "Gender",
+			"relation-type": "Relation types",
+			"date-range": "Date range"
+		},
+		"form": {
+			"nothing-found": "Nothing found",
+			"remove-item": "Remove {item}",
+			"search": "Search...",
+			"select-option": "Please select an option"
+		},
+		"gender": {
+			"all": "All genders",
+			"female": "Female",
+			"male": "Male"
+		}
+	},
+	"NetworkVisualisationPage": {
+		"meta": {
+			"title": "Network-Visualisation"
+		},
+		"title": "Network-Visualisation"
+	},
+	"NotFoundPage": {
+		"meta": {
+			"title": "Page not found"
+		},
+		"title": "Page not found"
+	}
+}

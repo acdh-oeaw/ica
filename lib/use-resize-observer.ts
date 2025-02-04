@@ -1,6 +1,6 @@
+import { noop } from "@acdh-oeaw/lib";
 import { useEffect, useState } from "react";
 
-import { noop } from "@/lib/noop";
 import type { ElementRef } from "@/lib/use-element-ref";
 import { useEvent } from "@/lib/use-event";
 

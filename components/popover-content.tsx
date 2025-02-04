@@ -1,10 +1,10 @@
+import { isNonNullable } from "@acdh-oeaw/lib";
 import { Fragment, type ReactNode } from "react";
 
+import type { SerializablePlaceRelationsMap } from "@/app/geo-visualisation/_components/persons-layer";
 import { db } from "@/db";
 import type { Place, Relation } from "@/db/types";
-import type { SerializablePlaceRelationsMap } from "@/features/map/persons-layer";
 import { createEntityUrl } from "@/lib/create-entity-url";
-import { isNonNullable } from "@/lib/is-non-nullable";
 
 interface PopoverContentProps {
 	place: Place;
@@ -17,12 +17,7 @@ export function PopoverContent(props: PopoverContentProps): ReactNode {
 	return (
 		<div className="grid gap-1 font-sans">
 			<h3 className="text-xs font-medium">
-				<a
-					className="underline decoration-dotted"
-					href={createEntityUrl(place)}
-					target="_blank"
-					rel="noreferrer"
-				>
+				<a className="underline decoration-dotted" href={createEntityUrl(place)} target="_blank">
 					{place.label}
 				</a>
 			</h3>
@@ -73,8 +68,8 @@ function RelationsLabel(props: RelationsListItemProps): ReactNode {
 						<a
 							className="underline decoration-dotted underline-offset-0"
 							href={createEntityUrl(relation.source)}
-							target="_blank"
 							rel="noreferrer"
+							target="_blank"
 						>
 							{relation.source.label}
 						</a>

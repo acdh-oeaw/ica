@@ -1,3 +1,4 @@
+import { isNonNullable } from "@acdh-oeaw/lib";
 import { Combobox, Transition } from "@headlessui/react";
 import {
 	CheckIcon as CheckMarkIcon,
@@ -7,7 +8,6 @@ import {
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { type ChangeEvent, Fragment, type ReactNode, useMemo, useState } from "react";
 
-import { isNonNullable } from "@/lib/is-non-nullable";
 import { useElementRef } from "@/lib/use-element-ref";
 
 const defaultSelectionColor: SelectionColor = { backgroundColor: "#1b1e28", color: "#fff" };
@@ -120,7 +120,7 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): Rea
 										style={{ backgroundColor, color }}
 									>
 										<span className="block truncate">{getDisplayLabel(key)}</span>
-										<button type="button" onClick={onRemoveSelectedKey}>
+										<button onClick={onRemoveSelectedKey} type="button">
 											<span className="sr-only">
 												{messages.removeSelectedKey(getDisplayLabel(key))}
 											</span>

@@ -9,23 +9,18 @@
 	scrollbar-gutter: stable;
 }
 
-:-moz-focusring {
-	outline: auto;
-}
-
-:focus,
-:focus-visible {
-	z-index: var(--z-index-focus-ring);
-	outline: 2px solid var(--color-focus-ring);
-	outline-offset: 2px;
-}
-
-:focus:not(:focus-visible) {
+:focus {
 	/**
    * Not setting `outline: none` to keep all focus outlines (irrespective of `:focus-visible`)
    * in Windows High Contrast Mode.
    */
 	outline: 2px solid transparent;
+}
+
+:focus-visible {
+	z-index: var(--z-index-focus-ring);
+	outline: 2px solid var(--color-focus-ring);
+	outline-offset: 2px;
 }
 
 ::selection {
@@ -52,10 +47,6 @@ body,
 	block-size: 100%;
 }
 
-#__next {
-	isolation: isolate;
-}
-
 a {
 	color: inherit;
 	transition-timing-function: theme(transitionTimingFunction.DEFAULT);
@@ -80,18 +71,10 @@ textarea {
 }
 
 canvas,
-figure,
-iframe,
 img,
-picture,
-svg,
-video {
+svg {
 	display: block;
 	max-width: 100%;
-}
-
-fieldset {
-	border: none;
 }
 
 h1,

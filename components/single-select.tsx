@@ -49,7 +49,7 @@ export function SingleSelect<T extends Item>(props: SingleSelectProps<T>): React
 				<Listbox.Button className="relative w-full cursor-default overflow-hidden rounded-lg bg-neutral-0 py-2 pl-3 pr-10 text-left text-sm shadow-md focus:outline-none focus-visible:border-primary-500 focus-visible:ring-2 focus-visible:ring-neutral-0/75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300">
 					<span className="block truncate">{getDisplayLabel(selectedKey)}</span>
 					<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-						<SelectorIcon className="size-5 text-neutral-400" aria-hidden="true" />
+						<SelectorIcon aria-hidden={true} className="size-5 text-neutral-400" />
 					</span>
 				</Listbox.Button>
 			</div>

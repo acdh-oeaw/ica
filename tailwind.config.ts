@@ -2,17 +2,10 @@ import typographyPlugin from "@tailwindcss/typography";
 import type { Config } from "tailwindcss";
 import colors from "tailwindcss/colors";
 import animatePlugin from "tailwindcss-animate";
+import racPlugin from "tailwindcss-react-aria-components";
 
 const config: Config = {
-	content: ["./**/*.@(css|ts|tsx)"],
-	corePlugins: {
-		backgroundOpacity: false,
-		borderOpacity: false,
-		divideOpacity: false,
-		placeholderOpacity: false,
-		ringOpacity: false,
-		textOpacity: false,
-	},
+	content: ["./@(app|components|styles)/**/*.@(css|ts|tsx)"],
 	theme: {
 		extend: {
 			colors: {
@@ -20,7 +13,7 @@ const config: Config = {
 				primary: colors.slate,
 			},
 			fontFamily: {
-				sans: ["InterVariable", "ui-sans-serif", "system-ui", "sans-serif"],
+				body: ["var(--_font-body, ui-sans-serif)", "system-ui", "sans-serif"],
 			},
 			screens: {
 				xs: "480px",
@@ -31,7 +24,7 @@ const config: Config = {
 			},
 		},
 	},
-	plugins: [animatePlugin, typographyPlugin],
+	plugins: [animatePlugin, racPlugin, typographyPlugin],
 };
 
 export default config;

@@ -1,8 +1,10 @@
 import { createUrl, request, type RequestConfig } from "@acdh-oeaw/lib";
 import useQuery from "swr";
 
-import { baseUrl } from "@/config/api.config";
+import { env } from "@/config/env.config";
 import type { Event, Institution, Person, Place } from "@/db/types";
+
+const baseUrl = `${env.NEXT_PUBLIC_API_BASE_URL}/apis/api/`;
 
 function getPersonById(id: Person["id"]) {
 	const url = createUrl({ baseUrl, pathname: `entities/person/${id}/` });

@@ -1,10 +1,10 @@
 import { isNonEmptyString } from "@acdh-oeaw/lib";
+import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 
 import { db } from "@/db";
 import type { EntityBase, Event, Institution, Person, Place } from "@/db/types";
 import { createEntityUrl } from "@/lib/create-entity-url";
-import { useI18n } from "@/lib/i18n/use-i18n";
 
 interface EntityDetailsProps {
 	entity: EntityBase;
@@ -34,7 +34,7 @@ interface EventProps {
 function Event(props: EventProps): ReactNode {
 	const { id } = props;
 
-	const { t } = useI18n<"common">();
+	const t = useTranslations("EntityDetails");
 
 	const event = db.events.get(id);
 
@@ -47,20 +47,20 @@ function Event(props: EventProps): ReactNode {
 					<h2 className="text-lg font-medium text-neutral-600">{event.label}</h2>
 				</div>
 				<a
-					aria-label={t(["common", "see-database-entry-for"], { values: { label: event.label } })}
+					aria-label={t("see-database-entry-for", { label: event.label })}
 					className="text-xs underline hover:text-primary-700 focus-visible:text-primary-700"
 					href={createEntityUrl(event)}
 					rel="noreferrer"
 					target="_blank"
 				>
-					{t(["common", "see-database-entry"])}
+					{t("see-database-entry")}
 				</a>
 			</div>
 			<dl className="grid gap-y-3">
 				{event.persons.size > 0 ? (
 					<div className="grid gap-1 text-sm">
 						<dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-							{t(["common", "details", "related-persons"])}
+							{t("details.related-persons")}
 						</dt>
 						<dd>
 							{Array.from(event.persons)
@@ -79,7 +79,7 @@ function Event(props: EventProps): ReactNode {
 				{event.places.size > 0 ? (
 					<div className="grid gap-1 text-sm">
 						<dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-							{t(["common", "details", "related-places"])}
+							{t("details.related-places")}
 						</dt>
 						<dd>
 							{Array.from(event.places)
@@ -98,7 +98,7 @@ function Event(props: EventProps): ReactNode {
 				{event.institutions.size > 0 ? (
 					<div className="grid gap-1 text-sm">
 						<dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-							{t(["common", "details", "related-institutions"])}
+							{t("details.related-institutions")}
 						</dt>
 						<dd>
 							{Array.from(event.institutions)
@@ -117,7 +117,7 @@ function Event(props: EventProps): ReactNode {
 				{event.events.size > 0 ? (
 					<div className="grid gap-1 text-sm">
 						<dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-							{t(["common", "details", "related-events"])}
+							{t("details.related-events")}
 						</dt>
 						<dd>
 							{Array.from(event.events)
@@ -145,7 +145,7 @@ interface InstitutionProps {
 function Institution(props: InstitutionProps): ReactNode {
 	const { id } = props;
 
-	const { t } = useI18n<"common">();
+	const t = useTranslations("EntityDetails");
 
 	const institution = db.institutions.get(id);
 
@@ -158,22 +158,20 @@ function Institution(props: InstitutionProps): ReactNode {
 					<h2 className="text-lg font-medium text-neutral-600">{institution.label}</h2>
 				</div>
 				<a
-					aria-label={t(["common", "see-database-entry-for"], {
-						values: { label: institution.label },
-					})}
+					aria-label={t("see-database-entry-for", { label: institution.label })}
 					className="text-xs underline hover:text-primary-700 focus-visible:text-primary-700"
 					href={createEntityUrl(institution)}
 					rel="noreferrer"
 					target="_blank"
 				>
-					{t(["common", "see-database-entry"])}
+					{t("see-database-entry")}
 				</a>
 			</div>
 			<dl className="grid gap-y-3">
 				{institution.persons.size > 0 ? (
 					<div className="grid gap-1 text-sm">
 						<dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-							{t(["common", "details", "related-persons"])}
+							{t("details.related-persons")}
 						</dt>
 						<dd>
 							{Array.from(institution.persons)
@@ -192,7 +190,7 @@ function Institution(props: InstitutionProps): ReactNode {
 				{institution.places.size > 0 ? (
 					<div className="grid gap-1 text-sm">
 						<dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-							{t(["common", "details", "related-places"])}
+							{t("details.related-places")}
 						</dt>
 						<dd>
 							{Array.from(institution.places)
@@ -211,7 +209,7 @@ function Institution(props: InstitutionProps): ReactNode {
 				{institution.institutions.size > 0 ? (
 					<div className="grid gap-1 text-sm">
 						<dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-							{t(["common", "details", "related-institutions"])}
+							{t("details.related-institutions")}
 						</dt>
 						<dd>
 							{Array.from(institution.institutions)
@@ -230,7 +228,7 @@ function Institution(props: InstitutionProps): ReactNode {
 				{institution.events.size > 0 ? (
 					<div className="grid gap-1 text-sm">
 						<dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-							{t(["common", "details", "related-events"])}
+							{t("details.related-events")}
 						</dt>
 						<dd>
 							{Array.from(institution.events)
@@ -258,9 +256,9 @@ interface PersonProps {
 function Person(props: PersonProps): ReactNode {
 	const { id } = props;
 
-	const person = db.persons.get(id);
+	const t = useTranslations("EntityDetails");
 
-	const { t } = useI18n<"common">();
+	const person = db.persons.get(id);
 
 	if (person == null) return null;
 
@@ -285,20 +283,20 @@ function Person(props: PersonProps): ReactNode {
 					) : null}
 				</div>
 				<a
-					aria-label={t(["common", "see-database-entry-for"], { values: { label: person.label } })}
+					aria-label={t("see-database-entry-for", { label: person.label })}
 					className="text-xs underline hover:text-primary-700 focus-visible:text-primary-700"
 					href={createEntityUrl(person)}
 					rel="noreferrer"
 					target="_blank"
 				>
-					{t(["common", "see-database-entry"])}
+					{t("see-database-entry")}
 				</a>
 			</div>
 			<dl className="grid gap-y-3">
 				{person.professions.size > 0 ? (
 					<div className="grid gap-1 text-sm">
 						<dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-							{t(["common", "details", "professions"])}
+							{t("details.professions")}
 						</dt>
 						<dd>
 							{Array.from(person.professions)
@@ -313,7 +311,7 @@ function Person(props: PersonProps): ReactNode {
 				{isNonEmptyString(person.notes) ? (
 					<div className="grid gap-1 text-sm">
 						<dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-							{t(["common", "details", "notes"])}
+							{t("details.notes")}
 						</dt>
 						<dd>{person.notes}</dd>
 					</div>
@@ -321,7 +319,7 @@ function Person(props: PersonProps): ReactNode {
 				{isNonEmptyString(person.references) ? (
 					<div className="grid gap-1 text-sm">
 						<dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-							{t(["common", "details", "references"])}
+							{t("details.references")}
 						</dt>
 						<dd>{person.references}</dd>
 					</div>
@@ -329,7 +327,7 @@ function Person(props: PersonProps): ReactNode {
 				{person.persons.size > 0 ? (
 					<div className="grid gap-1 text-sm">
 						<dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-							{t(["common", "details", "related-places"])}
+							{t("details.related-places")}
 						</dt>
 						<dd>
 							{Array.from(person.persons)
@@ -348,7 +346,7 @@ function Person(props: PersonProps): ReactNode {
 				{person.places.size > 0 ? (
 					<div className="grid gap-1 text-sm">
 						<dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-							{t(["common", "details", "related-places"])}
+							{t("details.related-places")}
 						</dt>
 						<dd>
 							{Array.from(person.places)
@@ -367,7 +365,7 @@ function Person(props: PersonProps): ReactNode {
 				{person.institutions.size > 0 ? (
 					<div className="grid gap-1 text-sm">
 						<dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-							{t(["common", "details", "related-institutions"])}
+							{t("details.related-institutions")}
 						</dt>
 						<dd>
 							{Array.from(person.institutions)
@@ -386,7 +384,7 @@ function Person(props: PersonProps): ReactNode {
 				{person.events.size > 0 ? (
 					<div className="grid gap-1 text-sm">
 						<dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-							{t(["common", "details", "related-events"])}
+							{t("details.related-events")}
 						</dt>
 						<dd>
 							{Array.from(person.events)
@@ -414,9 +412,9 @@ interface PlaceProps {
 function Place(props: PlaceProps): ReactNode {
 	const { id } = props;
 
-	const place = db.places.get(id);
+	const t = useTranslations("EntityDetails");
 
-	const { t } = useI18n<"common">();
+	const place = db.places.get(id);
 
 	if (place == null) return null;
 
@@ -427,20 +425,20 @@ function Place(props: PlaceProps): ReactNode {
 					<h2 className="text-lg font-medium text-neutral-600">{place.label}</h2>
 				</div>
 				<a
-					aria-label={t(["common", "see-database-entry-for"], { values: { label: place.label } })}
+					aria-label={t("see-database-entry-for", { label: place.label })}
 					className="text-xs underline hover:text-primary-700 focus-visible:text-primary-700"
 					href={createEntityUrl(place)}
 					rel="noreferrer"
 					target="_blank"
 				>
-					{t(["common", "see-database-entry"])}
+					{t("see-database-entry")}
 				</a>
 			</div>
 			<dl className="grid gap-y-3">
 				{place.persons.size > 0 ? (
 					<div className="grid gap-1 text-sm">
 						<dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-							{t(["common", "details", "related-persons"])}
+							{t("details.related-persons")}
 						</dt>
 						<dd>
 							{Array.from(place.persons)
@@ -459,7 +457,7 @@ function Place(props: PlaceProps): ReactNode {
 				{place.places.size > 0 ? (
 					<div className="grid gap-1 text-sm">
 						<dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-							{t(["common", "details", "related-places"])}
+							{t("details.related-places")}
 						</dt>
 						<dd>
 							{Array.from(place.places)
@@ -478,7 +476,7 @@ function Place(props: PlaceProps): ReactNode {
 				{place.institutions.size > 0 ? (
 					<div className="grid gap-1 text-sm">
 						<dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-							{t(["common", "details", "related-institutions"])}
+							{t("details.related-institutions")}
 						</dt>
 						<dd>
 							{Array.from(place.institutions)
@@ -497,7 +495,7 @@ function Place(props: PlaceProps): ReactNode {
 				{place.events.size > 0 ? (
 					<div className="grid gap-1 text-sm">
 						<dt className="text-xs font-medium uppercase tracking-wide text-neutral-600">
-							{t(["common", "details", "related-events"])}
+							{t("details.related-events")}
 						</dt>
 						<dd>
 							{Array.from(place.events)

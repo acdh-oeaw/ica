@@ -6,6 +6,7 @@ import {
 	createUrl,
 	createUrlSearchParams,
 	HttpError,
+	isNonNullable,
 	log,
 	request as _request,
 	type RequestConfig,
@@ -15,7 +16,7 @@ import { type HierarchyNode, stratify } from "d3";
 import { format } from "prettier";
 import serialize from "serialize-javascript";
 
-import { baseUrl } from "@/config/api.config";
+import { env } from "@/config/env.config";
 import type {
 	Database,
 	EntityBase,
@@ -29,7 +30,8 @@ import type {
 	RelationBase,
 	RelationTypeBase,
 } from "@/db/types";
-import { isNonNullable } from "@/lib/is-non-nullable";
+
+const baseUrl = `${env.NEXT_PUBLIC_API_BASE_URL}/apis/api/`;
 
 type RelationType = RelationTypeBase & { parent_class?: { id: number } | null };
 interface Context {

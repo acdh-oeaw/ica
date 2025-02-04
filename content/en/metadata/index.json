@@ -1,0 +1,13 @@
+{
+	"description": "A Visualisation of Transatlantic Networks and Emigration from Central Europe.",
+	"title": "Ideas crossing the Atlantic",
+	"twitter": {
+		"creator": "@acdh_oeaw",
+		"site": "@acdh_oeaw"
+	},
+	"manifest": {
+		"description": "A Visualisation of Transatlantic Networks and Emigration from Central Europe.",
+		"name": "Ideas crossing the Atlantic",
+		"short-name": "ICA"
+	}
+}

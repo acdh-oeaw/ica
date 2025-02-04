@@ -1,66 +1,60 @@
-import { log } from "@acdh-oeaw/lib";
-import createBundleAnalyzerPlugin from "@next/bundle-analyzer";
+import createBundleAnalyzer from "@next/bundle-analyzer";
+import localesPlugin from "@react-aria/optimize-locales-plugin";
 import type { NextConfig } from "next";
+import createI18nPlugin from "next-intl/plugin";
 
-import { defaultLocale, locales } from "@/config/i18n.config";
+import { env } from "@/config/env.config";
 
 const config: NextConfig = {
+	/** Compression should be handled by nginx reverse proxy. */
+	compress: false,
 	eslint: {
 		dirs: [process.cwd()],
 		ignoreDuringBuilds: true,
 	},
 	headers() {
+		/** @type {Awaited<ReturnType<NonNullable<NextConfig["headers"]>>>} */
 		const headers = [
+			/** @see https://nextjs.org/docs/app/building-your-application/deploying#streaming-and-suspense */
 			{
-				source: "/:path*",
+				source: "/:path*{/}?",
 				headers: [
 					{
-						key: "X-DNS-Prefetch-Control",
-						value: "on",
-					},
-				],
-			},
-			{
-				source: "/assets/fonts/:path*",
-				headers: [
-					{
-						key: "Cache-Control",
-						value: "public, immutable, max-age=31536000",
+						key: "X-Accel-Buffering",
+						value: "no",
 					},
 				],
 			},
 		];
 
-		if (process.env.NEXT_PUBLIC_BOTS !== "enabled") {
-			headers.push({
-				source: "/:path*",
-				headers: [
-					{
-						key: "X-Robots-Tag",
-						value: "noindex, nofollow",
-					},
-				],
-			});
-
-			log.warn("Indexing by search engines is disallowed.");
-		}
-
 		return Promise.resolve(headers);
 	},
-	i18n: {
-		defaultLocale,
-		locales: locales as ["en"],
+	logging: {
+		fetches: {
+			fullUrl: true,
+		},
 	},
-	output: "standalone",
-	pageExtensions: ["page.tsx", "api.ts"],
-	reactStrictMode: true,
+	output: env.BUILD_MODE,
 	typescript: {
 		ignoreBuildErrors: true,
+	},
+	webpack(config, { isServer }) {
+		/**
+		 * @see https://react-spectrum.adobe.com/react-aria/ssr.html#nextjs-app-router
+		 */
+		if (!isServer) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+			config.plugins.push(localesPlugin.webpack({ locales: [] }));
+		}
+
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+		return config;
 	},
 };
 
 const plugins: Array<(config: NextConfig) => NextConfig> = [
-	createBundleAnalyzerPlugin({ enabled: process.env.BUNDLE_ANALYZER === "enabled" }),
+	createBundleAnalyzer({ enabled: env.BUNDLE_ANALYZER === "enabled" }),
+	createI18nPlugin("./lib/i18n/get-request-config.ts"),
 ];
 
 export default plugins.reduce((config, plugin) => {
