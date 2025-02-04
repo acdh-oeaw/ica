@@ -68,7 +68,6 @@ function RelationsLabel(props: RelationsListItemProps): ReactNode {
 						<a
 							className="underline decoration-dotted underline-offset-0"
 							href={createEntityUrl(relation.source)}
-							rel="noreferrer"
 							target="_blank"
 						>
 							{relation.source.label}

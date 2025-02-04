@@ -50,7 +50,6 @@ function Event(props: EventProps): ReactNode {
 					aria-label={t("see-database-entry-for", { label: event.label })}
 					className="text-xs underline hover:text-primary-700 focus-visible:text-primary-700"
 					href={createEntityUrl(event)}
-					rel="noreferrer"
 					target="_blank"
 				>
 					{t("see-database-entry")}
@@ -161,7 +160,6 @@ function Institution(props: InstitutionProps): ReactNode {
 					aria-label={t("see-database-entry-for", { label: institution.label })}
 					className="text-xs underline hover:text-primary-700 focus-visible:text-primary-700"
 					href={createEntityUrl(institution)}
-					rel="noreferrer"
 					target="_blank"
 				>
 					{t("see-database-entry")}
@@ -286,7 +284,6 @@ function Person(props: PersonProps): ReactNode {
 					aria-label={t("see-database-entry-for", { label: person.label })}
 					className="text-xs underline hover:text-primary-700 focus-visible:text-primary-700"
 					href={createEntityUrl(person)}
-					rel="noreferrer"
 					target="_blank"
 				>
 					{t("see-database-entry")}
@@ -428,7 +425,6 @@ function Place(props: PlaceProps): ReactNode {
 					aria-label={t("see-database-entry-for", { label: place.label })}
 					className="text-xs underline hover:text-primary-700 focus-visible:text-primary-700"
 					href={createEntityUrl(place)}
-					rel="noreferrer"
 					target="_blank"
 				>
 					{t("see-database-entry")}

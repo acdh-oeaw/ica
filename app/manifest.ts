@@ -21,12 +21,6 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
 				type: "image/svg+xml",
 			},
 			{
-				src: "/icon-maskable.svg",
-				sizes: "any",
-				type: "image/svg+xml",
-				purpose: "maskable",
-			},
-			{
 				src: "/android-chrome-192x192.png",
 				sizes: "192x192",
 				type: "image/png",

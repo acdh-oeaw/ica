@@ -25,11 +25,9 @@ export function AppFooter(): ReactNode {
 		<footer className="border-t border-neutral-200">
 			<div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-8 py-4 text-xs font-medium">
 				<span className="flex items-center gap-2">
-					<a href={acdh.href} rel="noreferrer" target="_blank">
-						<Image alt="" className="size-8" src={logo as StaticImageData} />
-					</a>
+					<Image alt="" className="size-8" src={logo as StaticImageData} />
 					&copy; {new Date().getUTCFullYear()}{" "}
-					<a href={acdh.href} rel="noreferrer" target="_blank">
+					<a href={acdh.href} target="_blank">
 						{acdh.label}
 					</a>
 				</span>

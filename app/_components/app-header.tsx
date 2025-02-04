@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 
-import { Link } from "@/components/link";
+import { NavLink } from "@/components/nav-link";
 import { createHref } from "@/lib/create-href";
 
 export function AppHeader(): ReactNode {
@@ -26,12 +26,12 @@ export function AppHeader(): ReactNode {
 		<header className="border-b border-neutral-200">
 			<div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-8 py-4 text-sm font-medium">
 				<div className="shrink-0">
-					<Link
+					<NavLink
 						className="hover:text-primary-700 focus-visible:text-primary-700"
 						href={links.home.href}
 					>
 						{links.home.label}
-					</Link>
+					</NavLink>
 					{/* <strong className="ml-4">(work in progress)</strong> */}
 				</div>
 				<nav>
@@ -41,12 +41,12 @@ export function AppHeader(): ReactNode {
 
 							return (
 								<li key={id}>
-									<Link
+									<NavLink
 										className="transition hover:text-primary-700 focus-visible:text-primary-700"
 										href={link.href}
 									>
 										{link.label}
-									</Link>
+									</NavLink>
 								</li>
 							);
 						})}
