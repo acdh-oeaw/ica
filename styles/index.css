@@ -3,6 +3,11 @@
 
 @import "tailwindcss";
 
+@plugin "@headlessui/tailwindcss";
+@plugin "@tailwindcss/typography";
+@plugin "tailwindcss-animate";
+@plugin "tailwindcss-react-aria-components";
+
 @theme {
 	--color-*: initial;
 
