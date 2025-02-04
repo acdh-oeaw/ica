@@ -37,6 +37,8 @@ export function AppHeader(): ReactNode {
 				<nav>
 					<ul className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2" role="list">
 						{Object.entries(links).map(([id, link]) => {
+							if (id === "home") return null;
+
 							return (
 								<li key={id}>
 									<Link
