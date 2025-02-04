@@ -1,14 +1,19 @@
 import { isNonNullable } from "@acdh-oeaw/lib";
-import { Combobox, Transition } from "@headlessui/react";
-import { useVirtualizer } from "@tanstack/react-virtual";
+import {
+	Combobox,
+	ComboboxButton,
+	ComboboxInput,
+	ComboboxOption,
+	ComboboxOptions,
+	Label,
+	Transition,
+} from "@headlessui/react";
 import {
 	CheckIcon as CheckMarkIcon,
 	ChevronsUpDownIcon as SelectorIcon,
 	XIcon as RemoveIcon,
 } from "lucide-react";
 import { type ChangeEvent, Fragment, type ReactNode, useMemo, useState } from "react";
-
-import { useElementRef } from "@/lib/use-element-ref";
 
 const defaultSelectionColor: SelectionColor = { backgroundColor: "#1b1e28", color: "#fff" };
 
@@ -70,24 +75,6 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): Rea
 		return visibleItems;
 	}, [items, searchTerm]);
 
-	const [element, setElement] = useElementRef();
-	const virtualizer = useVirtualizer({
-		count: visibleItems.length,
-		estimateSize() {
-			return 36;
-		},
-		getItemKey(index) {
-			return visibleItems[index]!.id;
-		},
-		getScrollElement() {
-			return element;
-		},
-		overscan: 10,
-	});
-
-	const height = virtualizer.getTotalSize();
-	const virtualItems = virtualizer.getVirtualItems();
-
 	return (
 		<Combobox
 			as="div"
@@ -96,9 +83,11 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): Rea
 			name={name}
 			onChange={onSelectionChange}
 			value={selectedKeys}
+			// @ts-expect-error It's fine.
+			virtual={{ options: visibleItems }}
 		>
 			<div className="grid gap-y-1">
-				<Combobox.Label className="text-xs font-medium text-neutral-600">{label}</Combobox.Label>
+				<Label className="text-xs font-medium text-neutral-600">{label}</Label>
 				<div className="relative w-full cursor-default overflow-hidden rounded-lg bg-neutral-0 text-left text-sm shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-0/75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300">
 					{selectedKeys.length > 0 ? (
 						<ul className="flex flex-wrap gap-2 p-2 text-xs" role="list">
@@ -132,16 +121,16 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): Rea
 						</ul>
 					) : null}
 					<div className="relative">
-						<Combobox.Input
+						<ComboboxInput
 							autoComplete="off"
 							className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-neutral-900 focus-visible:outline-none"
 							onChange={onInputChange}
 							placeholder={messages.placeholder}
 							value={searchTerm}
 						/>
-						<Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2 text-neutral-400">
+						<ComboboxButton className="absolute inset-y-0 right-0 flex items-center pr-2 text-neutral-400">
 							<SelectorIcon aria-hidden={true} className="size-5" />
-						</Combobox.Button>
+						</ComboboxButton>
 					</div>
 				</div>
 			</div>
@@ -154,51 +143,40 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): Rea
 				leaveFrom="transform scale-100 opacity-100"
 				leaveTo="transform scale-95 opacity-0"
 			>
-				<Combobox.Options className="absolute z-overlay mt-1 w-full rounded-md bg-neutral-0 py-1 text-sm shadow-lg ring-1 ring-neutral-1000/5 focus:outline-none">
-					{searchTerm !== "" && visibleItems.length === 0 ? (
-						<div className="relative cursor-default select-none px-4 py-2 text-neutral-700">
-							{messages.nothingFound}
-						</div>
-					) : null}
-					<div ref={setElement} className="max-h-96 overflow-auto">
-						<div className="relative w-full" style={{ height }}>
-							{virtualItems.map((virtualItem) => {
-								const item = visibleItems[virtualItem.index]!;
-								const { backgroundColor } = getColor?.(item.id) ?? defaultSelectionColor;
+				<ComboboxOptions
+					as="ul"
+					className="empty:invisible absolute max-h-96 overflow-auto z-overlay mt-1 w-full rounded-md bg-neutral-0 py-1 text-sm shadow-lg ring-1 ring-neutral-1000/5 focus:outline-none"
+				>
+					{({ option }) => {
+						const item = option as T;
+						const { backgroundColor } = getColor?.(item.id) ?? defaultSelectionColor;
 
-								return (
-									<Combobox.Option
-										key={item.id}
-										className="absolute left-0 top-0 w-full cursor-default select-none py-2 pl-10 pr-4 ui-active:bg-neutral-100 ui-active:text-neutral-900"
-										style={{
-											height: virtualItem.size,
-											transform: `translateY(${String(virtualItem.start)}px)`,
-										}}
-										value={item.id}
-									>
-										{({ selected }) => {
-											return (
-												<Fragment>
-													<span className="block truncate ui-selected:font-medium">
-														{item.label}
-													</span>
-													{selected ? (
-														<span
-															className="absolute inset-y-0 left-0 grid place-items-center pl-3"
-															style={{ color: backgroundColor }}
-														>
-															<CheckMarkIcon aria-hidden={true} className="size-5" />
-														</span>
-													) : null}
-												</Fragment>
-											);
-										}}
-									</Combobox.Option>
-								);
-							})}
-						</div>
-					</div>
-				</Combobox.Options>
+						return (
+							<ComboboxOption
+								key={item.id}
+								as="li"
+								className="relative w-full cursor-default select-none py-2 pl-10 pr-4 ui-active:bg-neutral-100 ui-active:text-neutral-900"
+								value={item.id}
+							>
+								{({ selected }) => {
+									return (
+										<Fragment>
+											<span className="block truncate ui-selected:font-medium">{item.label}</span>
+											{selected ? (
+												<span
+													className="absolute inset-y-0 left-0 grid place-items-center pl-3"
+													style={{ color: backgroundColor }}
+												>
+													<CheckMarkIcon aria-hidden={true} className="size-5" />
+												</span>
+											) : null}
+										</Fragment>
+									);
+								}}
+							</ComboboxOption>
+						);
+					}}
+				</ComboboxOptions>
 			</Transition>
 		</Combobox>
 	);
