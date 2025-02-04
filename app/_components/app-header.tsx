@@ -42,7 +42,7 @@ export function AppHeader(): ReactNode {
 							return (
 								<li key={id}>
 									<Link
-										className="hover:text-primary-700 focus-visible:text-primary-700"
+										className="transition hover:text-primary-700 focus-visible:text-primary-700"
 										href={link.href}
 									>
 										{link.label}
