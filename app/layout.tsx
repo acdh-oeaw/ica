@@ -75,7 +75,7 @@ export default async function LocaleLayout(props: Readonly<LocaleLayoutProps>): 
 
 	return (
 		<html
-			className={cn(fonts.body.variable, "bg-white font-body text-neutral-950 antialiased")}
+			className={cn(fonts.body.variable, "bg-background font-body text-text antialiased")}
 			lang={locale}
 			/**
 			 * Suppressing hydration warning because we add `data-ui-color-scheme` before first paint.

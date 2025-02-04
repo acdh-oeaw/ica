@@ -37,7 +37,7 @@ export default async function IndexPage(_props: Readonly<IndexPageProps>): Promi
 
 	return (
 		<MainContent>
-			<section className="relative border-y border-primary-200 bg-primary-50">
+			<section className="relative border-y border-neutral-200 bg-background">
 				<Image
 					alt=""
 					className="absolute inset-0 size-full object-cover opacity-40"

@@ -11,6 +11,9 @@ const config: Config = {
 			colors: {
 				neutral: { 0: colors.white, ...colors.slate, 1000: colors.black },
 				primary: colors.slate,
+				background: "var(--color-background)",
+				text: "var(--color-text)",
+				"heading-text": "var(--color-heading-text)",
 			},
 			fontFamily: {
 				body: ["var(--_font-body, ui-sans-serif)", "system-ui", "sans-serif"],
