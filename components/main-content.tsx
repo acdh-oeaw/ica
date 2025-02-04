@@ -12,7 +12,11 @@ export function MainContent(props: Readonly<MainContentProps>): ReactNode {
 	const { children, className } = props;
 
 	return (
-		<main className={cn("outline-none", className)} id={id} tabIndex={-1}>
+		<main
+			className={cn("outline-none focus-visible:outline-none", className)}
+			id={id}
+			tabIndex={-1}
+		>
 			{children}
 		</main>
 	);

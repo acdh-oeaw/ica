@@ -28,7 +28,7 @@ interface RangeSliderProps {
 export function RangeSlider(props: RangeSliderProps): ReactNode {
 	const { getValueLabel = getYearRange, label, name } = props;
 
-	const trackRef = useRef<HTMLDivElement>(null);
+	const trackRef = useRef<HTMLDivElement | null>(null);
 	const numberFormatter = useNumberFormatter();
 	const state = useSliderState<[number, number]>({ ...props, numberFormatter });
 	const { groupProps, trackProps, labelProps, outputProps } = useSlider(props, state, trackRef);
@@ -62,7 +62,7 @@ interface ThumbProps {
 	"aria-label": string;
 	index: number;
 	name: string;
-	trackRef: RefObject<HTMLDivElement>;
+	trackRef: RefObject<HTMLDivElement | null>;
 	state: SliderState;
 }
 
