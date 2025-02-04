@@ -1,11 +1,11 @@
 import { isNonNullable } from "@acdh-oeaw/lib";
 import { Combobox, Transition } from "@headlessui/react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import {
 	CheckIcon as CheckMarkIcon,
-	ChevronUpDownIcon as SelectorIcon,
-	XMarkIcon as RemoveIcon,
-} from "@heroicons/react/20/solid";
-import { useVirtualizer } from "@tanstack/react-virtual";
+	ChevronsUpDownIcon as SelectorIcon,
+	XIcon as RemoveIcon,
+} from "lucide-react";
 import { type ChangeEvent, Fragment, type ReactNode, useMemo, useState } from "react";
 
 import { useElementRef } from "@/lib/use-element-ref";

@@ -1,8 +1,5 @@
 import { Listbox, Transition } from "@headlessui/react";
-import {
-	CheckIcon as CheckMarkIcon,
-	ChevronUpDownIcon as SelectorIcon,
-} from "@heroicons/react/20/solid";
+import { CheckIcon as CheckMarkIcon, ChevronsUpDownIcon as SelectorIcon } from "lucide-react";
 import { Fragment, type ReactNode } from "react";
 
 const defaultSelectionColor: SelectionColor = { backgroundColor: "#1b1e28", color: "#fff" };
