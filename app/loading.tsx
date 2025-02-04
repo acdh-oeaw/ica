@@ -8,7 +8,7 @@ export default function Loading(): ReactNode {
 	const t = useTranslations("Loading");
 
 	return (
-		<MainContent className="bg-primary-50">
+		<MainContent className="bg-background">
 			<section className="grid place-content-center place-items-center py-16 xs:py-24 ">
 				<LoadingIndicator aria-label={t("loading")} />
 			</section>

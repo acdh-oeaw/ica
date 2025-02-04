@@ -32,9 +32,9 @@ export default function NotFoundPage(_props: Readonly<NotFoundPageProps>): React
 	const t = useTranslations("NotFoundPage");
 
 	return (
-		<MainContent className="bg-primary-50">
-			<section className="grid place-content-center place-items-center py-16 xs:py-24">
-				<h1 className="text-balance text-center text-2xl font-bold">{t("title")}</h1>
+		<MainContent className="bg-background">
+			<section className="h-full grid place-content-center place-items-center gap-y-6 py-16 xs:py-24">
+				<h1 className="text-balance text-center text-4xl font-bold">{t("title")}</h1>
 			</section>
 		</MainContent>
 	);
