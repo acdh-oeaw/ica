@@ -1,3 +1,4 @@
+import headlessUiPlugin from "@headlessui/tailwindcss";
 import typographyPlugin from "@tailwindcss/typography";
 import type { Config } from "tailwindcss";
 import colors from "tailwindcss/colors";
@@ -27,7 +28,7 @@ const config: Config = {
 			},
 		},
 	},
-	plugins: [animatePlugin, racPlugin, typographyPlugin],
+	plugins: [animatePlugin, headlessUiPlugin, racPlugin, typographyPlugin],
 };
 
 export default config;
