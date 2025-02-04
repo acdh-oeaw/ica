@@ -169,7 +169,7 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): Rea
 								return (
 									<Combobox.Option
 										key={item.id}
-										className="ui-active:bg-neutral-100 ui-active:text-neutral-900 absolute left-0 top-0 w-full cursor-default select-none py-2 pl-10 pr-4"
+										className="absolute left-0 top-0 w-full cursor-default select-none py-2 pl-10 pr-4 ui-active:bg-neutral-100 ui-active:text-neutral-900"
 										style={{
 											height: virtualItem.size,
 											transform: `translateY(${String(virtualItem.start)}px)`,
@@ -179,7 +179,7 @@ export function MultiComboBox<T extends Item>(props: MultiComboBoxProps<T>): Rea
 										{({ selected }) => {
 											return (
 												<Fragment>
-													<span className="ui-selected:font-medium block truncate">
+													<span className="block truncate ui-selected:font-medium">
 														{item.label}
 													</span>
 													{selected ? (

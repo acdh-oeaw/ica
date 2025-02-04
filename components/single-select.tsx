@@ -66,13 +66,13 @@ export function SingleSelect<T extends Item>(props: SingleSelectProps<T>): React
 						return (
 							<Listbox.Option
 								key={item.id}
-								className="ui-active:bg-neutral-100 ui-active:text-neutral-900 relative cursor-default select-none py-2 pl-10 pr-4"
+								className="relative cursor-default select-none py-2 pl-10 pr-4 ui-active:bg-neutral-100 ui-active:text-neutral-900"
 								value={item.id}
 							>
 								{({ selected }) => {
 									return (
 										<Fragment>
-											<span className="ui-selected:font-medium block truncate">{item.label}</span>
+											<span className="block truncate ui-selected:font-medium">{item.label}</span>
 											{selected ? (
 												<span
 													className="absolute inset-y-0 left-0 grid place-items-center pl-3"
