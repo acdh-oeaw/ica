@@ -71,7 +71,7 @@ export default async function LocaleLayout(props: Readonly<LocaleLayoutProps>): 
 	const locale = await getLocale();
 	const t = await getTranslations("LocaleLayout");
 	const meta = await getTranslations("metadata");
-	const messages = (await getMessages()) as IntlMessages;
+	const messages = await getMessages();
 
 	return (
 		<html

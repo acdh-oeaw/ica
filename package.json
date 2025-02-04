@@ -47,11 +47,11 @@
 		"fast-glob": "^3.3.3",
 		"force-graph": "^1.49.0",
 		"image-dimensions": "^2.3.0",
-		"lucide-react": "^0.471.1",
+		"lucide-react": "^0.474.0",
 		"maplibre-gl": "^5.1.0",
 		"markdown-it": "^14.1.0",
 		"next": "^15.1.6",
-		"next-intl": "^3.26.3",
+		"next-intl": "^4.0.0-beta-c4c5986",
 		"react": "^19.0.0",
 		"react-aria": "^3.37.0",
 		"react-aria-components": "^1.6.0",
@@ -62,7 +62,7 @@
 		"server-only": "^0.0.1",
 		"sharp": "^0.33.5",
 		"swr": "^2.3.0",
-		"valibot": "1.0.0-beta.12"
+		"valibot": "^1.0.0-beta.12"
 	},
 	"devDependencies": {
 		"@acdh-oeaw/eslint-config": "^2.0.6",
@@ -95,8 +95,8 @@
 		"dotenv-cli": "^8.0.0",
 		"dotenv-expand": "^12.0.1",
 		"eslint": "^9.18.0",
-		"eslint-config-flat-gitignore": "^1.0.0",
-		"eslint-plugin-check-file": "^2.8.0",
+		"eslint-config-flat-gitignore": "^2.0.0",
+		"eslint-plugin-check-file": "^3.0.0",
 		"globals": "^15.14.0",
 		"is-ci": "^4.1.0",
 		"lint-staged": "^15.4.0",
