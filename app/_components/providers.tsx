@@ -21,7 +21,7 @@ export function Providers(props: Readonly<ProvidersProps>): ReactNode {
 	return (
 		// eslint-disable-next-line @typescript-eslint/unbound-method
 		<RouterProvider navigate={router.push}>
-			<NextIntlClientProvider locale={locale} messages={messages} timeZone="UTC">
+			<NextIntlClientProvider locale={locale} messages={messages}>
 				<I18nProvider locale={locale}>{children}</I18nProvider>
 			</NextIntlClientProvider>
 		</RouterProvider>
