@@ -32,7 +32,7 @@ export function AppHeader(): ReactNode {
 					>
 						{links.home.label}
 					</Link>
-					<strong className="ml-4">(work in progress)</strong>
+					{/* <strong className="ml-4">(work in progress)</strong> */}
 				</div>
 				<nav>
 					<ul className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2" role="list">
