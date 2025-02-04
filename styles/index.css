@@ -1,22 +1,176 @@
+/* stylelint-disable color-no-hex */
 /* stylelint-disable custom-property-empty-line-before */
 
-@import "tailwindcss/tailwind.css";
-@import "@/styles/globals.css";
+@import "tailwindcss";
 
-:root {
-	--color-background: theme(colors.neutral.50);
-	--color-text: theme(colors.neutral.900);
-	--color-heading-text: theme(colors.neutral.900);
-	--color-focus-ring: theme(colors.primary.600);
-	--color-selection-background: theme(colors.primary.600);
-	--color-selection-text: theme(colors.neutral.0);
+@theme {
+	--color-*: initial;
 
-	--font-family-text: var(--_font-body, ui-sans-serif), system-ui, sans-serif;
+	--color-neutral-0: #fff;
+	--color-neutral-50: #f8fafc;
+	--color-neutral-100: #f1f5f9;
+	--color-neutral-200: #e2e8f0;
+	--color-neutral-300: #cbd5e1;
+	--color-neutral-400: #94a3b8;
+	--color-neutral-500: #64748b;
+	--color-neutral-600: #475569;
+	--color-neutral-700: #334155;
+	--color-neutral-800: #1e293b;
+	--color-neutral-900: #0f172a;
+	--color-neutral-950: #020617;
+	--color-neutral-1000: #000;
+
+	--color-primary-50: #f8fafc;
+	--color-primary-100: #f1f5f9;
+	--color-primary-200: #e2e8f0;
+	--color-primary-300: #cbd5e1;
+	--color-primary-400: #94a3b8;
+	--color-primary-500: #64748b;
+	--color-primary-600: #475569;
+	--color-primary-700: #334155;
+	--color-primary-800: #1e293b;
+	--color-primary-900: #0f172a;
+	--color-primary-950: #020617;
+
+	--color-background: var(--color-neutral-50);
+	--color-text: var(--color-neutral-900);
+	--color-heading-text: var(--color-neutral-900);
+	--color-focus-ring: var(--color-primary-600);
+	--color-selection-background: var(--color-primary-600);
+	--color-selection-text: var(--color-neutral-0);
+
+	--breakpoint-xs: 480px;
 
 	--z-index-dialog: 100;
 	--z-index-focus-ring: 10;
 	--z-index-page-load-progress-indicator: 50;
 	--z-index-overlay: 200;
+}
 
-	color-scheme: light;
+@theme inline {
+	--font-body: var(--_font-body, ui-sans-serif), system-ui, sans-serif;
+}
+
+@layer base {
+	*,
+	*::before,
+	*::after {
+		min-width: 0;
+		min-height: 0;
+		scrollbar-gutter: stable;
+	}
+
+	:focus {
+		/**
+   * Not setting `outline: none` to keep all focus outlines (irrespective of `:focus-visible`)
+   * in Windows High Contrast Mode.
+   */
+		outline: 2px solid transparent;
+	}
+
+	:focus-visible {
+		z-index: var(--z-index-focus-ring);
+		outline: 2px solid var(--color-focus-ring);
+		outline-offset: 2px;
+	}
+
+	::selection {
+		background-color: var(--color-selection-background);
+		color: var(--color-selection-text);
+	}
+
+	:root {
+		background-color: var(--color-background);
+		color: var(--color-text);
+		font-family: var(--font-family-text);
+		overflow-wrap: break-word;
+		tab-size: 4;
+		text-size-adjust: none;
+		touch-action: manipulation;
+		-webkit-font-smoothing: antialiased;
+		text-rendering: optimizeLegibility;
+		-webkit-tap-highlight-color: transparent;
+		color-scheme: light;
+	}
+
+	html,
+	body {
+		block-size: 100%;
+	}
+
+	a {
+		color: inherit;
+		transition-timing-function: var(--default-transition-timing-function);
+		transition-duration: var(--default-transition-duration);
+		transition-property: color;
+		text-underline-offset: 0.25em;
+		text-decoration-thickness: from-font;
+		text-underline-position: from-font;
+
+		&:hover {
+			color: var(--colors-primary-600);
+		}
+	}
+
+	button,
+	input,
+	select,
+	textarea {
+		font: inherit;
+		letter-spacing: inherit;
+		word-spacing: inherit;
+	}
+
+	canvas,
+	img,
+	svg {
+		display: block;
+		max-width: 100%;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		color: var(--color-heading-text);
+	}
+
+	[hidden] {
+		display: none !important;
+	}
+
+	[id] {
+		scroll-margin-block-start: 2ex;
+	}
+
+	/* stylelint-disable-next-line order/order */
+	@media (prefers-reduced-motion: reduce) {
+		*,
+		*::before,
+		*::after {
+			/** Not set to 0, to ensure `transitionend` and `animationend` events still fire. */
+			transition-duration: 0.01ms !important;
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+			scroll-behavior: auto !important;
+		}
+	}
+
+	.maplibregl-canvas-container,
+	.maplibregl-control-container {
+		isolation: isolate;
+	}
+
+	.maplibregl-popup-content {
+		overflow-y: auto;
+		max-height: 320px;
+		cursor: default;
+	}
+
+	.force-graph-container div.graph-tooltip {
+		font-size: 0.75rem;
+		font-family: var(--font-body);
+	}
 }
