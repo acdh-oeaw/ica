@@ -41,6 +41,7 @@ export default async function IndexPage(_props: Readonly<IndexPageProps>): Promi
 				<Image
 					alt=""
 					className="absolute inset-0 size-full object-cover opacity-40"
+					decoding="sync"
 					priority={true}
 					sizes="100vw"
 					src={hero}
