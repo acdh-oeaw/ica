@@ -1,11 +1,6 @@
 {
-	"name": "Node.js & TypeScript",
-	"build": {
-		"dockerfile": "Dockerfile",
-		"args": {
-			"VARIANT": "18-bullseye"
-		}
-	},
+	"name": "Next.js",
+	"image": "ghcr.io/acdh-oeaw/devcontainer-frontend:22",
 	"customizations": {
 		"vscode": {
 			"extensions": [
@@ -13,15 +8,11 @@
 				"dbaeumer.vscode-eslint",
 				"editorconfig.editorconfig",
 				"esbenp.prettier-vscode",
+				"lokalise.i18n-ally",
 				"mikestead.dotenv",
+				"ms-playwright.playwright",
 				"stylelint.vscode-stylelint"
 			]
 		}
-	},
-	"features": {
-		"github-cli": "latest"
-	},
-	"forwardPorts": [3000],
-	"postCreateCommand": "pnpm install",
-	"remoteUser": "node"
+	}
 }

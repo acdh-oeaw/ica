@@ -4,45 +4,52 @@
 node_modules/
 .pnpm-store/
 
-# next.js
-/.next
-/out
-
-# misc
-.DS_Store
-*.pem
-
 # logs
 *.log
 
-# local env files
+# non-public environment variables
+.env.keys
 .env.local
 .env.*.local
 
-# typescript
+# caches
+.eslintcache
+.prettiercache
+.stylelintcache
 *.tsbuildinfo
+
+# performance profiles
+*.cpuprofile
+*.heapprofile
+*.heapsnapshot
+
+# vercel
+.vercel
+
+# misc
+.DS_Store
+.idea/
+
+# next.js
+.next/
 next-env.d.ts
+out/
 
-# auto-generated favicons
-public/favicon.ico
-public/icon.svg
-public/android-chrome-192x192.png
-public/android-chrome-512x512.png
-public/apple-touch-icon.png
-public/app.webmanifest
-public/image.webp
+# test
+/coverage/
 
-# generated database (currently not ignored because fetching takes relatively long)
-# src/db/institutions.ts
-# src/db/persons.ts
-# src/db/places.ts
-# src/db/professions.ts
+# playwright
+/blob-report/
+/playwright/.cache/
+/playwright-report/
+/test-results/
 
 
 ## .dockerignore ##
 
 # git
 .git/
+.gitattributes
 .gitignore
 
 # github
@@ -50,3 +57,15 @@ public/image.webp
 
 # vscode settings
 .vscode/
+
+# environment variables
+.env
+.env.*
+
+# tests
+playwright.config.ts
+/e2e/
+/test/
+
+# misc
+.editorconfig
