@@ -6,7 +6,7 @@
 # @see https://sharp.pixelplumbing.com/install#linux-memory-allocator
 
 # build
-FROM node:22-alpine AS build
+FROM node:24-alpine AS build
 
 RUN corepack enable
 
@@ -15,7 +15,7 @@ WORKDIR /app
 
 USER node
 
-COPY --chown=node:node .npmrc package.json pnpm-lock.yaml ./
+COPY --chown=node:node .npmrc package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 RUN pnpm fetch
 
@@ -43,7 +43,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN pnpm run build
 
 # serve
-FROM node:22-alpine AS serve
+FROM node:24-alpine AS serve
 
 RUN mkdir /app && chown -R node:node /app
 WORKDIR /app

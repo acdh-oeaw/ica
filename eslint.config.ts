@@ -7,9 +7,8 @@ import reactConfig from "@acdh-oeaw/eslint-config-react";
 import gitignore from "eslint-config-flat-gitignore";
 // @ts-expect-error Missing type declaration.
 import checkFilePlugin from "eslint-plugin-check-file";
-import type { Config } from "typescript-eslint";
 
-const config: Config = [
+const config = [
 	gitignore({ strict: false }),
 	...baseConfig,
 	...reactConfig,
