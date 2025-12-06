@@ -21,7 +21,7 @@
 		"lint:styles:check": "stylelint \"./**/*.css\" --cache --ignore-path ./.gitignore",
 		"lint:styles:fix": "pnpm run lint:styles:check --fix",
 		"preinstall": "npx only-allow pnpm",
-		"prepare": "run-s setup",
+		"prepare": "run-s setup types:prepare",
 		"setup": "is-ci || simple-git-hooks",
 		"start": "next start",
 		"test": "exit 0",
@@ -31,6 +31,7 @@
 		"test:e2e:ui": "playwright test --ui",
 		"test:e2e:update-snapshots": "playwright test --update-snapshots",
 		"types:check": "tsc --noEmit",
+		"types:prepare": "next typegen",
 		"validate": "run-p format:check lint:check types:check test test:e2e"
 	},
 	"dependencies": {
