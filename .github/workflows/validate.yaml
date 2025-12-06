@@ -25,6 +25,12 @@ jobs:
         node-version: [24.x]
         os: [ubuntu-24.04]
 
+    env:
+      NEXT_PUBLIC_API_BASE_URL: "${{ vars.NEXT_PUBLIC_API_BASE_URL }}"
+      NEXT_PUBLIC_APP_BASE_URL: "http://localhost:3000"
+      NEXT_PUBLIC_MATOMO_BASE_URL: "${{ vars.NEXT_PUBLIC_MATOMO_BASE_URL }}"
+      NEXT_PUBLIC_REDMINE_ID: "${{ vars.SERVICE_ID }}"
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -81,19 +87,9 @@ jobs:
 
       - name: Build app
         run: pnpm run build
-        env:
-          NEXT_PUBLIC_API_BASE_URL: "${{ vars.NEXT_PUBLIC_API_BASE_URL }}"
-          NEXT_PUBLIC_APP_BASE_URL: "http://localhost:3000"
-          NEXT_PUBLIC_MATOMO_BASE_URL: "${{ vars.NEXT_PUBLIC_MATOMO_BASE_URL }}"
-          NEXT_PUBLIC_REDMINE_ID: "${{ vars.SERVICE_ID }}"
 
       - name: Run e2e tests
         run: pnpm run test:e2e --pass-with-no-tests
-        env:
-          ENV_VALIDATION: "disabled"
-          NEXT_PUBLIC_APP_BASE_URL: "http://localhost:3000"
-          NEXT_PUBLIC_MATOMO_BASE_URL: "${{ vars.NEXT_PUBLIC_MATOMO_BASE_URL }}"
-          NEXT_PUBLIC_REDMINE_ID: "${{ vars.SERVICE_ID }}"
 
       - uses: actions/upload-artifact@v5
         if: ${{ !cancelled() }}
