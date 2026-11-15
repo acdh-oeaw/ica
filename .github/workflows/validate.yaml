@@ -6,6 +6,11 @@ concurrency:
 
 on:
   workflow_dispatch:
+    inputs:
+      update-snapshots:
+        description: "Regenerate visual snapshots on the CI runner and upload them as an artifact"
+        type: boolean
+        default: false
   pull_request:
     branches:
       - main
@@ -22,8 +27,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        node-version: [24.x]
-        os: [ubuntu-24.04]
+        node-version: [26.x]
+        os: [ubuntu-26.04]
 
     env:
       NEXT_PUBLIC_API_BASE_URL: "${{ vars.NEXT_PUBLIC_API_BASE_URL }}"
@@ -33,13 +38,15 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/setup@v3
+        with:
+          install: false
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
@@ -56,16 +63,13 @@ jobs:
       - name: Typecheck
         run: pnpm run types:check
 
-      - name: Test
-        run: pnpm run test
-
       - name: Get playwright version
         run: |
           PLAYWRIGHT_VERSION=$(pnpm ls @playwright/test --json | jq --raw-output '.[0].devDependencies["@playwright/test"].version')
-          echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
+          echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> "$GITHUB_ENV"
 
       - name: Cache playwright browsers
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         id: cache-playwright-browsers
         with:
           path: "~/.cache/ms-playwright"
@@ -80,7 +84,7 @@ jobs:
 
       # https://nextjs.org/docs/pages/building-your-application/deploying/ci-build-caching#github-actions
       - name: Cache Next.js build output
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: "${{ github.workspace }}/.next/cache"
           key: "${{ matrix.os }}-nextjs-${{ hashFiles('pnpm-lock.yaml') }}"
@@ -89,9 +93,23 @@ jobs:
         run: pnpm run build
 
       - name: Run e2e tests
-        run: pnpm run test:e2e --pass-with-no-tests
+        if: ${{ !inputs.update-snapshots }}
+        run: xvfb-run --auto-servernum pnpm run test:e2e --pass-with-no-tests
 
-      - uses: actions/upload-artifact@v5
+      - name: Update visual snapshots
+        if: ${{ inputs.update-snapshots }}
+        run: xvfb-run --auto-servernum pnpm run test:e2e:update-snapshots
+
+      - name: Upload visual snapshots
+        uses: actions/upload-artifact@v7
+        if: ${{ inputs.update-snapshots }}
+        with:
+          name: snapshots
+          path: e2e/snapshots/
+          if-no-files-found: error
+          retention-days: 7
+
+      - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: playwright-report

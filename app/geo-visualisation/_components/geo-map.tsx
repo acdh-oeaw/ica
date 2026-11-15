@@ -1,5 +1,6 @@
 import "maplibre-gl/dist/maplibre-gl.css";
 
+import { setWorkerUrl } from "maplibre-gl";
 import { forwardRef, type ReactNode } from "react";
 import {
 	Map,
@@ -12,6 +13,9 @@ import {
 
 import { useElementDimensions } from "@/lib/use-element-dimensions";
 import { type ElementRef, useElementRef } from "@/lib/use-element-ref";
+
+// A static URL lets Turbopack emit MapLibre's worker as a separate asset.
+setWorkerUrl(new URL("maplibre-gl/dist/maplibre-gl-worker.mjs", import.meta.url).href);
 
 interface GeoMapProps extends Omit<MapProps, "mapLib"> {
 	children?: ReactNode;

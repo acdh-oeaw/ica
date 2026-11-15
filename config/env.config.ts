@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax */
+/* oxlint-disable no-restricted-properties */
 
 import { log } from "@acdh-oeaw/lib";
 import { createEnv } from "@acdh-oeaw/validate-env/next";
@@ -15,7 +15,6 @@ export const env = createEnv({
 	private(input) {
 		const Schema = v.object({
 			BUILD_MODE: v.optional(v.picklist(["export", "standalone"])),
-			BUNDLE_ANALYZER: v.optional(v.picklist(["disabled", "enabled"]), "disabled"),
 			CI: v.optional(v.pipe(v.unknown(), v.transform(Boolean), v.boolean())),
 		});
 
@@ -44,7 +43,6 @@ export const env = createEnv({
 	},
 	environment: {
 		BUILD_MODE: process.env.BUILD_MODE,
-		BUNDLE_ANALYZER: process.env.BUNDLE_ANALYZER,
 		CI: process.env.CI,
 		NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
 		NEXT_PUBLIC_APP_BASE_URL: process.env.NEXT_PUBLIC_APP_BASE_URL,
@@ -63,7 +61,6 @@ export const env = createEnv({
 		if (error instanceof v.ValiError) {
 			const message = "Invalid environment variables";
 
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 			log.error(`${message}:`, v.flatten(error.issues).nested);
 
 			const validationError = new Error(message);

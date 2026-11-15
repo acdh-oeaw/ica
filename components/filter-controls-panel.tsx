@@ -1,4 +1,4 @@
-import type { FormEvent, ReactNode } from "react";
+import type { ReactNode, SubmitEvent } from "react";
 
 interface FilterControlsPanelProps {
 	children: ReactNode;
@@ -8,7 +8,7 @@ interface FilterControlsPanelProps {
 export function FilterControlsPanel(props: FilterControlsPanelProps): ReactNode {
 	const { children, name } = props;
 
-	function onSubmit(event: FormEvent<HTMLFormElement>) {
+	function onSubmit(event: SubmitEvent<HTMLFormElement>) {
 		event.preventDefault();
 	}
 

@@ -5,6 +5,15 @@ import { defaultLocale } from "@/config/i18n.config";
 import { expect, test } from "@/e2e/lib/test";
 
 test.describe("app", () => {
+	test("should serve an uncached health check", async ({ request }) => {
+		const response = await request.get("/health");
+
+		expect(response.status()).toBe(200);
+		expect(response.headers()["cache-control"]).toBe("no-store");
+		expect(response.headers()["content-type"]).toBe("text/plain; charset=utf-8");
+		expect(await response.text()).toBe("OK");
+	});
+
 	if (env.NEXT_PUBLIC_BOTS !== "enabled") {
 		test("should serve a robots.txt which disallows search engine bots", async ({ request }) => {
 			const response = await request.get("/robots.txt");
@@ -81,6 +90,18 @@ test.describe("app", () => {
 					{ src: "/icon.svg", sizes: "any", type: "image/svg+xml" },
 					{ src: "/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
 					{ src: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
+					{
+						src: "/icon-maskable.svg",
+						sizes: "any",
+						type: "image/svg+xml",
+						purpose: "maskable",
+					},
+					{
+						src: "/maskable-icon.png",
+						sizes: "512x512",
+						type: "image/png",
+						purpose: "maskable",
+					},
 				],
 			}),
 		);

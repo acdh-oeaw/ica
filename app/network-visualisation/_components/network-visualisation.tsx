@@ -26,16 +26,10 @@ export function NetworkVisualisation(): ReactNode {
 			persons: {
 				placeholder: t("form.search"),
 				nothingFound: t("form.nothing-found"),
-				removeSelectedKey(label: string) {
-					return t("form.remove-item", { item: label });
-				},
 			},
 			professions: {
 				placeholder: t("form.search"),
 				nothingFound: t("form.nothing-found"),
-				removeSelectedKey(label: string) {
-					return t("form.remove-item", { item: label });
-				},
 			},
 			gender: {
 				placeholder: t("form.select-option"),
@@ -43,9 +37,6 @@ export function NetworkVisualisation(): ReactNode {
 			relationTypes: {
 				placeholder: t("form.search"),
 				nothingFound: t("form.nothing-found"),
-				removeSelectedKey(label: string) {
-					return t("form.remove-item", { item: label });
-				},
 			},
 		};
 	}, [t]);

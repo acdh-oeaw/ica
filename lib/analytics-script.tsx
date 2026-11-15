@@ -1,11 +1,11 @@
 "use client";
 
 import { createUrl } from "@acdh-oeaw/lib";
+import { useLocale } from "next-intl";
 import type { NextWebVitalsMetric } from "next/app";
 import { useSearchParams } from "next/navigation";
 import Script from "next/script";
 import { useReportWebVitals } from "next/web-vitals";
-import { useLocale } from "next-intl";
 import { Fragment, type ReactNode, Suspense, useEffect } from "react";
 
 import { env } from "@/config/env.config";

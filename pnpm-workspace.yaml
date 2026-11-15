@@ -1,5 +1,12 @@
-onlyBuiltDependencies:
-  - '@swc/core'
-  - esbuild
-  - sharp
-  - simple-git-hooks
+allowBuilds:
+  '@parcel/watcher': true
+  '@swc/core': true
+  esbuild: true
+  lefthook: true
+
+engineStrict: true
+
+shellEmulator: true
+
+patchedDependencies:
+  '@react-aria/optimize-locales-plugin@2.1.0': patches/@react-aria__optimize-locales-plugin.patch
