@@ -23,14 +23,14 @@ ingress:
   annotations:
     traefik.ingress.kubernetes.io/router.middlewares: kube-system-compress@kubernetescrd
 livenessProbe:
-  path: "/"
+  path: "/health"
   initialDelaySeconds: 15
   timeoutSeconds: 15
   periodSeconds: 30
   scheme: "HTTP"
   probeType: "httpGet"
 readinessProbe:
-  path: "/"
+  path: "/health"
   initialDelaySeconds: 5
   timeoutSeconds: 3
   scheme: "HTTP"

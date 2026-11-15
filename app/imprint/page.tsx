@@ -1,4 +1,3 @@
-import { request } from "@acdh-oeaw/lib";
 import type { Metadata, ResolvingMetadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
@@ -7,6 +6,8 @@ import { MainContent } from "@/components/main-content";
 import { createImprintUrl } from "@/config/imprint.config";
 
 interface ImprintPageProps extends Record<string, never> {}
+
+export const revalidate = 86400;
 
 export async function generateMetadata(
 	_props: Readonly<ImprintPageProps>,
@@ -26,9 +27,14 @@ export default async function ImprintPage(_props: Readonly<ImprintPageProps>): P
 	const locale = await getLocale();
 	const t = await getTranslations("ImprintPage");
 
-	const result = await request(createImprintUrl(locale), { responseType: "text" });
-	if (result.error != null) throw result.error;
-	const html = result.value.data;
+	const response = await fetch(createImprintUrl(locale), {
+		next: { revalidate },
+		signal: AbortSignal.timeout(10_000),
+	});
+	if (!response.ok) {
+		throw new Error(`Failed to fetch imprint: ${response.status}`);
+	}
+	const html = await response.text();
 
 	return (
 		<MainContent className="prose-sm mx-auto w-full max-w-2xl py-12">

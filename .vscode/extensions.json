@@ -2,7 +2,6 @@
 	"recommendations": [
 		"bradlc.vscode-tailwindcss",
 		"editorconfig.editorconfig",
-		"lokalise.i18n-ally",
 		"mikestead.dotenv",
 		"ms-playwright.playwright",
 		"stylelint.vscode-stylelint",

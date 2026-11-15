@@ -314,9 +314,6 @@ importers:
       eslint-plugin-playwright:
         specifier: ^2.12.2
         version: 2.12.2(eslint@9.39.5(jiti@2.7.0)(supports-color@7.2.0))
-      is-ci:
-        specifier: ^4.1.0
-        version: 4.1.0
       lefthook:
         specifier: ^2.2.2
         version: 2.2.2
@@ -2416,10 +2413,6 @@ packages:
 
   intl-messageformat@12.1.5:
     resolution: {integrity: sha512-quhcDFAxy4wr/GrgWgmMjuegoedNUIxGNLORfXgDgdjuv8cBM88ClLTLXmfYC1roMSR1PPc55yUEkpJ5m67W2g==}
-
-  is-ci@4.1.0:
-    resolution: {integrity: sha512-Ab9bQDQ11lWootZUI5qxgN2ZXwxNI5hTwnsvOc1wyxQ7zQ8OkEDw79mI0+9jI3x432NfwbVRru+3noJfXF6lSQ==}
-    hasBin: true
 
   is-extendable@0.1.1:
     resolution: {integrity: sha512-5BMULNob1vgFX6EjQw5izWDxrecWK9AM72rugNr0TFldMOi0fj6Jk+zeKIt0xGj4cEfQIJth4w3OKWOJ4f+AFw==}
@@ -4986,10 +4979,6 @@ snapshots:
     dependencies:
       '@formatjs/fast-memoize': 3.1.7
       '@formatjs/icu-messageformat-parser': 3.5.23
-
-  is-ci@4.1.0:
-    dependencies:
-      ci-info: 4.5.0
 
   is-extendable@0.1.1: {}
 

@@ -6,6 +6,11 @@ concurrency:
 
 on:
   workflow_dispatch:
+    inputs:
+      update-snapshots:
+        description: "Regenerate visual snapshots on the CI runner and upload them as an artifact"
+        type: boolean
+        default: false
   pull_request:
     branches:
       - main
@@ -23,7 +28,7 @@ jobs:
       fail-fast: true
       matrix:
         node-version: [26.x]
-        os: [ubuntu-24.04]
+        os: [ubuntu-26.04]
 
     env:
       NEXT_PUBLIC_API_BASE_URL: "${{ vars.NEXT_PUBLIC_API_BASE_URL }}"
@@ -88,7 +93,21 @@ jobs:
         run: pnpm run build
 
       - name: Run e2e tests
+        if: ${{ !inputs.update-snapshots }}
         run: pnpm run test:e2e --pass-with-no-tests
+
+      - name: Update visual snapshots
+        if: ${{ inputs.update-snapshots }}
+        run: pnpm run test:e2e:update-snapshots
+
+      - name: Upload visual snapshots
+        uses: actions/upload-artifact@v7
+        if: ${{ inputs.update-snapshots }}
+        with:
+          name: snapshots
+          path: e2e/snapshots/
+          if-no-files-found: error
+          retention-days: 7
 
       - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
