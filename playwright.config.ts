@@ -43,6 +43,8 @@ export default defineConfig({
 			name: "firefox",
 			use: {
 				...devices["Desktop Firefox"],
+				// Firefox needs an Xvfb display for software WebGL2 on Linux CI.
+				headless: !isCI,
 				launchOptions: {
 					// Allow software WebGL2 rendering on CI runners without a GPU.
 					firefoxUserPrefs: { "webgl.force-enabled": true },

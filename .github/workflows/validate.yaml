@@ -94,11 +94,11 @@ jobs:
 
       - name: Run e2e tests
         if: ${{ !inputs.update-snapshots }}
-        run: pnpm run test:e2e --pass-with-no-tests
+        run: xvfb-run --auto-servernum pnpm run test:e2e --pass-with-no-tests
 
       - name: Update visual snapshots
         if: ${{ inputs.update-snapshots }}
-        run: pnpm run test:e2e:update-snapshots
+        run: xvfb-run --auto-servernum pnpm run test:e2e:update-snapshots
 
       - name: Upload visual snapshots
         uses: actions/upload-artifact@v7
