@@ -90,7 +90,7 @@ test("should add json+ld metadata", async ({ createIndexPage }) => {
 			.locator('script[type="application/ld+json"]')
 			.textContent();
 
-		// eslint-disable-next-line playwright/prefer-web-first-assertions
+		// oxlint-disable-next-line playwright/prefer-web-first-assertions
 		expect(metadata).toBe(
 			jsonLdScriptProps({
 				"@context": "https://schema.org",
@@ -102,10 +102,9 @@ test("should add json+ld metadata", async ({ createIndexPage }) => {
 	}
 });
 
-// eslint-disable-next-line playwright/no-skipped-test
-test.skip("should serve an open-graph image", async ({ createIndexPage, request }) => {
+test("should serve an open-graph image", async ({ createIndexPage, request }) => {
 	for (const locale of locales) {
-		const imagePath = `/opengraph-image`;
+		const imagePath = "/opengraph-image.png";
 
 		const { indexPage } = await createIndexPage(locale);
 		await indexPage.goto();

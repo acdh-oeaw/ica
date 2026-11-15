@@ -1,10 +1,13 @@
 {
+	"[markdown]": {
+		"editor.wordWrap": "on"
+	},
 	"css.validate": false,
 	"debug.toolBarLocation": "docked",
 	"editor.codeActionsOnSave": {
 		"source.fixAll": "explicit"
 	},
-	"editor.defaultFormatter": "prettier.prettier-vscode",
+	"editor.defaultFormatter": "oxc.oxc-vscode",
 	"editor.formatOnSave": true,
 	"editor.inlayHints.enabled": "offUnlessPressed",
 	"editor.linkedEditing": true,
@@ -13,21 +16,21 @@
 	},
 	"editor.rulers": [100],
 	"editor.stickyScroll.enabled": true,
-	"eslint.enable": true,
-	"eslint.validate": ["javascript", "typescript", "typescriptreact"],
+	"eslint.enable": false,
 	"files.associations": {
 		"*.css": "tailwindcss"
 	},
 	"files.eol": "\n",
-	"i18n-ally.annotations": false,
-	"i18n-ally.keepFulfilled": true,
-	"i18n-ally.keystyle": "nested",
-	"i18n-ally.localesPaths": ["./messages"],
-	"i18n-ally.review.enabled": false,
-	"i18n-ally.sortKeys": true,
-	"i18n-ally.tabStyle": "tab",
+	"js/ts.experimental.useTsgo": true,
+	"js/ts.inlayHints.parameterNames.enabled": "all",
+	"js/ts.preferences.autoImportSpecifierExcludeRegexes": ["^next/dist/", "^next/router$"],
+	"js/ts.preferences.importModuleSpecifier": "non-relative",
+	"js/ts.preferences.preferTypeOnlyAutoImports": true,
+	"js/ts.tsdk.path": "node_modules/typescript/lib",
+	"js/ts.tsdk.promptToUseWorkspaceVersion": true,
 	"less.validate": false,
-	"prettier.ignorePath": ".gitignore",
+	"oxc.typeAware": true,
+	"prettier.enable": false,
 	"scss.validate": false,
 	"stylelint.enable": true,
 	"stylelint.snippet": ["css", "postcss", "tailwindcss"],
@@ -38,15 +41,6 @@
 	],
 	"tailwindCSS.validate": true,
 	"terminal.integrated.enablePersistentSessions": false,
-	"typescript.enablePromptUseWorkspaceTsdk": true,
-	"typescript.inlayHints.parameterNames.enabled": "all",
-	"typescript.preferences.autoImportFileExcludePatterns": [
-		"next/router.d.ts",
-		"next/dist/client/router.d.ts"
-	],
-	"typescript.preferences.importModuleSpecifier": "non-relative",
-	"typescript.preferences.preferTypeOnlyAutoImports": true,
-	"typescript.tsdk": "node_modules/typescript/lib",
 	"workbench.editor.customLabels.patterns": {
 		"**/app/**/error.tsx": "${dirname} - error",
 		"**/app/**/forbidden.tsx": "${dirname} - forbidden",
@@ -58,8 +52,5 @@
 		"**/app/**/unauthorized.tsx": "${dirname} - unauthorized"
 	},
 	"workbench.editor.labelFormat": "medium",
-	"workbench.tree.enableStickyScroll": true,
-	"[markdown]": {
-		"editor.wordWrap": "on"
-	}
+	"workbench.tree.enableStickyScroll": true
 }

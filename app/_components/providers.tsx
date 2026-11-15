@@ -19,9 +19,9 @@ export function Providers(props: Readonly<ProvidersProps>): ReactNode {
 	const router = useRouter();
 
 	return (
-		// eslint-disable-next-line @typescript-eslint/unbound-method
+		// oxlint-disable-next-line typescript/unbound-method
 		<RouterProvider navigate={router.push}>
-			<NextIntlClientProvider locale={locale} messages={messages}>
+			<NextIntlClientProvider locale={locale} messages={messages} timeZone="UTC">
 				<I18nProvider locale={locale}>{children}</I18nProvider>
 			</NextIntlClientProvider>
 		</RouterProvider>

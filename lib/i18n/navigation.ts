@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-imports */
+/* oxlint-disable no-restricted-imports */
 
 import Link, { type LinkProps } from "next/link";
 import type { FC, ReactNode } from "react";

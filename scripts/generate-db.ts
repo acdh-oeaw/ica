@@ -9,11 +9,10 @@ import {
 	isNonNullable,
 	log,
 	request as _request,
-	type RequestConfig,
+	type RequestOptions,
 } from "@acdh-oeaw/lib";
-import config from "@acdh-oeaw/prettier-config";
 import { type HierarchyNode, stratify } from "d3";
-import { format } from "prettier";
+import { format } from "oxfmt";
 import serialize from "serialize-javascript";
 
 import { env } from "@/config/env.config";
@@ -30,6 +29,7 @@ import type {
 	RelationBase,
 	RelationTypeBase,
 } from "@/db/types";
+import config from "@/oxfmt.config";
 
 const baseUrl = `${env.NEXT_PUBLIC_API_BASE_URL}/apis/api/`;
 
@@ -42,18 +42,21 @@ interface Context {
  * The ica api will time out when being hit with many requests,
  * so we retry requests after a grace period.
  */
-async function request(...args: Parameters<typeof _request>) {
+async function request(url: URL | string, options: RequestOptions<"json">) {
 	try {
-		const response = await _request(...args);
+		const response = await _request(url, options);
+		if (response.error != null) throw response.error;
 
-		return response;
+		return response.value.data;
 	} catch (error) {
 		if (error instanceof Error && error.name === "TimeoutError") {
 			log.warn("Connection timed out. Retrying after 20s...");
 			await new Promise((resolve) => {
 				setTimeout(resolve, 20000);
 			});
-			return _request(...args);
+			const response = await _request(url, options);
+			if (response.error != null) throw response.error;
+			return response.value.data;
 		} else {
 			throw error;
 		}
@@ -62,7 +65,7 @@ async function request(...args: Parameters<typeof _request>) {
 
 //
 
-const options: RequestConfig = {
+const options: RequestOptions<"json"> = {
 	responseType: "json",
 	timeout: 60_000,
 };
@@ -607,7 +610,7 @@ async function generate() {
 	const persons = await getPersons();
 	const ids = new Set(
 		persons.map((person) => {
-			return String(person.id);
+			return person.id;
 		}),
 	);
 
@@ -622,14 +625,17 @@ async function generate() {
 
 	for (const [key, entities] of Object.entries(db)) {
 		const filePath = path.join(outputFolder, `${key}.ts`);
-		await fs.writeFile(
-			filePath,
-			await format(`export const ${key} = ${serialize(entities)}`, {
-				...config,
-				parser: "typescript",
-			}),
-			{ encoding: "utf-8" },
-		);
+		const result = await format(filePath, `export const ${key} = ${serialize(entities)}`, config);
+		if (result.errors.length > 0) {
+			throw new Error(
+				`Failed to format ${filePath}: ${result.errors
+					.map((error) => {
+						return error.message;
+					})
+					.join("\n")}`,
+			);
+		}
+		await fs.writeFile(filePath, result.code, { encoding: "utf-8" });
 	}
 }
 

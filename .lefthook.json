@@ -1,0 +1,25 @@
+{
+	"$schema": "./node_modules/lefthook/schema.json",
+	"pre-commit": {
+		"piped": true,
+		"commands": {
+			"oxlint": {
+				"priority": 1,
+				"glob": "*.{js,ts,tsx}",
+				"run": "pnpm exec oxlint --fix {staged_files}",
+				"stage_fixed": true
+			},
+			"stylelint": {
+				"priority": 2,
+				"glob": "*.css",
+				"run": "pnpm exec stylelint --cache --fix {staged_files}",
+				"stage_fixed": true
+			},
+			"oxfmt": {
+				"priority": 3,
+				"run": "pnpm exec oxfmt --write --no-error-on-unmatched-pattern {staged_files}",
+				"stage_fixed": true
+			}
+		}
+	}
+}
