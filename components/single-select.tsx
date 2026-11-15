@@ -1,6 +1,8 @@
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon as CheckMarkIcon, ChevronsUpDownIcon as SelectorIcon } from "lucide-react";
-import { Fragment, type ReactNode } from "react";
+import { Fragment, type ReactNode, useRef } from "react";
+
+import { SelectPopover } from "@/components/select-popover";
 
 const defaultSelectionColor: SelectionColor = { backgroundColor: "#1b1e28", color: "#fff" };
 
@@ -28,6 +30,7 @@ interface SingleSelectProps<T extends Item> {
 
 export function SingleSelect<T extends Item>(props: SingleSelectProps<T>): ReactNode {
 	const { getColor, items, label, messages, name, onSelectionChange, selectedKey } = props;
+	const buttonRef = useRef<HTMLButtonElement>(null);
 
 	function getDisplayLabel(selectedKey: Item["id"]) {
 		return items.get(selectedKey)?.label ?? messages.placeholder;
@@ -43,7 +46,10 @@ export function SingleSelect<T extends Item>(props: SingleSelectProps<T>): React
 		>
 			<div className="grid gap-y-1">
 				<Listbox.Label className="text-xs font-medium text-neutral-600">{label}</Listbox.Label>
-				<Listbox.Button className="relative w-full cursor-default overflow-hidden rounded-lg bg-neutral-0 py-2 pl-3 pr-10 text-left text-sm shadow-md focus:outline-none focus-visible:border-primary-500 focus-visible:ring-2 focus-visible:ring-neutral-0/75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300">
+				<Listbox.Button
+					ref={buttonRef}
+					className="relative w-full cursor-default overflow-hidden rounded-lg bg-neutral-0 py-2 pl-3 pr-10 text-left text-sm shadow-md focus:outline-none focus-visible:border-primary-500 focus-visible:ring-2 focus-visible:ring-neutral-0/75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300"
+				>
 					<span className="block truncate">{getDisplayLabel(selectedKey)}</span>
 					<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
 						<SelectorIcon aria-hidden={true} className="size-5 text-neutral-400" />
@@ -59,20 +65,28 @@ export function SingleSelect<T extends Item>(props: SingleSelectProps<T>): React
 				leaveFrom="transform scale-100 opacity-100"
 				leaveTo="transform scale-95 opacity-0"
 			>
-				<Listbox.Options className="absolute z-overlay mt-1 max-h-96 w-full overflow-auto rounded-md bg-neutral-0 py-1 text-sm shadow-lg ring-1 ring-neutral-1000/5 focus:outline-none">
+				<Listbox.Options
+					as={SelectPopover}
+					className="z-overlay overflow-y-auto overscroll-contain rounded-md bg-neutral-0 py-1 text-sm shadow-lg ring-1 ring-neutral-1000/5 focus:outline-none"
+					targetRef={buttonRef}
+				>
 					{Array.from(items.values()).map((item) => {
 						const { backgroundColor } = getColor?.(item.id) ?? defaultSelectionColor;
 
 						return (
 							<Listbox.Option
 								key={item.id}
-								className="relative cursor-default select-none py-2 pl-10 pr-4 ui-active:bg-neutral-100 ui-active:text-neutral-900"
+								className={({ active }) => {
+									return `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? "bg-neutral-200 text-neutral-900" : "text-neutral-700"}`;
+								}}
 								value={item.id}
 							>
 								{({ selected }) => {
 									return (
 										<Fragment>
-											<span className="block truncate ui-selected:font-medium">{item.label}</span>
+											<span className={`block truncate ${selected ? "font-semibold" : ""}`}>
+												{item.label}
+											</span>
 											{selected ? (
 												<span
 													className="absolute inset-y-0 left-0 grid place-items-center pl-3"
