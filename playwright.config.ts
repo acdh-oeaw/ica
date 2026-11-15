@@ -41,7 +41,13 @@ export default defineConfig({
 		},
 		{
 			name: "firefox",
-			use: { ...devices["Desktop Firefox"] },
+			use: {
+				...devices["Desktop Firefox"],
+				launchOptions: {
+					// Allow software WebGL2 rendering on CI runners without a GPU.
+					firefoxUserPrefs: { "webgl.force-enabled": true },
+				},
+			},
 			dependencies: ["setup"],
 		},
 		{
