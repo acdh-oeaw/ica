@@ -1,0 +1,106 @@
+import { defineConfig } from "oxlint";
+
+export default defineConfig({
+	plugins: ["eslint", "typescript", "react", "jsx-a11y", "nextjs", "import", "node"],
+	jsPlugins: [{ name: "check-file", specifier: "eslint-plugin-check-file" }],
+	categories: { correctness: "error" },
+	env: { builtin: true, browser: true },
+	ignorePatterns: ["**/*.d.ts"],
+	options: { typeAware: true, typeCheck: true, reportUnusedDisableDirectives: "error" },
+	rules: {
+		"check-file/filename-naming-convention": [
+			"error",
+			{ "**/*": "KEBAB_CASE" },
+			{ ignoreMiddleExtensions: true },
+		],
+		"check-file/folder-naming-convention": ["error", { "**/": "NEXT_JS_APP_ROUTER_CASE" }],
+		"arrow-body-style": ["error", "always"],
+		eqeqeq: ["error", "smart"],
+		"no-console": ["warn", { allow: ["warn", "error"] }],
+		"no-implicit-coercion": "error",
+		"no-param-reassign": "error",
+		"prefer-const": "error",
+		"prefer-template": "error",
+		"import/no-default-export": "error",
+		"nextjs/no-img-element": "warn",
+		"no-restricted-properties": [
+			"error",
+			{
+				object: "process",
+				property: "env",
+				message: "Please use `@/config/env.config` instead.",
+			},
+		],
+		"no-restricted-imports": [
+			"error",
+			{
+				paths: [
+					{
+						name: "next/image",
+						message: "Please use `@/components/image` or `@/components/server-image` instead.",
+					},
+					{ name: "next/link", message: "Please use `@/components/link` instead." },
+					{
+						name: "next/navigation",
+						importNames: ["redirect", "permanentRedirect", "useRouter", "usePathname"],
+						message: "Please use `@/lib/i18n/navigation` instead.",
+					},
+					{ name: "next/router", message: "Please use `@/lib/i18n/navigation` instead." },
+				],
+			},
+		],
+		"typescript/array-type": ["error", { default: "generic" }],
+		"typescript/consistent-type-imports": ["error", { fixStyle: "inline-type-imports" }],
+		"typescript/no-explicit-any": "error",
+		"typescript/no-floating-promises": "error",
+		"typescript/no-misused-promises": "error",
+		"typescript/no-unnecessary-condition": "error",
+		"typescript/no-unsafe-argument": "error",
+		"typescript/no-unsafe-assignment": "error",
+		"typescript/no-unsafe-call": "error",
+		"typescript/no-unsafe-member-access": "error",
+		"typescript/no-unsafe-return": "error",
+		"typescript/require-array-sort-compare": "error",
+		"typescript/restrict-template-expressions": ["error", { allowNumber: true }],
+		"typescript/switch-exhaustiveness-check": "error",
+		"typescript/unbound-method": "error",
+		"react/jsx-boolean-value": ["error", "always"],
+		"react/react-in-jsx-scope": "off",
+		// Keep explicit list roles for Safari when Tailwind removes list markers.
+		"jsx-a11y/no-redundant-roles": ["error", { ul: ["list"], ol: ["list"] }],
+		"jsx-a11y/prefer-tag-over-role": "off",
+		// This app does not enable React Compiler.
+		"react/incompatible-library": "off",
+		"react/purity": "off",
+		"react/set-state-in-effect": "off",
+	},
+	overrides: [
+		{
+			files: [
+				"*.config.ts",
+				"app/**/page.tsx",
+				"app/**/layout.tsx",
+				"app/**/loading.tsx",
+				"app/**/error.tsx",
+				"app/**/not-found.tsx",
+				"app/manifest.ts",
+				"app/robots.ts",
+				"app/sitemap.ts",
+			],
+			rules: { "import/no-default-export": "off" },
+		},
+		{
+			files: ["e2e/**/*.ts"],
+			jsPlugins: [{ name: "playwright", specifier: "eslint-plugin-playwright" }],
+			rules: {
+				"react/rules-of-hooks": "off",
+				"playwright/expect-expect": "error",
+				"playwright/missing-playwright-await": "error",
+				"playwright/no-focused-test": "error",
+				"playwright/no-skipped-test": "error",
+				"playwright/prefer-web-first-assertions": "error",
+				"playwright/valid-expect": "error",
+			},
+		},
+	],
+});

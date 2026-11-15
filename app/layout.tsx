@@ -1,7 +1,7 @@
 import "@/styles/index.css";
 
 import { cn } from "@acdh-oeaw/style-variants";
-import type { Metadata, ResolvingMetadata, Viewport } from "next";
+import type { Metadata, Viewport } from "next";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { LocalizedStringProvider as Translations } from "react-aria-components/i18n";
@@ -27,10 +27,7 @@ export const viewport: Viewport = {
 	width: "device-width",
 };
 
-export async function generateMetadata(
-	_props: Omit<Readonly<LocaleLayoutProps>, "children">,
-	_parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
 	const locale = await getLocale();
 	const meta = await getTranslations("metadata");
 

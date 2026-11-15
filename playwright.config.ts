@@ -6,8 +6,7 @@ import { config as dotenv } from "dotenv";
 import { expand } from "dotenv-expand";
 
 /**
- * Reading `.env` files here instead of using `dotenv-cli` so environment variables are
- * available to the vs code plugin as well.
+ * Load `.env` files here so environment variables are available to the VS Code plugin as well.
  */
 for (const envFilePath of [".env.test.local", ".env.local", ".env.test", ".env"]) {
 	expand(dotenv({ path: join(process.cwd(), envFilePath) }));

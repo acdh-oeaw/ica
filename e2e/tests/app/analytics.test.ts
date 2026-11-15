@@ -5,7 +5,7 @@ import { defaultLocale } from "@/config/i18n.config";
 import { expect, test } from "@/e2e/lib/test";
 
 test.describe("analytics service", () => {
-	// eslint-disable-next-line playwright/no-skipped-test
+	// oxlint-disable-next-line playwright/no-skipped-test
 	test.skip(() => {
 		return env.NEXT_PUBLIC_MATOMO_BASE_URL == null || env.NEXT_PUBLIC_MATOMO_ID == null;
 	}, "Analytics service disabled.");

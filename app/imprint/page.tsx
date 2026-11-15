@@ -26,7 +26,9 @@ export default async function ImprintPage(_props: Readonly<ImprintPageProps>): P
 	const locale = await getLocale();
 	const t = await getTranslations("ImprintPage");
 
-	const html = await request(createImprintUrl(locale), { responseType: "text" });
+	const result = await request(createImprintUrl(locale), { responseType: "text" });
+	if (result.error != null) throw result.error;
+	const html = result.value.data;
 
 	return (
 		<MainContent className="prose-sm mx-auto w-full max-w-2xl py-12">

@@ -1,6 +1,6 @@
-// eslint-disable-next-line no-restricted-imports
-import type { StaticImageData } from "next/image";
 import { useTranslations } from "next-intl";
+// oxlint-disable-next-line no-restricted-imports
+import type { StaticImageData } from "next/image";
 import type { ReactNode } from "react";
 
 import { Image } from "@/components/image";

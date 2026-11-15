@@ -1,11 +1,37 @@
 {
 	"$schema": "https://json.schemastore.org/tsconfig",
-	"extends": "@acdh-oeaw/tsconfig",
 	"compilerOptions": {
+		"allowArbitraryExtensions": true,
+		"allowImportingTsExtensions": true,
+		"allowJs": true,
+		"checkJs": true,
+		"erasableSyntaxOnly": true,
+		"incremental": true,
+		"isolatedModules": true,
+		"jsx": "react-jsx",
+		"lib": ["dom", "dom.iterable", "es2023"],
+		"module": "preserve",
+		"moduleDetection": "force",
+		"noEmit": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitReturns": true,
+		"noUncheckedIndexedAccess": true,
+		"noUncheckedSideEffectImports": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"target": "es2022",
+		"types": ["node", "react", "react-dom"],
+		"verbatimModuleSyntax": true,
+		"customConditions": [],
 		"paths": {
 			"@/*": ["./*"]
 		},
-		"plugins": [{ "name": "next" }]
+		"plugins": [
+			{
+				"name": "next"
+			}
+		]
 	},
 	"include": [
 		"./next-env.d.ts",
@@ -13,7 +39,8 @@
 		"./**/*.js",
 		"./**/*.ts",
 		"./**/*.tsx",
-		".next/types/**/*.ts"
+		".next/types/**/*.ts",
+		".next/dev/types/**/*.ts"
 	],
 	"exclude": ["node_modules", "out"]
 }
