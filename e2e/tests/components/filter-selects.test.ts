@@ -12,6 +12,8 @@ for (const pathname of ["/geo-visualisation", "/network-visualisation"]) {
 				await input.press("ArrowDown");
 				const listbox = page.getByRole("listbox");
 				await expect(listbox).toBeVisible();
+				await expect(input).toHaveAttribute("aria-expanded", "true");
+				await expect(page.locator('[data-trigger="ComboBox"][data-entering]')).toHaveCount(0);
 				await expect
 					.poll(async () => {
 						return listbox.evaluate((element) => {
@@ -22,8 +24,19 @@ for (const pathname of ["/geo-visualisation", "/network-visualisation"]) {
 					.toBe(true);
 				await expect(listbox).toHaveCSS("overflow-y", "auto");
 				await input.press("End");
-				const options = listbox.getByRole("option");
-				await expect(options.last()).toHaveAttribute("data-focused");
+				await expect
+					.poll(async () => {
+						return listbox.getByRole("option").evaluateAll((options) => {
+							const focused = options.find((option) => {
+								return option.hasAttribute("data-focused");
+							});
+							return (
+								focused != null &&
+								focused.getAttribute("aria-posinset") === focused.getAttribute("aria-setsize")
+							);
+						});
+					})
+					.toBe(true);
 				await expect
 					.poll(async () => {
 						return listbox.evaluate((element) => {
@@ -32,6 +45,7 @@ for (const pathname of ["/geo-visualisation", "/network-visualisation"]) {
 					})
 					.toBeGreaterThan(0);
 				await input.press("Escape");
+				await expect(listbox).toBeHidden();
 			}
 		});
 
@@ -53,12 +67,12 @@ for (const pathname of ["/geo-visualisation", "/network-visualisation"]) {
 			await input.press("Enter");
 			await expect(options.nth(2)).toHaveAttribute("aria-selected", "true");
 			await input.press("Escape");
+			await expect(page.getByRole("listbox")).toBeHidden();
 			await expect(
 				page
 					.getByRole("grid", { name: "Persons", exact: true })
 					.getByText("Stefan Zweig", { exact: true }),
 			).toBeVisible();
-			await input.press("Escape");
 			await page.getByRole("button", { name: /All genders/ }).click();
 			await page.keyboard.press("ArrowDown");
 			await expect(page.getByRole("option", { name: "Female", exact: true })).toHaveCSS(
