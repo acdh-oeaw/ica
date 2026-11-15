@@ -102,10 +102,9 @@ test("should add json+ld metadata", async ({ createIndexPage }) => {
 	}
 });
 
-// oxlint-disable-next-line playwright/no-skipped-test
-test.skip("should serve an open-graph image", async ({ createIndexPage, request }) => {
+test("should serve an open-graph image", async ({ createIndexPage, request }) => {
 	for (const locale of locales) {
-		const imagePath = `/opengraph-image`;
+		const imagePath = "/opengraph-image.png";
 
 		const { indexPage } = await createIndexPage(locale);
 		await indexPage.goto();

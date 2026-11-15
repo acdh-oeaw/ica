@@ -18,11 +18,17 @@ export class ImprintPage {
 		this.i18n = i18n;
 		this.url = "/imprint";
 		this.mainContent = page.getByRole("main");
-		this.title = page.getByRole("heading", { level: 1 });
+		this.title = page.getByRole("heading", {
+			level: 1,
+			name: i18n.t("ImprintPage.meta.title"),
+			exact: true,
+		});
 		this.skipLink = page.getByRole("link", { name: i18n.t("LocaleLayout.skip-to-main-content") });
 	}
 
-	goto() {
-		return this.page.goto(this.url);
+	async goto() {
+		const response = await this.page.goto(this.url);
+		await this.title.waitFor({ state: "visible" });
+		return response;
 	}
 }

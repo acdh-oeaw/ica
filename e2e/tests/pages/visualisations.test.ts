@@ -35,11 +35,18 @@ for (const pathname of ["/geo-visualisation", "/network-visualisation"]) {
 }
 
 test("should load the map and allow zooming", async ({ page }) => {
-	const workerLoaded = page.waitForResponse((response) => {
-		return response.url().includes("maplibre-gl-worker") && response.ok();
+	const workerLoaded = page.waitForEvent("worker", {
+		predicate(worker) {
+			return worker.url().includes("maplibre-gl-worker");
+		},
 	});
 	await page.goto("/geo-visualisation");
-	await workerLoaded;
+	const worker = await workerLoaded;
+	expect(
+		await worker.evaluate(() => {
+			return self.location.pathname;
+		}),
+	).toMatch(/maplibre-gl-worker.*\.mjs$/);
 	await expect(page.getByRole("region", { name: "Map" })).toBeVisible();
 	await expect(page.locator("canvas.maplibregl-canvas")).toBeVisible();
 	await page.getByRole("button", { name: "Zoom in", exact: true }).click();

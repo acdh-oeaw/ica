@@ -12,7 +12,7 @@ export function AppFooter(): ReactNode {
 	const t = useTranslations("AppFooter");
 
 	const acdh = {
-		label: "ACDH-CH",
+		label: "ACDH",
 		href: "https://www.oeaw.ac.at/acdh",
 	};
 
@@ -25,7 +25,7 @@ export function AppFooter(): ReactNode {
 		<footer className="border-t border-neutral-200">
 			<div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-8 py-4 text-xs font-medium">
 				<span className="flex items-center gap-2">
-					<Image alt="" className="size-8" src={logo as StaticImageData} />
+					<Image alt="" className="h-8 w-auto" src={logo as StaticImageData} />
 					&copy; {new Date().getUTCFullYear()}{" "}
 					<a href={acdh.href} target="_blank">
 						{acdh.label}
