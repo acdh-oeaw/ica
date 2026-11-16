@@ -24,25 +24,24 @@ export function AppHeader(): ReactNode {
 
 	return (
 		<header className="border-b border-neutral-200">
-			<div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-8 py-4 text-sm font-medium">
+			<div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-5 py-5 text-sm font-normal text-neutral-600 sm:px-8">
 				<div className="shrink-0">
 					<NavLink
-						className="hover:text-primary-700 focus-visible:text-primary-700"
+						className="py-1 text-neutral-900 hover:underline focus-visible:underline"
 						href={links.home.href}
 					>
 						{links.home.label}
 					</NavLink>
-					{/* <strong className="ml-4">(work in progress)</strong> */}
 				</div>
 				<nav>
-					<ul className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2" role="list">
+					<ul className="flex flex-wrap items-center justify-end gap-x-6 gap-y-2" role="list">
 						{Object.entries(links).map(([id, link]) => {
 							if (id === "home") return null;
 
 							return (
 								<li key={id}>
 									<NavLink
-										className="transition hover:text-primary-700 focus-visible:text-primary-700"
+										className="py-1 underline-offset-4 transition hover:text-neutral-900 focus-visible:text-neutral-900 aria-[current=page]:text-neutral-900 aria-[current=page]:underline aria-[current=page]:decoration-neutral-400"
 										href={link.href}
 									>
 										{link.label}

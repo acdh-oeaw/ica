@@ -1,83 +1,80 @@
+import "@/app/(index)/landing-page.css";
+
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
+import { ArrowDown, ArrowUpRight, MapPin, Network } from "lucide-react";
 import MarkdownIt from "markdown-it";
 import { getTranslations } from "next-intl/server";
+import { Source_Serif_4 } from "next/font/google";
 import type { ReactNode } from "react";
 
-import { Image } from "@/components/image";
 import { Link } from "@/components/link";
 import { MainContent } from "@/components/main-content";
 import { createHref } from "@/lib/create-href";
-import hero from "@/public/assets/images/hero.jpg";
 
-async function getHeroSectionContent(): Promise<string> {
-	const filePath = join(process.cwd(), "content", "en", "index-page", "index.mdx");
-	const fileContent = await readFile(filePath, { encoding: "utf-8" });
+const headingFont = Source_Serif_4({
+	display: "swap",
+	subsets: ["latin", "latin-ext"],
+	weight: "400",
+	variable: "--_font-landing-heading",
+});
+
+export default async function IndexPage(): Promise<ReactNode> {
+	const [t, content] = await Promise.all([
+		getTranslations("IndexPage"),
+		readFile(join(process.cwd(), "content", "en", "index-page", "index.mdx"), "utf-8"),
+	]);
 	const renderer = new MarkdownIt();
-	const html = renderer.render(fileContent);
-	return html;
-}
-
-interface IndexPageProps extends Record<string, never> {}
-
-export default async function IndexPage(_props: Readonly<IndexPageProps>): Promise<ReactNode> {
-	const t = await getTranslations("IndexPage");
-
-	const links = {
-		geo: {
-			label: t("explore-map"),
-			href: createHref({ pathname: "/geo-visualisation" }),
-		},
-		network: {
-			label: t("explore-graph"),
-			href: createHref({ pathname: "/network-visualisation" }),
-		},
-	};
+	const views = [
+		{ id: "map", icon: MapPin, href: createHref({ pathname: "/geo-visualisation" }) },
+		{ id: "graph", icon: Network, href: createHref({ pathname: "/network-visualisation" }) },
+	] as const;
 
 	return (
-		<MainContent>
-			<section className="relative border-y border-neutral-200 bg-background">
-				<Image
-					alt=""
-					className="absolute inset-0 size-full object-cover opacity-40"
-					decoding="sync"
-					priority={true}
-					sizes="100vw"
-					src={hero}
-				/>
-				<div className="relative mx-auto max-w-7xl p-8">
-					<div className="grid justify-items-center gap-4 py-32">
-						<h1 className="text-center text-5xl font-extrabold tracking-tighter md:text-6xl lg:text-7xl">
-							{t("title")}
-						</h1>
-						<h2 className="max-w-2xl text-center text-2xl font-extrabold tracking-tight md:text-3xl">
-							{t("lead-in")}
-						</h2>
-						<div className="mx-auto mt-4 flex flex-col gap-4 xs:flex-row">
-							{Object.entries(links).map(([id, link]) => {
-								return (
-									<Link
-										key={id}
-										className="inline-flex rounded-md bg-primary-600 px-12 py-4 text-center font-medium text-neutral-0 hover:bg-primary-700 hover:text-neutral-0 focus-visible:bg-primary-700 focus-visible:ring"
-										href={link.href}
-									>
-										{link.label}
-									</Link>
-								);
-							})}
-						</div>
-					</div>
+		<MainContent className={`landing-page ${headingFont.variable}`}>
+			<section aria-labelledby="landing-title" className="landing-hero">
+				<h1 id="landing-title">{t("title")}</h1>
+				<div>
+					<p className="landing-lead">{t("lead-in")}</p>
+					<p className="landing-description">{t("description")}</p>
+					<a className="landing-text-link" href="#explore">
+						{t("start-exploring")} <ArrowDown aria-hidden="true" size={17} />
+					</a>
 				</div>
 			</section>
 
-			<section>
-				<div className="mx-auto w-full max-w-7xl p-8">
-					<div
-						dangerouslySetInnerHTML={{ __html: await getHeroSectionContent() }}
-						className="mx-auto grid w-full max-w-2xl items-start gap-4 font-medium leading-relaxed"
-					/>
+			<nav aria-label={t("start-exploring")} className="landing-explore" id="explore">
+				<div className="landing-views">
+					{views.map(({ id, icon: Icon, href }) => {
+						return (
+							<Link key={id} className="landing-view" href={href}>
+								<Icon
+									aria-hidden="true"
+									className="landing-view-icon"
+									size={27}
+									strokeWidth={1.4}
+								/>
+								<h2>{t(`views.${id}.title`)}</h2>
+								<p>{t(`views.${id}.description`)}</p>
+								<span className="landing-view-action">
+									{t(id === "map" ? "explore-map" : "explore-graph")}
+									<ArrowUpRight aria-hidden="true" size={20} />
+								</span>
+							</Link>
+						);
+					})}
 				</div>
+			</nav>
+
+			<section aria-labelledby="about-title" className="landing-about">
+				<div>
+					<h2 id="about-title">{t("about-title")}</h2>
+				</div>
+				<div
+					className="landing-prose"
+					dangerouslySetInnerHTML={{ __html: renderer.render(content) }}
+				/>
 			</section>
 		</MainContent>
 	);
