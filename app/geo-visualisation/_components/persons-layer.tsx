@@ -256,11 +256,6 @@ export function PersonsLayer(props: PersonsLayerProps): ReactNode {
 					id: place.id,
 					kind: place.kind,
 					status,
-					/**
-					 * Note that `mapbox-gl` json-stringifies any feature properties on events.
-					 *
-					 * @see https://github.com/mapbox/mapbox-gl-js/issues/2434
-					 */
 					relations: Array.from(placeRelations),
 				},
 			};

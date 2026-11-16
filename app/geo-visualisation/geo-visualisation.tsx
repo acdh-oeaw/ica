@@ -78,18 +78,9 @@ export function GeoVisualisation(): ReactNode {
 		}
 
 		const feature = _feature as unknown as PlaceFeature;
-		const { id, relations: stringifiedContent } = feature.properties;
+		const { id, relations } = feature.properties;
 
 		const place = db.places.get(id)!;
-
-		/**
-		 * Note that `mapbox-gl` json-stringifies any feature properties on events.
-		 *
-		 * @see https://github.com/mapbox/mapbox-gl-js/issues/2434
-		 */
-		const relations = JSON.parse(
-			stringifiedContent as unknown as string,
-		) as SerializablePlaceRelationsMap;
 
 		setPopover({ place, relations, coordinates: lngLat });
 	}

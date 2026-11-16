@@ -52,3 +52,32 @@ test("should load the map and allow zooming", async ({ page }) => {
 	await page.getByRole("button", { name: "Zoom in", exact: true }).click();
 	await page.getByRole("button", { name: "Zoom out", exact: true }).click();
 });
+
+test("should show a place and its relations when clicking a map point", async ({ page }) => {
+	await page.setViewportSize({ width: 1440, height: 1000 });
+	const errors: Array<string> = [];
+	page.on("pageerror", (error) => {
+		errors.push(error.message);
+	});
+	await page.goto("/geo-visualisation");
+	const canvas = page.locator("canvas.maplibregl-canvas");
+	await expect(canvas).toBeVisible();
+	const bounds = await canvas.boundingBox();
+	expect(bounds).not.toBeNull();
+	if (bounds == null) throw new Error("Map canvas has no bounds");
+
+	// Vienna's point is just southeast of the default camera's center.
+	const position = { x: bounds.width / 2 + 37, y: bounds.height / 2 + 40 };
+	await expect(async () => {
+		await canvas.hover({ position: { x: 50, y: 50 } });
+		await canvas.hover({ position });
+		await expect(canvas).toHaveCSS("cursor", "pointer");
+	}).toPass();
+	await canvas.click({ position });
+
+	const popup = page.locator(".maplibregl-popup-content");
+	await expect(popup).toBeVisible();
+	await expect(popup.getByRole("heading", { name: "Vienna", exact: true })).toBeVisible();
+	await expect(popup.getByRole("listitem")).not.toHaveCount(0);
+	expect(errors).toEqual([]);
+});
