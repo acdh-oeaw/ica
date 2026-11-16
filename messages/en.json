@@ -61,10 +61,23 @@
 		"title": "Imprint"
 	},
 	"IndexPage": {
-		"lead-in": "A Visualisation of Transatlantic Networks and Emigration from Central Europe",
+		"lead-in": "Transatlantic networks and emigration from Central Europe.",
 		"title": "Ideas crossing the Atlantic",
 		"explore-graph": "Explore Graph",
-		"explore-map": "Explore Map"
+		"explore-map": "Explore Map",
+		"description": "Explore the personal networks that connected Central Europe and North America, especially from the 1920s to the 1960s. Discover how these relationships shaped cultural exchange and helped people forced into exile find support abroad.",
+		"start-exploring": "Discover the collection",
+		"views": {
+			"map": {
+				"title": "Map transatlantic lives",
+				"description": "Explore the places where people lived, met, and worked. Trace the geography of transatlantic exchange, from Vienna to North America."
+			},
+			"graph": {
+				"title": "Trace personal networks",
+				"description": "Discover relationships between writers, journalists, musicians, and scholars, and the networks that supported lives in exile."
+			}
+		},
+		"about-title": "A shared history, connected lives."
 	},
 	"Loading": {
 		"loading": "Loading"
