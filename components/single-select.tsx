@@ -61,17 +61,22 @@ export function SingleSelect<T extends Item>(props: SingleSelectProps<T>): React
 				</span>
 			</Button>
 			<Popover
-				className="z-overlay w-[var(--trigger-width)] rounded-md bg-neutral-0 py-1 text-sm shadow-lg ring-1 ring-neutral-1000/5 entering:animate-in entering:fade-in entering:zoom-in-95 exiting:animate-out exiting:fade-out exiting:zoom-out-95"
+				className="z-overlay max-h-[min(24rem,var(--available-height))] w-[var(--trigger-width)] overflow-hidden rounded-md bg-neutral-0 text-sm shadow-lg ring-1 ring-neutral-1000/5 entering:animate-in entering:fade-in entering:zoom-in-95 exiting:animate-out exiting:fade-out exiting:zoom-out-95"
 				offset={4}
 			>
-				<ListBox className="max-h-96 overflow-auto outline-none" items={options}>
+				<ListBox
+					className="max-h-[inherit] overflow-y-auto overscroll-contain py-1 outline-none"
+					items={options}
+				>
 					{(item) => {
 						const { backgroundColor } = getColor?.(item.id) ?? defaultSelectionColor;
 						return (
 							<ListBoxItem
 								id={item.id}
 								textValue={item.label}
-								className="relative cursor-default select-none py-2 pl-10 pr-4 outline-none focused:bg-neutral-100 focused:text-neutral-900"
+								className={({ isFocused, isHovered }) => {
+									return `relative cursor-default select-none py-2 pl-10 pr-4 outline-none ${isFocused || isHovered ? "bg-neutral-200 text-neutral-900" : "text-neutral-700"}`;
+								}}
 							>
 								{({ isSelected }) => {
 									return (
