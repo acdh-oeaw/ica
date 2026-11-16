@@ -28,6 +28,11 @@
 		"something-went-wrong": "Something went wrong!",
 		"try-again": "Try again"
 	},
+	"GeoMap": {
+		"unavailable-title": "Map unavailable",
+		"unavailable-description": "Your browser couldn’t start the graphics needed for this map. Try enabling hardware acceleration or using another browser.",
+		"explore-network": "Explore the network instead"
+	},
 	"GeoVisualisation": {
 		"filter": {
 			"person": "Persons",
