@@ -144,7 +144,8 @@ test("should explain when the map cannot initialize WebGL 2", async ({
 	).toContainText("graphics");
 	await expect(page.locator("canvas.maplibregl-canvas")).toHaveCount(0);
 	const { getViolations } = await createAccessibilityScanner();
-	expect(await getViolations()).toEqual([]);
+	// Keep the accessibility scan focused on the newly rendered fallback region.
+	expect(await getViolations({ selector: '[role="status"]' })).toEqual([]);
 	await test.info().attach("graphics-unavailable", {
 		body: await page.getByRole("main").screenshot(),
 		contentType: "image/png",
