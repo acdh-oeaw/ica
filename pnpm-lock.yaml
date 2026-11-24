@@ -168,8 +168,12 @@ snapshots:
 lockfileVersion: '9.0'
 
 settings:
+  autoDedupe: true
   autoInstallPeers: true
+  dedupeInjectedDeps: true
+  dedupePeerDependents: true
   excludeLinksFromLockfile: false
+  linkWorkspacePackages: false
 
 patchedDependencies:
   '@react-aria/optimize-locales-plugin@2.1.0': efdd0d6bab6bd4da748e6aecbeddb326b4556847cabffae540c77d986da7f239

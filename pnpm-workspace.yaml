@@ -3,10 +3,20 @@ allowBuilds:
   '@swc/core': true
   esbuild: true
   lefthook: true
+  sharp: true
+
+autoDedupe: true
 
 engineStrict: true
 
-shellEmulator: true
+lockfile:
+  includeResolutionSettings: true
+
+minimumReleaseAge: 720
 
 patchedDependencies:
   '@react-aria/optimize-locales-plugin@2.1.0': patches/@react-aria__optimize-locales-plugin.patch
+
+saveTypes: true
+
+shellEmulator: true
